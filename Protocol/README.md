@@ -24,6 +24,7 @@ All Zigate Messages contain :
 As all Zigate messages are Serial messages, they can be serialized in the following form :
 
 **Header**
+
 | COMMAND | LENGTH | CHECKSUM |
 | --- | --- | --- |
 | 2 bytes | 2 bytes | 1 byte |
@@ -33,11 +34,11 @@ As all Zigate messages are Serial messages, they can be serialized in the follow
  * **CHECKSUM** : 1 byte, computation method explained below.
 
 **Payload**
-Beware, the payload is optional. When no payload is provided, neither DATA nor RSSI will be sent.
+**Beware**, the payload is **optional**. When no payload is provided, neither DATA nor RSSI will be sent.
 
 | DATA | RSSI |
 | --- | --- |
-| * | * |
+| N-1 bytes | 1 byte |
 
  * **DATA** : N-1 bytes (N is btw 0 and 0xffff)
  * **RSSI** : 1 byte btw `0x00` and `0xff`
@@ -51,18 +52,18 @@ To compute the checksum, use the following steps:
  * Let L1 and L2 be the two bytes representing the LENGTH.
  * Let Pi be the PAYLOAD byte at index i
 
-Examples:
+*Examples:*
  * if COMMAND is 0x8000, C1=0x80 and C2=0x00
  * if LENGTH is 0x0005, L1=0x00 and L2=0x05
  * if PAYLOAD is 0x00000010, P1=0x00, P2=0x00, P3=0x00, P4=0x10
 
-The checksum can be computed this way:  
-**CHECKSUM**=`C1 ^ C2 ^ L1 ^ L2 ^ P1 ^ P2 ^ ... ^ Pi ^ RSSI`
+The checksum can be computed this way:  
+`CHECKSUM=C1 ^ C2 ^ L1 ^ L2 ^ P1 ^ P2 ^ ... ^ Pi ^ RSSI`
 
 If there is no payload, checksum can be computed this way:  
-**CHECKSUM**=`C1 ^ C2 ^ L1 ^ L2`
+`CHECKSUM=C1 ^ C2 ^ L1 ^ L2`
 
-Example:  
+*Example:*
  * COMMAND: 0x8000
  * LENGTH: 0x0005
  * PAYLOAD: 0x00000010
@@ -77,12 +78,18 @@ When sending a message (outbound OR inbound), it needs to be encoded this way :
  * **ENCODED** FRAME : see encoding below
  * **STOP** : 1 byte, value is always `0x03`
 
-The encoding is the following:
+The encoding is the following:  
+
 Let **B** any byte value of the message.
 If B is between `0x00` and `0x0f` (included) then :
  * Instead of B, a 2-byte content will be written in the encoded frame
  * The first byte is a fixed value: `0x02`
  * The second byte is the result of B ^ 0x10
+
+### Example
+ * To encode 0x0a, you will write 0x02 0x1a on the serial link
+ * To encode 0x10, you will write 0x10 on the serial link
+ * To encode 0x05, you will write 0x02 0x15 on the serial link
 
 ### Sample implementation
 
