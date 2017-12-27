@@ -9,10 +9,11 @@ Install your PL2303HX driver on your system.
  * [Windows](http://www.prolific.com.tw/US/ShowProduct.aspx?p_id=225&pcid=41)
  * [Mac OS/X](http://www.prolific.com.tw/US/ShowProduct.aspx?p_id=229&pcid=41)
 
-
 NB :
  * `"^" is the XOR operator`
  * All multi-byte values are **big-endian**
+
+![ZiGate Protocol](structure.png)
 
 ## Messages
 
