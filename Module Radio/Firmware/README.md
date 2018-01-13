@@ -1,7 +1,7 @@
 # Version 3.0a
 
- * Change Max number controled device to 60
- * Fix some Bugs
+ * Change max number controled devices to 60
+ * Fix some bugs
 
 # Version 3.0
 
