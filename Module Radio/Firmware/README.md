@@ -1,3 +1,9 @@
+# Version 3.0b
+
+* Up to 80 devices. 50 ZiGate's children and 30 others devices linked to routers
+* Add new command. 0x015 (Get Devices List) and 0x8015 for the response. More details on http://zigate.fr/wiki/commandes-zigate/
+* Fix other minor bugs and enhancements
+
 # Version 3.0a
 
  * Change max number controled devices to 60
