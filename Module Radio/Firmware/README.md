@@ -1,3 +1,8 @@
+# Version 3.0c
+
+* Fix Attributes Data conversion uint32. Real and true value from consumption data device
+* Fix Get Xiaomi private data from cluster 0x0000 attributes FF01 with specific manufacturer 0x115F
+
 # Version 3.0b
 
 * Up to 80 devices. 50 ZiGate's children and 30 other devices linked to routers
