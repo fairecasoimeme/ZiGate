@@ -1,7 +1,7 @@
 # Version 3.0c
 
 * Fix Attributes Data conversion uint32. Real and true value from consumption data device
-* Fix Get Xiaomi private data from cluster 0x0000 attributes FF01 with specific manufacturer 0x115F
+* Fix Get Xiaomi private data from cluster 0x0000 attributes 0xFF01 with specific manufacturer 0x115F
 
 # Version 3.0b
 
