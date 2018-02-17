@@ -1,3 +1,10 @@
+# Version 3.0d
+
+* Fix max number group table to 5. Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated. https://github.com/KiwiHC16/Abeille/issues/80
+* Fix wrong output cluster count and attributes. https://github.com/fairecasoimeme/ZiGate/issues/18
+* Add Short Address to 0x8062 / Get Group. https://github.com/fairecasoimeme/ZiGate/issues/19
+* Add new command 0x0009 / 0x8009 --> NetworkState. Give network State. https://github.com/fairecasoimeme/ZiGate/issues/15
+
 # Version 3.0c
 
 * Fix Attributes Data conversion uint32. Real and true value from consumption data device
@@ -5,7 +12,7 @@
 
 # Version 3.0b
 
-* Up to 80 devices. 50 ZiGate's children and 30 other devices linked to routers
+* Up to 80 devices. 50 ZiGate's children and 30 others devices linked to routers
 * Add new command. 0x015 (Get Devices List) and 0x8015 for the response. More details on http://zigate.fr/wiki/commandes-zigate/
 * Fix other minor bugs and enhancements
 
@@ -30,4 +37,3 @@
 
 # Initial Version
 JN-AN-1216-Zigbee-3-0-IoT-ControlBridge
-
