@@ -1,6 +1,8 @@
 # Version 3.0d
 
-* Fix max number group table to 5. Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated. https://github.com/KiwiHC16/Abeille/issues/80
+Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.
+
+* Fix max number group table to 5.  https://github.com/KiwiHC16/Abeille/issues/80
 * Fix wrong output cluster count and attributes. https://github.com/fairecasoimeme/ZiGate/issues/18
 * Add Short Address to 0x8062 / Get Group. https://github.com/fairecasoimeme/ZiGate/issues/19
 * Add new command 0x0009 / 0x8009 --> NetworkState. Give network State. https://github.com/fairecasoimeme/ZiGate/issues/15
