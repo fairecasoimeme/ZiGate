@@ -6,4 +6,5 @@ Vous trouverez dans cette section les sources et le binaire de la passerelle WiF
 La bse du firmware s'appuie sur la librairie Arduino
 
 Cependant vous pouvez utiliser le firmware ESP-LINK : https://github.com/jeelabs/esp-link
-Ce firmware est compatible en configurant le l'UART en mode swap.
+
+Ce firmware est compatible en configurant l'UART en mode swap.
