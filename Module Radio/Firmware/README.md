@@ -1,3 +1,13 @@
+# Version 3.0e
+
+* Add Private cluster 0xFC01 to manage some Legrand Netatmo stuff
+* Add Power configuration Cluster. Used by Ikea . https://github.com/KiwiHC16/Abeille/issues/139
+* Add 0xFF02 Cluster. Used by Xiaomi devices for battery informations. https://github.com/KiwiHC16/Abeille/issues/141
+* Add TimeServer functions (Set 0x0016 and Get 0x0017). You can give a datetime to ZiGate. Some device tell ZiGate to get datetime like some Xiaomi devices.
+* Fix UART control flow.
+* Fix Device announce from some devices. Ex : fix the Legrand Netatmo join sequence.
+* Update Device Timeout. 256 min to 16384 min. Limit Xiaomi devices lost. Not a fix but should be better. Not really tested in real condition. https://github.com/fairecasoimeme/ZiGate/issues/38
+
 # Version 3.0d
 
 Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.
