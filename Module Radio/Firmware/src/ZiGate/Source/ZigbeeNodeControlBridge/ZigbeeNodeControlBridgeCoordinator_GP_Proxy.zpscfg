@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zpscfg:ZigbeeWirelessNetwork xmlns:zpscfg="http://www.nxp.com/zpscfg" DefaultExtendedPANId="0x0000000000000000" MaxNumberNodes="36" Version="1.1" DefaultSecurityEnabled="true">
+  <Profiles Name="ZDP" Id="0x0000">
+    <Clusters Name="NWK_addr_req" Id="0x0000"/>
+    <Clusters Name="IEEE_addr_req" Id="0x0001"/>
+    <Clusters Name="Node_Desc_req" Id="0x0002"/>
+    <Clusters Name="Power_Desc_req" Id="0x0003"/>
+    <Clusters Name="Simple_Desc_req" Id="0x0004"/>
+    <Clusters Name="Active_EP_req" Id="0x0005"/>
+    <Clusters Name="Match_Desc_req" Id="0x0006"/>
+    <Clusters Name="Complex_Desc_req" Id="0x0010"/>
+    <Clusters Name="User_Desc_req" Id="0x0011"/>
+    <Clusters Name="Discovery_Cache_req" Id="0x0012"/>
+    <Clusters Name="Device_annce" Id="0x0013"/>
+    <Clusters Name="User_Desc_set" Id="0x0014"/>
+    <Clusters Name="System_Server_Discovery_req" Id="0x0015"/>
+    <Clusters Name="Discovery_store_req" Id="0x0016"/>
+    <Clusters Name="Node_Desc_store_req" Id="0x0017"/>
+    <Clusters Name="Power_Desc_store_req" Id="0x0018"/>
+    <Clusters Name="Active_EP_store_req" Id="0x0019"/>
+    <Clusters Name="Simple_Desc_store_req" Id="0x001A"/>
+    <Clusters Name="Remove_node_cache_req" Id="0x001B"/>
+    <Clusters Name="Find_node_chache_req" Id="0x001C"/>
+    <Clusters Name="Extended_Simple_Desc_req" Id="0x001D"/>
+    <Clusters Name="Extended_Active_EP_req" Id="0x001E"/>
+    <Clusters Name="End_Device_Bind_req" Id="0x0020"/>
+    <Clusters Name="Bind_req" Id="0x0021"/>
+    <Clusters Name="Unbind_req" Id="0x0022"/>
+    <Clusters Name="Bind_Register_req" Id="0x0023"/>
+    <Clusters Name="Replace_Device_req" Id="0x0024"/>
+    <Clusters Name="Store_Bkup_Bind_Entry_req" Id="0x0025"/>
+    <Clusters Name="Remove_Bkup_Bind_Entry_req" Id="0x0026"/>
+    <Clusters Name="Backup_Bind_Table_req" Id="0x0027"/>
+    <Clusters Name="Recover_Bind_Table_req" Id="0x0028"/>
+    <Clusters Name="Backup_Source_Bind_req" Id="0x0029"/>
+    <Clusters Name="Recover_Source_Bind_req" Id="0x002A"/>
+    <Clusters Name="Mgmt_NWK_Disc_req" Id="0x0030"/>
+    <Clusters Name="Mgmt_Lqi_req" Id="0x0031"/>
+    <Clusters Name="Mgmt_Rtg_req" Id="0x0032"/>
+    <Clusters Name="Mgmt_Bind_req" Id="0x0033"/>
+    <Clusters Name="Mgmt_Leave_req" Id="0x0034"/>
+    <Clusters Name="Mgmt_Direct_Join_req" Id="0x0035"/>
+    <Clusters Name="Mgmt_Permit_Joining_req" Id="0x0036"/>
+    <Clusters Name="Mgmt_Cache_req" Id="0x0037"/>
+    <Clusters Name="Mgmt_NWK_Update_req" Id="0x0038"/>
+    <Clusters Name="NWK_addr_rsp" Id="0x8000"/>
+    <Clusters Name="IEEE_addr_rsp" Id="0x8001"/>
+    <Clusters Name="Node_Desc_rsp" Id="0x8002"/>
+    <Clusters Name="Power_Desc_rsp" Id="0x8003"/>
+    <Clusters Name="Simple_Desc_rsp" Id="0x8004"/>
+    <Clusters Name="Active_EP_rsp" Id="0x8005"/>
+    <Clusters Name="Match_Desc_rsp" Id="0x8006"/>
+    <Clusters Name="Complex_Desc_rsp" Id="0x8010"/>
+    <Clusters Name="User_Desc_rsp" Id="0x8011"/>
+    <Clusters Name="Discovery_Cache_rsp" Id="0x8012"/>
+    <Clusters Name="User_Desc_conf" Id="0x8014"/>
+    <Clusters Name="System_Server_Discovery_rsp" Id="0x8015"/>
+    <Clusters Name="Discovery_store_rsp" Id="0x8016"/>
+    <Clusters Name="Node_Desc_store_rsp" Id="0x8017"/>
+    <Clusters Name="Power_Desc_store_rsp" Id="0x8018"/>
+    <Clusters Name="Active_EP_store_rsp" Id="0x8019"/>
+    <Clusters Name="Simple_Desc_store_rsp" Id="0x801A"/>
+    <Clusters Name="Remove_node_cache_rsp" Id="0x801B"/>
+    <Clusters Name="Find_node_chache_rsp" Id="0x801C"/>
+    <Clusters Name="Extended_Simple_Desc_rsp" Id="0x801D"/>
+    <Clusters Name="Extended_Active_EP_rsp" Id="0x801E"/>
+    <Clusters Name="End_Device_Bind_rsp" Id="0x8020"/>
+    <Clusters Name="Bind_rsp" Id="0x8021"/>
+    <Clusters Name="Unbind_rsp" Id="0x8022"/>
+    <Clusters Name="Bind_Register_rsp" Id="0x8023"/>
+    <Clusters Name="Replace_Device_rsp" Id="0x8024"/>
+    <Clusters Name="Store_Bkup_Bind_Entry_rsp" Id="0x8025"/>
+    <Clusters Name="Remove_Bkup_Bind_Entry_rsp" Id="0x8026"/>
+    <Clusters Name="Backup_Bind_Table_rsp" Id="0x8027"/>
+    <Clusters Name="Recover_Bind_Table_rsp" Id="0x8028"/>
+    <Clusters Name="Backup_Source_Bind_rsp" Id="0x8029"/>
+    <Clusters Name="Recover_Source_Bind_rsp" Id="0x802A"/>
+    <Clusters Name="Mgmt_NWK_Disc_rsp" Id="0x8030"/>
+    <Clusters Name="Mgmt_Lqi_rsp" Id="0x8031"/>
+    <Clusters Name="Mgmt_Rtg_rsp" Id="0x8032"/>
+    <Clusters Name="Mgmt_Bind_rsp" Id="0x8033"/>
+    <Clusters Name="Mgmt_Leave_rsp" Id="0x8034"/>
+    <Clusters Name="Mgmt_Direct_Join_rsp" Id="0x8035"/>
+    <Clusters Name="Mgmt_Permit_Joining_rsp" Id="0x8036"/>
+    <Clusters Name="Mgmt_Cache_rsp" Id="0x8037"/>
+    <Clusters Name="Mgmt_NWK_Update_rsp" Id="0x8038"/>
+    <Clusters Name="Parent_Annce_req" Id="0x001F"/>
+    <Clusters Name="Parent_Annce_rsp" Id="0x801F"/>
+  </Profiles>
+  <Profiles Name="ZLO" Id="0x0104">
+    <Clusters Name="Basic" Id="0x0000"/>
+    <Clusters Name="Power_Configuration" Id="0x0001"/>
+    <Clusters Name="Identify" Id="0x0003"/>
+    <Clusters Name="Groups" Id="0x0004"/>
+    <Clusters Name="Scenes" Id="0x0005"/>
+    <Clusters Name="On_Off" Id="0x0006"/>
+    <Clusters Name="Level_Control" Id="0x0008"/>
+    <Clusters Name="Color_Control" Id="0x0300"/>
+    <Clusters Name="Door_Lock" Id="0x0101"/>
+    <Clusters Name="ZLL_Commissioning" Id="0x1000"/>
+    <Clusters Name="IASZone" Id="0x0500"/>
+    <Clusters Name="OTA" Id="0x0019"/>
+    <Clusters Name="Metering" Id="0x0702"/>
+    <Clusters Name="Thermostat" Id="0x0201"/>
+    <Clusters Name="Thermostat_UI" Id="0x0204"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_ILLUMINANCE_LEVEL_SENSING" Id="0x0401"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_ILLUMINANCE_MEASUREMENT" Id="0x0400"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_OCCUPANCY_SENSING" Id="0x0406"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" Id="0x0405"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" Id="0x0402"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" Id="0x0403"/>
+    <Clusters Name="ASC" Id="0x0B03"/>
+    <Clusters Name="Electrical_Measurements" Id="0x0B04"/>
+    <Clusters Name="Diagnostics" Id="0x0B05"/>
+    <Clusters Name="Default" Id="0xFFFF"/>
+  </Profiles>
+  <Profiles Name="GP" Id="0xA1E0">
+    <Clusters Name="GreenPower" Id="0x0021"/>
+  </Profiles>
+  <Coordinator Name="ZigbeeNodeControlBridge" DiscoveryNeighbourTableSize="1" ActiveNeighbourTableSize="26" RouteDiscoveryTableSize="2" RoutingTableSize="255" BroadcastTransactionTableSize="25" RouteRecordTableSize="5" AddressMapTableSize="10" SecurityMaterialSets="2" MaxNumSimultaneousApsdeReq="5" MaxNumSimultaneousApsdeAckReq="3" MACMutexName="mutexMAC" ZPSMutexName="mutexZPS" FragmentationMaxNumSimulRx="3" FragmentationMaxNumSimulTx="3" DefaultEventMessageName="APP_msgZpsEvents" MACDcfmIndMessage="zps_msgDcfmInd" MACTimeEventMessage="zps_msgTimeEvents" apsNonMemberRadius="2" apsDesignatedCoordinator="true" apsUseInsecureJoin="false" apsMaxWindowSize="8" apsInterframeDelay="10" APSDuplicateTableSize="4" apsSecurityTimeoutPeriod="6000" apsUseExtPANId="0x0000000000000000" SecurityEnabled="true" MACMlmeDcfmIndMessage="zps_msgMlmeDcfmInd" MACMcpsDcfmIndMessage="zps_msgMcpsDcfmInd" APSPersistenceTime="100" NumAPSMESimulCommands="4" StackProfile="2" InterPAN="false" GreenPowerSupport="true" NwkFcSaveCountBitShift="10" ApsFcSaveCountBitShift="10" MacTableSize="36" DefaultCallbackName="APP_vGenCallback" PermitJoiningTime="0" ChildTableSize="10">
+    <Endpoints Id="0" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZDP" Name="ZDO">
+      <InputClusters Cluster="NWK_addr_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="IEEE_addr_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Node_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Power_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Simple_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Active_EP_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Match_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Complex_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="User_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Discovery_Cache_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Device_annce" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="User_Desc_set" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="System_Server_Discovery_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Discovery_store_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Node_Desc_store_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Power_Desc_store_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Active_EP_store_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Simple_Desc_store_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Remove_node_cache_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Find_node_chache_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Extended_Simple_Desc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Extended_Active_EP_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="End_Device_Bind_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Bind_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Unbind_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Bind_Register_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Replace_Device_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Store_Bkup_Bind_Entry_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Remove_Bkup_Bind_Entry_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Backup_Bind_Table_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Recover_Bind_Table_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Backup_Source_Bind_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Recover_Source_Bind_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Mgmt_NWK_Disc_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Mgmt_Lqi_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Mgmt_Rtg_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Bind_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Leave_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Direct_Join_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Permit_Joining_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Cache_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_NWK_Update_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="NWK_addr_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="IEEE_addr_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Node_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Power_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Simple_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Active_EP_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Match_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Complex_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="User_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Discovery_Cache_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="User_Desc_conf" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="System_Server_Discovery_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Discovery_store_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Node_Desc_store_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Power_Desc_store_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Active_EP_store_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Simple_Desc_store_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Remove_node_cache_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Find_node_chache_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Extended_Simple_Desc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Extended_Active_EP_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="End_Device_Bind_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Bind_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Unbind_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Bind_Register_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Replace_Device_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Store_Bkup_Bind_Entry_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Remove_Bkup_Bind_Entry_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Backup_Bind_Table_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Recover_Bind_Table_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Backup_Source_Bind_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Recover_Source_Bind_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_NWK_Disc_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Lqi_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Rtg_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Bind_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Leave_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Direct_Join_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Permit_Joining_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_Cache_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Mgmt_NWK_Update_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Parent_Annce_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Parent_Annce_rsp" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="NWK_addr_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="IEEE_addr_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Node_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Power_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Simple_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Active_EP_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Match_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Complex_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="User_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Discovery_Cache_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Device_annce" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="User_Desc_set" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="System_Server_Discovery_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Discovery_store_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Node_Desc_store_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Power_Desc_store_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Active_EP_store_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Simple_Desc_store_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Remove_node_cache_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Find_node_chache_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Extended_Simple_Desc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Extended_Active_EP_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="End_Device_Bind_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Bind_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Unbind_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Bind_Register_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Replace_Device_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Store_Bkup_Bind_Entry_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Remove_Bkup_Bind_Entry_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Backup_Bind_Table_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Recover_Bind_Table_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Backup_Source_Bind_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Recover_Source_Bind_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_NWK_Disc_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Lqi_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Rtg_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Bind_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Leave_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Direct_Join_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Permit_Joining_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_Cache_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Mgmt_NWK_Update_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="NWK_addr_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="IEEE_addr_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Node_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Power_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Simple_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Active_EP_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Match_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Complex_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="User_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Discovery_Cache_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="User_Desc_conf" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="System_Server_Discovery_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Discovery_store_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Node_Desc_store_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Power_Desc_store_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Active_EP_store_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Simple_Desc_store_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Remove_node_cache_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Find_node_chache_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Extended_Simple_Desc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Extended_Active_EP_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="End_Device_Bind_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Bind_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Unbind_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Bind_Register_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Replace_Device_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Store_Bkup_Bind_Entry_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Remove_Bkup_Bind_Entry_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Backup_Bind_Table_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Recover_Bind_Table_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Backup_Source_Bind_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Recover_Source_Bind_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_NWK_Disc_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Lqi_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Rtg_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Bind_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Leave_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Direct_Join_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Permit_Joining_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_Cache_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Mgmt_NWK_Update_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Parent_Annce_req" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Parent_Annce_rsp" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+    </Endpoints>
+    <Endpoints Id="1" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="ZLO">
+      <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Identify" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Level_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="On_Off" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Scenes" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Door_Lock" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Metering" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="IASZone" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="OTA" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Thermostat" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_ILLUMINANCE_LEVEL_SENSING" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_ILLUMINANCE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_OCCUPANCY_SENSING" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Thermostat_UI" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="ASC" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Electrical_Measurements" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Diagnostics" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="ZLL_Commissioning" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Default" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="ASC" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Basic" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Color_Control" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Groups" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Identify" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Level_Control" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="On_Off" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Scenes" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Door_Lock" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Metering" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="IASZone" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="OTA" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Thermostat" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_ILLUMINANCE_LEVEL_SENSING" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_ILLUMINANCE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_OCCUPANCY_SENSING" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Thermostat_UI" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+    </Endpoints>
+    <Endpoints Id="242" Enabled="true" ApplicationDeviceId="97" ApplicationDeviceVersion="0" Profile="GP" Name="GreenPower">
+      <InputClusters Cluster="GreenPower" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="GreenPower" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+    </Endpoints>
+    <PDUConfiguration NumNPDUs="19" PDUMMutexName="mutexPDUM">
+      <APDUs Id="ZigbeeNodeControlBridge->apduZDP" Name="apduZDP" Size="100" Instances="6"/>
+    </PDUConfiguration>
+    <ChannelMask Channel11="true" Channel12="false" Channel13="false" Channel14="false" Channel15="true" Channel16="false" Channel17="false" Channel18="false" Channel19="false" Channel20="true" Channel21="false" Channel22="false" Channel23="false" Channel24="false" Channel25="true" Channel26="false"/>
+    <NodeDescriptor ManufacturerCode="4423" LogicalType="ZC" ComplexDescriptorAvailable="false" UserDescriptorAvailable="false" APSFlags="0" FrequencyBand="2.4GHz" AlternatePANCoordinator="true" DeviceType="true" PowerSource="true" RxOnWhenIdle="true" Security="false" AllocateAddress="true" MaximumBufferSize="127" MaximumIncomingTransferSize="0" MaximumOutgoingTransferSize="0" ExtendedActiveEndpointListAvailable="false" ExtendedSimpleDescriptorListAvailable="false" PrimaryTrustCenter="true" BackupTrustCenter="false" PrimaryBindingTableCache="false" BackupBindingTableCache="false" PrimaryDiscoveryCache="false" BackupDiscoveryCache="false" NetworkManager="true"/>
+    <NodePowerDescriptor ConstantPower="true" RechargeableBattery="false" DisposableBattery="false" DefaultPowerSource="Constant Power" DefaultPowerMode="Synchronised with RxOnWhenIdle"/>
+    <BindingTable Size="5"/>
+    <GroupTable Size="5"/>
+    <KeyDescriptorTable Size="1"/>
+    <GreenPowerTxQueue Size="5"/>
+    <GreenPowerSecurityTable Size="5"/>
+    <MacInterfaceList>
+      <MacInterface RouterAllowed="true" ChannelListSize="1" index="0" RadioType="RT2400MHz" Enabled="true"/>
+    </MacInterfaceList>
+    <TrustCenter DeviceTableSize="36"/>
+    <ZDOServers>
+      <DefaultServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <ZdoClient OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <DeviceAnnceServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <ActiveEpServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <NwkAddrServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <IeeeAddrServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <SystemServerDiscoveryServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <NodeDescServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <PowerDescServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <MatchDescServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <SimpleDescServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <MgmtLqiServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <MgmtNWKUpdateServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <BindUnbindServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <BindRequestServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP" SimultaneousRequests="0x0003" TimeInterval="0x0001"/>
+      <MgmtBindServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <PermitJoiningServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <MgmtRtgServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <ParentAnnceServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
+      <EndDeviceBindServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP" Timeout="5" BindingTimeout="10" BindNumRetries="3"/>
+    </ZDOServers>
+  </Coordinator>
+</zpscfg:ZigbeeWirelessNetwork>

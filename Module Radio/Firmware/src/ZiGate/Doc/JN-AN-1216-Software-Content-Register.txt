@@ -1,0 +1,34 @@
+Release Name: JN-AN-1216 ZigBee 3.0 IoT Control Bridge for JN516x/7x
+Release Version: 1011
+
+Locations shown are after application note has been installed into workspace
+
+JN-AN-1216 ZigBee 3.0      Author: NXP
+IoT Control Bridge         Name: JN-AN-1216 ZigBee 3.0 IoT Control Bridge 
+for JN516x/7x              for JN516x/7x
+                           Version: 1011
+                           Location: <workspace>/JN-AN-1216-v1006-Zigbee-3-0-IoT-ControlBridge
+                           Description: Example ZigBee 3.0 control bridge and
+                           utility applications for JN516x/7x
+                           License: Proprietary. See EULA LA_OPT_Base_License
+                           Format: source code, make files, documentation
+                           
+C# Serial Port Enumerator  Author: Vladimir Afanasyev / Joe Pardue
+                           Name: C# Serial Port Enumerator
+                           Version: 21-07-2005
+                           Location: <workspace>/JN-AN-1216-v1006-Zigbee-3-0-IoT-ControlBridge/Tools/TestGUI/Source/Properties/DevInfo.cs
+                                     <workspace>/JN-AN-1216-v1006-Zigbee-3-0-IoT-ControlBridge/Tools/TestGUI/Source/Properties/PortSettings.resx
+                           Description: C# code to correctly enumerate serial ports
+                           License: Code Project Open Licence 1.02
+                           URL: https://www.codeproject.com/Articles/6398/NET-Diving-into-System-Programming-Part
+                           Format: source code
+
+SQLite                     Author: SQLite
+                           Name: SQLite
+                           Version: 2.0 b1
+                           Location: <workspace>/JN-AN-1216-v1006-Zigbee-3-0-IoT-ControlBridge/Tools/sqlitebrowser_200_b1_win.zip
+                           Description: SQL Database Engine
+                           License: Public Domain
+                           URL: http://www.hwaci.com/sw/sqlite/index.html
+                           Format: libraries
+                           

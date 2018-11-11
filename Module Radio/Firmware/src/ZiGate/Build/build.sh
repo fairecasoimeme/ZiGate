@@ -1,0 +1,40 @@
+ #!/bin/sh
+APP_NOTE_NAME=JN-AN-1216-Zigbee-3-0-IoT-ControlBridge
+
+BASE=$(cd ../../..; pwd)
+ZIP=winzip32
+EXPORT_PATH=SDK/$APP_NOTE_NAME
+
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=COORDINATOR BAUD=1000000 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x clean
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=COORDINATOR BAUD=1000000 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x 
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=COORDINATOR BAUD=115200 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x clean
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=COORDINATOR BAUD=115200 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x 
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=FULL_FUNC_DEVICE BAUD=1000000 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x clean
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=FULL_FUNC_DEVICE BAUD=1000000 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x 
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=FULL_FUNC_DEVICE BAUD=115200 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x clean
+make -C ZigbeeNodeControlBridge/  PDM_BUILD_TYPE=_EEPROM NODE=FULL_FUNC_DEVICE BAUD=115200 JENNIC_CHIP=JN5179 JENNIC_SDK=JN-SW-4270 JENNIC_CHIP_FAMILY=JN517x 
+mkdir -p SDK
+
+svn export --depth=files ../ $EXPORT_PATH 
+mkdir $EXPORT_PATH/Source
+mkdir $EXPORT_PATH/Doc
+mkdir $EXPORT_PATH/Tools
+svn export ../Source/Common $EXPORT_PATH/Source/Common/
+svn export ../Source/ZigbeeNodeControlBridge $EXPORT_PATH/Source/ZigbeeNodeControlBridge
+svn export ../JN516x $EXPORT_PATH/JN516x
+svn export ../JN517x $EXPORT_PATH/JN517x
+svn export ../Tools/TestGUI $EXPORT_PATH/Tools/TestGUI
+svn export ../Tools/TestGUI/Source $EXPORT_PATH/Tools/TestGUI/Source 
+#svn export ../Admin $EXPORT_PATH/Admin
+svn export ../Doc/JN-AN-1216-ZigBee-3-0-ControlBridge-UserGuide.pdf  $EXPORT_PATH/Doc/
+mkdir $EXPORT_PATH/Build
+mkdir $EXPORT_PATH/Build/ZigbeeNodeControlBridge
+
+chmod 777 ZigbeeNodeControlBridge/Makefile
+cp ZigbeeNodeControlBridge/*.bin $EXPORT_PATH/Build/ZigbeeNodeControlBridge/
+cp ZigbeeNodeControlBridge/Makefile $EXPORT_PATH/Build/ZigbeeNodeControlBridge/Makefile
+rm -f $APP_NOTE_NAME.zip
+cd SDK
+$ZIP -a -r ../$APP_NOTE_NAME.zip * 
+cd ..
+rm -rf SDK
