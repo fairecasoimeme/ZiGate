@@ -1,0 +1,67 @@
+/*****************************************************************************
+ *
+ * MODULE:             n/a
+ *
+ * COMPONENT:          version.template
+ *
+ * AUTHOR:             MRW
+ * 
+ * DESCRIPTION:        Capture version information from svn for inclusion into C code
+ *
+*/
+/****************************************************************************
+*
+* This software is owned by NXP B.V. and/or its supplier and is protected
+* under applicable copyright laws. All rights are reserved. We grant You,
+* and any third parties, a license to use this software solely and
+* exclusively on NXP products [NXP Microcontrollers such as JN5148, JN5142, JN5139]. 
+* You, and any third parties must reproduce the copyright and warranty notice
+* and any other legend of ownership on each copy or partial copy of the 
+* software.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+
+* Copyright NXP B.V. 2012. All rights reserved
+*
+***************************************************************************/
+
+#ifndef _VERSION_H_
+#define _VERSION_H_
+
+/****************************************************************************/
+/***        Macro Definitions                                             ***/
+/****************************************************************************/
+
+#define SVN_VERSION         ($WCMODS?0x40000000UL|:$$WCMIXED?0x80000000UL|:$$WCREV$UL)
+#define SVN_VERSIONSTR      "$WCREV$$WCMODS?M:$$WCMIXED?U:$"
+#define SVN_REVDATESTR      "$WCDATE$"
+#define SVN_BUILDDATESTR    "$WCNOW$"
+
+/****************************************************************************/
+/***        Type Definitions                                              ***/
+/****************************************************************************/
+
+
+/****************************************************************************/
+/***        Exported Functions                                            ***/
+/****************************************************************************/
+
+/****************************************************************************/
+/***        External Variables                                            ***/
+/****************************************************************************/
+
+#endif /*_VESRION_H_*/
+
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/

@@ -1,0 +1,154 @@
+###############################################################################
+#
+# MODULE:   Makefile.mk
+#
+# DESCRIPTION: Mac Library make file
+#
+# Use: make clean install
+#
+###############################################################################
+#
+# This software is owned by NXP B.V. and/or its supplier and is protected
+# under applicable copyright laws. All rights are reserved. We grant You,
+# and any third parties, a license to use this software solely and
+# exclusively on NXP products [NXP Microcontrollers such as JN5148, JN5142, JN5139].
+# You, and any third parties must reproduce the copyright and warranty notice
+# and any other legend of ownership on each copy or partial copy of the
+# software.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# Copyright NXP B.V. 2012. All rights reserved
+#
+###############################################################################
+# Library target name
+TARGET   = libMiniMacShim
+
+##############################################################################
+# Default target is the JN516x family since we're building a library
+JENNIC_CHIP_FAMILY  	?= JN516x
+JENNIC_CHIP		?= JN5168
+JENNIC_STACK            ?= MiniMac
+JENNIC_MAC              = MiniMacShim
+
+##############################################################################
+# Define the SDK location
+SDK_BASE_DIR      =  ../../..
+COMPONENT_BASE_DIR = $(SDK_BASE_DIR)/Components
+
+##############################################################################
+# Configure for the selected chip or chip family
+include $(SDK_BASE_DIR)/Chip/Common/Build/config.mk
+
+##############################################################################
+# Path definitions
+Mac_BASE  = ..
+Mac_BLD   = $(Mac_BASE)/Build
+Mac_SRC   = $(Mac_BASE)/Source
+Mac_LIB   = $(Mac_BASE)/Library
+Mac_PUB   = $(Mac_BASE)/Include
+
+##############################################################################
+# Component dependencies
+
+
+##############################################################################
+# Library header search paths
+INCFLAGS  = -I$(COMPONENT_BASE_DIR)/Common/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/MicroSpecific/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/HardwareApi/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/TOF/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/MiniMac/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/MMAC/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/Xcv/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/TimerServer/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/DebugFifo/Include
+
+# Required for shim layer
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/AppApi/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/Mac/Include
+INCFLAGS += -I$(COMPONENT_BASE_DIR)/Aes/Include
+
+##############################################################################
+# Library object files
+LIBOBJS += Mini_Shim.o
+
+##############################################################################
+# Library dynamic dependencies
+LIBDEPS = $(LIBOBJS:.o=.d)
+
+##############################################################################
+# VARIABLES
+CFLAGS += -DRXINCCA_WORKAROUND
+CFLAGS += -Werror
+CFLAGS += -Wno-cast-align
+
+##############################################################################
+# Debugging
+ifeq ($(DEBUG), 1)
+MODCFLAGS  := $(subst -Os,,$(CFLAGS))
+MODCFLAGS  += -g -O0 -DGDB
+$(info Building debug version ...)
+endif
+
+### Used to define debug output used by Components/DebugFifo
+#CFLAGS += -DDEBUG_ENABLE
+#CFLAGS += -DDEBUG_UART_NUMBER=0
+#CFLAGS += -DDEBUG_FIFO
+
+#########################################################################
+# Archiver
+ARFLAGS = rcs
+
+#########################################################################
+# Dependency rules
+
+.PHONY: all clean
+
+install: all
+	cp -f $(Mac_LIB)/$(TARGET)_$(JENNIC_CHIP_FAMILY).a $(COMPONENT_BASE_DIR)/Library
+
+all: $(Mac_LIB)/$(TARGET)_$(JENNIC_CHIP_FAMILY).a
+	cp -f $(Mac_LIB)/$(TARGET)_$(JENNIC_CHIP_FAMILY).a $(COMPONENT_BASE_DIR)/Library
+
+%.o: $(Mac_SRC)/%.S
+	$(info Assembling $< ...)
+	$(CC) -c -o $*.o $(ASFLAGS) $(MODCFLAGS) $(EXTRACFLAGS) $(INCFLAGS) $< -MD -MF $*.d -MP
+	@echo
+
+%.o: $(Mac_SRC)/%.c
+	$(info Compiling $< ...)
+	$(CC) -c -o $*.o $(CFLAGS) $(MODCFLAGS) $(EXTRACFLAGS) $(INCFLAGS) $< -MD -MF $*.d -MP
+	@echo
+
+$(Mac_LIB)/$(TARGET)_$(JENNIC_CHIP_FAMILY).a: $(LIBOBJS)
+	$(info Archiving $@ ...)
+	$(AR) $(ARFLAGS) $@ $(LIBOBJS)
+
+clean:
+	rm -f $(Mac_LIB)/*.a
+	rm -f $(Mac_BLD)/*.o
+	rm -f $(Mac_BLD)/*.d
+
+release: $(Mac_LIB)/$(TARGET)_$(JENNIC_CHIP_FAMILY).a
+	mkdir -p $(PREFIX)/Components/MiniMAC/Build
+	mkdir -p $(PREFIX)/Components/MiniMAC/Include
+	mkdir -p $(PREFIX)/Components/MiniMAC/Source
+	mkdir -p $(PREFIX)/Components/MiniMAC/Library
+	mkdir -p $(PREFIX)/Components/Library
+	cp -f $(Mac_BLD)/Makefile_shim $(PREFIX)/Components/MiniMAC/Build/
+	cp -f $(Mac_PUB)/*.h           $(PREFIX)/Components/MiniMAC/Include/
+	cp -f $(Mac_SRC)/Mini_Shim.c   $(PREFIX)/Components/MiniMAC/Source/
+	cp -f $(Mac_LIB)/$(TARGET)_$(JENNIC_CHIP_FAMILY).a $(PREFIX)/Components/Library/
+
+#########################################################################
