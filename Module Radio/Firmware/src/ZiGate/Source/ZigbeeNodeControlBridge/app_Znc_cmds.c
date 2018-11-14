@@ -94,7 +94,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0002030f
+#define VERSION    0x0002030e
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -408,25 +408,21 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             	uint32    u32Value;
             	u32Value      =  ZNC_RTN_U32 ( au8LinkRxBuffer, 0 );
             	sControlBridge.sTimeServerCluster.utctTime=u32Value;
+            	vSL_WriteMessage ( E_SL_MSG_STATUS,
+            	                                   u8Length,
+            	                                   au8values,
+            	                                   0 );
 
             }
             break;
             case E_SL_MSG_GET_TIMESERVER:
 			{
 				uint32    u32Value = sControlBridge.sTimeServerCluster.utctTime;
-
-				ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
-				ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
-				ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
-				vSL_WriteMessage ( E_SL_MSG_STATUS,
-								   u8Length,
-								   au8values,
-								   0 );
 				vSL_WriteMessage ( E_SL_MSG_GET_TIMESERVER_LIST,
 													sizeof ( uint32 ),
 													( uint8* ) &u32Value,
 												   0 );
-				return;
+
 			}
 			break;
             case (E_SL_MSG_GET_PERMIT_JOIN):
