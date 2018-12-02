@@ -477,7 +477,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  u16SizeOfAttribute,                                                 u16Length );
             if ( u16SizeOfAttribute !=  0 )
             {
-            	vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
+                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElÃ©ment : %d\n",i);
                 while ( i <  u16Elements )
                 {
                     if( ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_OSTRING ) ||
@@ -603,6 +603,9 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0],         psEvent->uMessage.sAttributeDiscoveryResponse.bDiscoveryComplete,    u16Length );
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeDiscoveryResponse.eAttributeDataType,    u16Length );
             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeDiscoveryResponse.u16AttributeEnum,      u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+            ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,          u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,    u16Length );
 
             vSL_WriteMessage ( E_SL_MSG_ATTRIBUTE_DISCOVERY_RESPONSE,
                                u16Length,
