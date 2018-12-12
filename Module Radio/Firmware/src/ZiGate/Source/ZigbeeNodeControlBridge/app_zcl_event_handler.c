@@ -842,6 +842,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                     {
                         case (E_CLD_GROUPS_CMD_ADD_GROUP):
                         {
+                            ZNC_BUF_U16_UPD   ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,              u16Length );
                             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          pCustom->uMessage.psAddGroupResponsePayload->eStatus,       u16Length );
                             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],          pCustom->uMessage.psAddGroupResponsePayload->u16GroupId,    u16Length );
                             u16Command = E_SL_MSG_ADD_GROUP_RESPONSE;
