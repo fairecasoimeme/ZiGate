@@ -193,6 +193,10 @@ typedef struct
         tsZCL_ClusterInstance sLevelControlClient;
     #endif
 
+	#if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
+       tsZCL_ClusterInstance sLevelControlServer;
+   #endif
+
     #if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_CLIENT)
         tsZCL_ClusterInstance sColourControlClient;
     #endif
@@ -386,6 +390,12 @@ typedef struct
         /* Level Control Cluster - Client */
         tsCLD_LevelControlClient sLevelControlClientCluster;
         tsCLD_LevelControlCustomDataStructure sLevelControlClientCustomDataStructure;
+    #endif
+
+    #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
+        /* Level Control Cluster - Server */
+        tsCLD_LevelControl sLevelControlServerCluster;
+        tsCLD_LevelControlCustomDataStructure sLevelControlServerCustomDataStructure;
     #endif
 
     #if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_CLIENT)

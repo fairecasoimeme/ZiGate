@@ -178,8 +178,8 @@ PUBLIC  teZCL_Status eCLD_LevelControlCommandHandler(
     psCommon->sCallBackMessage.u8CommandId = sZCL_HeaderParams.u8CommandIdentifier;
 
     /* Handle messages appropriate for the cluster type (Client/Server) */
-    if(psClusterInstance->bIsServer)
-    {
+   // if(psClusterInstance->bIsServer)
+   // {
 
         // SERVER
         switch(sZCL_HeaderParams.u8CommandIdentifier)
@@ -216,7 +216,7 @@ PUBLIC  teZCL_Status eCLD_LevelControlCommandHandler(
 
         }
 
-    }
+   // }
 
 #if 0
     /* If immediate update required, do it now rather than wait for next ZCL timer tick */

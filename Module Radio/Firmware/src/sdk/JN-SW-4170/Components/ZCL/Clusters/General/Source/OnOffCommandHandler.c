@@ -73,7 +73,6 @@
 
 #include "zcl_options.h"
 
-
 #include "dbg.h"
 #ifdef DEBUG_CLD_ONOFF
 #define TRACE_ONOFF TRUE
@@ -180,15 +179,16 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
 	tsZCL_HeaderParams sZCL_HeaderParams;
     DBG_vPrintf(TRACE_ONOFF, "\nONOFF: ");
 
+
     // further error checking can only be done once we have interrogated the ZCL payload
     u16ZCL_ReadCommandHeader(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst,
                              &sZCL_HeaderParams);
 
     // We don't handle messages as a client, so exit
-    if(psClusterInstance->bIsServer == FALSE)
+   /* if(psClusterInstance->bIsServer == FALSE)
     {
         return(E_ZCL_FAIL);
-    }
+    }*/
 
 #ifdef ONOFF_SERVER
 {

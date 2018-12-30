@@ -201,6 +201,7 @@ typedef enum
     E_SL_MSG_MOVE_STEP                                         =   0x0082,
     E_SL_MSG_MOVE_STOP_MOVE                                    =   0x0083,
     E_SL_MSG_MOVE_STOP_ONOFF                                   =   0x0084,
+    E_SL_MSG_MOVE_TO_LEVEL_UPDATE                              =   0x8085,
 
     /* Scenes Cluster */
     E_SL_MSG_VIEW_SCENE                                        =   0x00A0,

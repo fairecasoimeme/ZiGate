@@ -388,6 +388,20 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
         }
     #endif
 
+	#if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
+        /* Create an instance of a Level Control cluster as a server */
+        if(eCLD_LevelControlCreateLevelControl(&psDeviceInfo->sClusterInstance.sLevelControlServer,
+                              TRUE,
+                              &sCLD_LevelControl,
+                              &psDeviceInfo->sLevelControlServerCluster,
+                              &au8LevelControlAttributeControlBits[0],
+                              &psDeviceInfo->sLevelControlServerCustomDataStructure) != E_ZCL_SUCCESS)
+        {
+            // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+            return E_ZCL_FAIL;
+        }
+    #endif
+
     #if (defined CLD_GROUPS) && (defined GROUPS_SERVER)
         /* Create an instance of a Groups cluster as a server */
         if ( eCLD_GroupsCreateGroups ( &psDeviceInfo->sClusterInstance.sGroupsServer,

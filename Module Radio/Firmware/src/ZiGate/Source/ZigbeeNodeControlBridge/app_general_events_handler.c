@@ -913,9 +913,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
             vLog_Printf(TRACE_APP,LOG_DEBUG, "\nNwkStat: Addr:%x Status:%x",
                     psStackEvent->uEvent.sNwkStatusIndicationEvent.u16NwkAddr,
                     psStackEvent->uEvent.sNwkStatusIndicationEvent.u8Status);
-            vLog_Printf(TRACE_APP,LOG_DEBUG, "\nNwkStat: Addr:%x Status:%x",
-                    psStackEvent->uEvent.sNwkStatusIndicationEvent.u16NwkAddr,
-                    psStackEvent->uEvent.sNwkStatusIndicationEvent.u8Status);
+
          break;
 
          case ZPS_EVENT_NWK_STARTED:

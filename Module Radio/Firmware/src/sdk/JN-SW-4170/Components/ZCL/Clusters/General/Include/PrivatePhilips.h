@@ -84,6 +84,11 @@ PUBLIC teZCL_Status ePrivatePhilipsCommandHandler(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance);
+
+PUBLIC uint16 u16ZCL_PhilipsGetStringAttributeTypeSizeFromBuffer(
+                        uint16                     *pu16stringDataLength,
+                        uint8                     **ppu8stringData,
+                        uint8                      *pu8stringLengthPosition);
 /****************************************************************************/
 /***        External Variables                                            ***/
 /****************************************************************************/

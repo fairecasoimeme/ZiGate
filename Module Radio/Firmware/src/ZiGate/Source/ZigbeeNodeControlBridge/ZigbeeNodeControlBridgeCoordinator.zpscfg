@@ -295,10 +295,10 @@
     <Endpoints Id="1" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="ZLO">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
-      <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Identify" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
-      <InputClusters Cluster="Level_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
-      <InputClusters Cluster="On_Off" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Level_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="On_Off" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Scenes" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Door_Lock" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Metering" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
