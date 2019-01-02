@@ -477,7 +477,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  u16SizeOfAttribute,                                                 u16Length );
             if ( u16SizeOfAttribute !=  0 )
             {
-                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElÃ©ment : %d\n",i);
+                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
                 while ( i <  u16Elements )
                 {
                     if( ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_OSTRING ) ||
@@ -907,8 +907,11 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
                         case (E_CLD_GROUPS_CMD_REMOVE_GROUP):
                         {
+
+                        	ZNC_BUF_U16_UPD   ( &au8LinkTxBuffer [u16Length],         psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,       u16Length );
                             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],         pCustom->uMessage.psRemoveGroupResponsePayload->eStatus,       u16Length );
                             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psRemoveGroupResponsePayload->u16GroupId,    u16Length );
+
                             u16Command =  E_SL_MSG_REMOVE_GROUP_RESPONSE;
                         }
                         break;
