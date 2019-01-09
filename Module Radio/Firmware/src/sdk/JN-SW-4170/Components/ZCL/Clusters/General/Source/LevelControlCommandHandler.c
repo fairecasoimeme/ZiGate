@@ -294,6 +294,15 @@ PRIVATE  teZCL_Status eCLD_LevelControlHandleMoveToLevelCommand(
         DBG_vPrintf(TRACE_LEVEL_CONTROL, " Err:%d", eStatus);
         return eStatus;
     }
+
+    /* Message data for callback */
+    psCommon->sCallBackMessage.uMessage.psMoveToLevelCommandPayload = &sPayload;
+
+    /* call callback */
+    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+
+    return E_ZCL_SUCCESS;
+
 
     /* 3.10.2.2  Generic usage notes
      * If a move to level, move, step or stop command is received while the
@@ -436,6 +445,14 @@ PRIVATE  teZCL_Status eCLD_LevelControlHandleMoveCommand(
         DBG_vPrintf(TRACE_LEVEL_CONTROL, " Err:%d", eStatus);
         return eStatus;
     }
+
+    /* Message data for callback */
+    psCommon->sCallBackMessage.uMessage.psMoveCommandPayload = &sPayload;
+
+    /* call callback */
+    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+
+    return E_ZCL_SUCCESS;
 
     /* 3.10.2.2  Generic usage notes
      * If a move to level, move, step or stop command is received while the
@@ -578,6 +595,14 @@ PRIVATE  teZCL_Status eCLD_LevelControlHandleStepCommand(
         return eStatus;
     }
 
+    /* Message data for callback */
+    psCommon->sCallBackMessage.uMessage.psStepCommandPayload = &sPayload;
+
+    /* call callback */
+    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+
+    return E_ZCL_SUCCESS;
+
     /* 3.10.2.2  Generic usage notes
      * If a move to level, move, step or stop command is received while the
      * device is in its off state, i.e. the OnOff attribute of the on/off
@@ -724,6 +749,15 @@ PRIVATE  teZCL_Status eCLD_LevelControlHandleStopCommand(
         DBG_vPrintf(TRACE_LEVEL_CONTROL, " Err:%d", eStatus);
         return eStatus;
     }
+
+    /* Message data for callback */
+    psCommon->sCallBackMessage.uMessage.psStopCommandPayload = &sPayload;
+    
+    /* call callback */
+    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+
+    return E_ZCL_SUCCESS;
+
 
 #if ((defined CLD_ONOFF) && (defined ONOFF_SERVER))
     if(u8CommandIdentifier == E_CLD_LEVELCONTROL_CMD_STOP)
