@@ -73,6 +73,7 @@
 
 #include "zcl_options.h"
 
+
 #include "dbg.h"
 #ifdef DEBUG_CLD_ONOFF
 #define TRACE_ONOFF TRUE
@@ -178,7 +179,6 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
 
 	tsZCL_HeaderParams sZCL_HeaderParams;
     DBG_vPrintf(TRACE_ONOFF, "\nONOFF: ");
-
 
     // further error checking can only be done once we have interrogated the ZCL payload
     u16ZCL_ReadCommandHeader(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst,
@@ -486,7 +486,9 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
         DBG_vPrintf(TRACE_ONOFF, "Error: %d", eStatus);
         return(E_ZCL_FAIL);
     }
-
+  
+    return eStatus;
+
 
     /*
      * 6.6.1.4.3 Toggle command extensions
