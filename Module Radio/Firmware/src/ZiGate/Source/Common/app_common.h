@@ -210,6 +210,7 @@ extern PUBLIC void App_TransportKeyCallback ( void*   pvParam );
 extern void zps_taskZPS ( void );
 extern void APP_vProcessRxData ( void );
 extern bool_t APP_vProfileWideCommandSupportedForCluster ( uint16 u16Clusterid );
+extern bool_t APP_bZCL_IsManufacturerCodeSupported( uint16 u16ManufacturerCode );
 /****************************************************************************/
 /***        External Variables                                            ***/
 /****************************************************************************/
