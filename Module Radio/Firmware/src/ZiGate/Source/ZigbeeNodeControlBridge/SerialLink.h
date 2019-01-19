@@ -217,6 +217,7 @@ typedef enum
     E_SL_MSG_RECALL_SCENE                                      =   0x00A5,
     E_SL_MSG_SCENE_MEMBERSHIP_REQUEST                          =   0x00A6,
     E_SL_MSG_SCENE_MEMBERSHIP_RESPONSE                         =   0x80A6,
+    E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS					   =   0x80A7,
 
     /* Colour Cluster */
     E_SL_MSG_MOVE_TO_HUE                                       =   0x00B0,

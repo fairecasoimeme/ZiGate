@@ -1040,6 +1040,21 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                     }
                     break; // SCENE MEMBERSHIP RESPONSE
 
+                    case (E_CLD_SCENES_CMD_IKEA_REMOTE_SHORT_CLICK):
+                    case (E_CLD_SCENES_CMD_IKEA_REMOTE_BUTTON_DOWN):
+                    case (E_CLD_SCENES_CMD_IKEA_REMOTE_BUTTON_UP):
+                    {
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode,        u16Length );
+                        ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,  u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->u8CommandId,                                             u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Direction,    u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Attr1,        u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Attr2,        u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Attr3,        u16Length );
+                        u16Command = E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS;
+                    }
+                    break;//IKEA REMOTE CUSTOM
+
                     default:
                     break;
                 }

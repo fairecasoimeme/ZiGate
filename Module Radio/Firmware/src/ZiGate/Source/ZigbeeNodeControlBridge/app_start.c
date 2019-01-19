@@ -695,6 +695,7 @@ PUBLIC void APP_vInitResources ( void )
 #endif
 
     vZCL_RegisterHandleGeneralCmdCallBack (APP_vProfileWideCommandSupportedForCluster );
+    vZCL_RegisterCheckForManufCodeCallBack(APP_bZCL_IsManufacturerCodeSupported);
     DBG_vPrintf(TRACE_APPSTART, "APP: Initialising resources complete\n");
 
 }
@@ -1074,6 +1075,26 @@ bool_t APP_vProfileWideCommandSupportedForCluster ( uint16 u16Clusterid )
     }
     return FALSE;
 }
+
+bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
+{
+	switch(u16ManufacturerCode)
+	{
+		// Ikea
+		case(0x117C):
+		{
+			return TRUE;
+			break;
+		}
+
+		default:
+		{
+			return FALSE;
+		}
+	}
+	return FALSE;
+}
+
 /****************************************************************************/
 /***        END OF FILE                                                   ***/
 /****************************************************************************/
