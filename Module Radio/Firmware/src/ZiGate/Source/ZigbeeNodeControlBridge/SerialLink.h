@@ -264,6 +264,9 @@ typedef enum
     /* Door Lock Cluster */
     E_SL_MSG_LOCK_UNLOCK_DOOR                                   =  0x00F0,
 
+    /* Window Covering Cluster */
+    E_SL_MSG_WINDOW_COVERING_CMD                                =  0x00FA,
+
     /* ZHA Commands */
     E_SL_MSG_READ_ATTRIBUTE_REQUEST                             =  0x0100,
     E_SL_MSG_READ_ATTRIBUTE_RESPONSE                            =  0x8100,

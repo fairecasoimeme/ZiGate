@@ -2040,6 +2040,55 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             break;
 #endif
 
+#ifdef CLD_WINDOWCOVERING
+            case (E_SL_MSG_WINDOW_COVERING_CMD):
+            {
+                switch(au8LinkRxBuffer [ 5 ]) {
+                    case (E_CLD_WINDOWCOVERING_CMD_UP_OPEN):
+                    case (E_CLD_WINDOWCOVERING_CMD_DOWN_CLOSE):
+                    case (E_CLD_WINDOWCOVERING_CMD_STOP):
+                    {
+                        u8Status    = eCLD_WindowCoveringCommandOpenCloseStopRequestSend ( au8LinkRxBuffer [ 3 ],       // u8SourceEndPointId,
+                                                                                           au8LinkRxBuffer [ 4 ],       // u8DestinationEndPointId,
+                                                                                           &sAddress,                   // *psDestinationAddress,
+                                                                                           &u8SeqNum,                   // *pu8TransactionSequenceNumber,
+                                                                                           au8LinkRxBuffer [ 5 ] );     // u8CommandId);
+                    }
+                    break;
+
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_LIFT_VALUE):
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_TILT_VALUE):
+                    {
+                        tsCLD_WindowCovering_GoToValueRequestPayload sGoToValueRequestPayload;
+                        sGoToValueRequestPayload.u16Value = ZNC_RTN_U16 ( au8LinkRxBuffer, 6 );
+                        u8Status    = eCLD_WindowCoveringCommandGotoValueRequestSend ( au8LinkRxBuffer [ 3 ],       // u8SourceEndPointId,
+                                                                                       au8LinkRxBuffer [ 4 ],       // u8DestinationEndPointId,
+                                                                                       &sAddress,                   // *psDestinationAddress,
+                                                                                       &u8SeqNum,                   // *pu8TransactionSequenceNumber,
+                                                                                       au8LinkRxBuffer [ 5 ],       // u8CommandId
+                                                                                       &sGoToValueRequestPayload ); // *psGoToValueRequestPayload);
+                    }
+                    break;
+
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_LIFT_PERCENTAGE):
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_TILT_PERCENTAGE):
+                    {
+                        tsCLD_WindowCovering_GoToPercentageRequestPayload sGoToPercentageRequestPayload;
+                        sGoToPercentageRequestPayload.u8Percentage = au8LinkRxBuffer[6];
+                        u8Status    = eCLD_WindowCoveringCommandGotoPercentageRequestSend ( au8LinkRxBuffer [ 3 ],            // u8SourceEndPointId,
+                                                                                            au8LinkRxBuffer [ 4 ],            // u8DestinationEndPointId,
+                                                                                            &sAddress,                        // *psDestinationAddress,
+                                                                                            &u8SeqNum,                        // *pu8TransactionSequenceNumber,
+                                                                                            au8LinkRxBuffer [ 5 ],            // u8CommandId
+                                                                                            &sGoToPercentageRequestPayload ); // *sGoToPercentageRequestPayload);
+                    }
+                    break;
+                }
+            }
+            break;
+
+#endif
+
 #ifdef CLD_ASC_LOG
             case E_SL_MSG_ASC_LOG_MSG:
             {
