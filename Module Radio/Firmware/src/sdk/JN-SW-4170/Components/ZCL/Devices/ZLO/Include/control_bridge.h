@@ -78,6 +78,9 @@ extern "C" {
 #ifdef CLD_DOOR_LOCK
 #include "DoorLock.h"
 #endif
+#ifdef CLD_WINDOWCOVERING
+#include "WindowCovering.h"
+#endif
 #ifdef CLD_SIMPLE_METERING
 #include "SimpleMetering.h"
 #endif
@@ -246,6 +249,10 @@ typedef struct
 
     #if (defined CLD_DOOR_LOCK) && (defined DOOR_LOCK_CLIENT)
         tsZCL_ClusterInstance sDoorLockClient;
+    #endif
+
+    #if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
+        tsZCL_ClusterInstance sWindowCoveringClient;
     #endif
     
     #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_CLIENT)
@@ -465,6 +472,11 @@ typedef struct
     #if (defined CLD_DOOR_LOCK) && (defined DOOR_LOCK_CLIENT)
         /* door lock Cluster - Client */
         tsCLD_DoorLock sDoorLockClientCluster;
+    #endif
+
+    #if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
+        /* Window Covering Cluster - Client */
+        tsCLD_WindowCovering sWindowCoveringClientCluster;
     #endif
     
     #if (defined CLD_SIMPLE_METERING) && (defined SM_CLIENT)

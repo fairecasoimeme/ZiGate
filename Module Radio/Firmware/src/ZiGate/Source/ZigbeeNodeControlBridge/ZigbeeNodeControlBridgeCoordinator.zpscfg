@@ -97,6 +97,7 @@
     <Clusters Name="Level_Control" Id="0x0008"/>
     <Clusters Name="Color_Control" Id="0x0300"/>
     <Clusters Name="Door_Lock" Id="0x0101"/>
+    <Clusters Name="Window_Covering" Id="0x0102"/>
     <Clusters Name="ZLL_Commissioning" Id="0x1000"/>
     <Clusters Name="IASZone" Id="0x0500"/>
     <Clusters Name="OTA" Id="0x0019"/>
@@ -330,6 +331,7 @@
       <OutputClusters Cluster="On_Off" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Scenes" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Door_Lock" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Window_Covering" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <OutputClusters Cluster="Metering" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="IASZone" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="OTA" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>

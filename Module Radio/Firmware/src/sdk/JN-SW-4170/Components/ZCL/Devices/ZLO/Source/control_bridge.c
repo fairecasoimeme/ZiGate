@@ -499,6 +499,19 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
         }
     #endif
 
+    #if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
+        /* Create an instance of a Window Covering cluster as a client */
+        if( eCLD_WindowCoveringCreateWindowCovering ( &psDeviceInfo->sClusterInstance.sWindowCoveringClient,
+                                                      FALSE,
+                                                      &sCLD_WindowCovering,
+                                                      &psDeviceInfo->sWindowCoveringClientCluster,
+                                                      &au8WindowCoveringAttributeControlBits[0] ) != E_ZCL_SUCCESS )
+        {
+           // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+           return E_ZCL_FAIL;
+        }
+    #endif
+
     #if (defined CLD_SIMPLE_METERING) && (defined SM_CLIENT)
         /* Create an instance of a Simple Metering cluster as a client */
         if( eSE_SMCreate( u8EndPointIdentifier,                                    // uint8 u8Endpoint
