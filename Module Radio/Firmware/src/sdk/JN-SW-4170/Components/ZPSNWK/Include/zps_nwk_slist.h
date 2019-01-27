@@ -43,34 +43,34 @@
  * Copyright NXP B.V. 2016. All rights reserved
  *
  ****************************************************************************/
-
-#ifndef _zps_nwk_slist_h_
-#define _zps_nwk_slist_h_
-
-#ifndef MODULE
-#define MODULE /* no modifier implies global */
-#endif
-
-/***********************/
-/**** INCLUDE FILES ****/
-/***********************/
-
-#include "jendefs.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/************************/
-/**** MACROS/DEFINES ****/
-/************************/
-
-#define ZPS_NWK_SLIST_LIMBO_NODE ((zps_tsNwkSlistNode *)0xFFFFFFFF)
-
-/**************************/
-/**** TYPE DEFINITIONS ****/
-/**************************/
-
+
+#ifndef _zps_nwk_slist_h_
+#define _zps_nwk_slist_h_
+
+#ifndef MODULE
+#define MODULE /* no modifier implies global */
+#endif
+
+/***********************/
+/**** INCLUDE FILES ****/
+/***********************/
+
+#include "jendefs.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/************************/
+/**** MACROS/DEFINES ****/
+/************************/
+
+#define ZPS_NWK_SLIST_LIMBO_NODE ((zps_tsNwkSlistNode *)0xFFFFFFFF)
+
+/**************************/
+/**** TYPE DEFINITIONS ****/
+/**************************/
+
 /**
  * ZPS NWK Single linked list node
  * @ingroup g_zps_nwk_slist
@@ -94,22 +94,22 @@ typedef struct zps_tsNwkSlist_tag
     zps_tsNwkSlistNode *psHead;     /**< Head node in list (NULL if empty) */
     zps_tsNwkSlistNode *psTail;     /**< Tail node in list (NULL if empty) */
 } zps_tsNwkSlist;
-
-/****************************/
-/**** IMPORTED FUNCTIONS ****/
-/****************************/
-
-/**************************/
-/**** MODULE VARIABLES ****/
-/**************************/
 
-/****************************/
-/**** EXPORTED FUNCTIONS ****/
-/****************************/
-
+/****************************/
+/**** IMPORTED FUNCTIONS ****/
+/****************************/
+
+/**************************/
+/**** MODULE VARIABLES ****/
+/**************************/
+
+/****************************/
+/**** EXPORTED FUNCTIONS ****/
+/****************************/
+
 MODULE void
 zps_vNwkSlistInit(zps_tsNwkSlist *psList);
-
+
 MODULE void
 zps_vNwkSlistAddToHead(zps_tsNwkSlist *psList,
                        zps_tsNwkSlistNode *psNode);
@@ -136,10 +136,10 @@ zps_vNwkSlistMakeLimboNode(zps_tsNwkSlistNode *psNode);
 MODULE bool_t
 zps_bNwkSlistIsLimboNode(zps_tsNwkSlistNode *psNode);
 
-#ifdef __cplusplus
-};
-#endif
-
-#endif /* _mac_prv_h_ */
-
-/* End of file $Id: zps_nwk_slist.h 84024 2016-10-12 13:18:30Z nxp29741 $ *******************************************/
+#ifdef __cplusplus
+};
+#endif
+
+#endif /* _mac_prv_h_ */
+
+/* End of file $Id: zps_nwk_slist.h 84024 2016-10-12 13:18:30Z nxp29741 $ *******************************************/
