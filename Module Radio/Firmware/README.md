@@ -1,4 +1,28 @@
+# Version 3.0f
+
+Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.
+
+* Add Private cluster 0xFC00 to manage Philips Hue remote controler. Now you can bind Philips Remote controler to ZiGate and intercept pushed buttons
+* Add ON/OFF server capacity to ZiGate. You can add Ikea or other Zigbee 3.0 remote controler with ZiGate to the same Group. You can intercept ON/OFF pushed buttons. https://github.com/fairecasoimeme/ZiGate/issues/64 
+* Add LevelControl server capacity to ZiGate. You can add Ikea or other Zigbee 3.0 remote controler with ZiGate to the same Group. You can intercept LevelControl pushed buttons. https://github.com/fairecasoimeme/ZiGate/issues/64
+* Add support for Ikea remote scenes button (left/right buttons)
+* Add support of cluster Window Covering (0x0102) https://github.com/fairecasoimeme/ZiGate/issues/125
+* Add command 0x8085 (E_SL_MSG_MOVE_TO_LEVEL_UPDATE) to get informations from Levelcontrol pushed buttons
+* Add SrcAddr to all Group And Scene commands https://github.com/fairecasoimeme/ZiGate/issues/123
+* Add SrcAddr to 0x8060 command (add group response) https://github.com/fairecasoimeme/ZiGate/pull/97
+* Add SrcAddr to 0x8063 command (remove group response) https://github.com/fairecasoimeme/ZiGate/issues/111 
+* Add addr, endpoint and cluster to 0x8140 command (Attribute Discovery response) response https://github.com/fairecasoimeme/ZiGate/pull/90
+* Add support of certification mode command (0x0019). You can configure ZiGate with CE or FCC norm. By default, it's CE norm.
+* Add ZiGate blue led control. You can off/on the blue Led with 0x0018 command 
+* Add TxPower control with 0x0806 command
+* Fix Group 0x0000 issue https://github.com/fairecasoimeme/ZiGate/pull/137
+* Fix Compatible with 24bits and 48bits unsigned integer datas. Fix the Salus devices issues https://github.com/fairecasoimeme/ZiGate/issues/66
+* Fix loosing devices when ZiGate shutdown. Free flash memory with down to 70 devices controlled by ZiGate. https://github.com/fairecasoimeme/ZiGate/issues/91
+* Remove viewing capacity list at start
+
 # Version 3.0e
+
+Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.
 
 * Add Private cluster 0xFC01 to manage some Legrand Netatmo stuff
 * Add Power configuration Cluster. Used by Ikea . https://github.com/KiwiHC16/Abeille/issues/139
