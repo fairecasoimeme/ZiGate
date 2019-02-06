@@ -1017,97 +1017,47 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             /* Group cluster commands */
             case (E_SL_MSG_ADD_GROUP):
             {
-                if ( 0x0000 == u16TargetAddress )
-                {
-                    uint16          u16GroupId;
-                    uint8           i;
-                    ZPS_tsAplAib    *psAplAib = ZPS_psAplAibGetAib();
+                tsCLD_Groups_AddGroupRequestPayload    sRequest;
 
-                    u16GroupId      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+                sRequest.u16GroupId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+                sRequest.sGroupName.u8Length       =  0;
+                sRequest.sGroupName.u8MaxLength    =  0;
+                sRequest.sGroupName.pu8Data    =  (uint8*)"";
 
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nAdd Group ID: %x", u16GroupId );
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nAdd EndPoint: %x", au8LinkRxBuffer[4] );
-
-                    /* Request to add the bridge to a group, no name supported... */
-                    u8Status    = ZPS_eAplZdoGroupEndpointAdd ( u16GroupId,
-                                                                au8LinkRxBuffer [ 4 ] );
-
-                    for ( i = 0; i < psAplAib->psAplApsmeGroupTable->u32SizeOfGroupTable; i++ )
-                    {
-                        vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nGroup ID: %x",
-                                              psAplAib->psAplApsmeGroupTable->psAplApsmeGroupTableId[i].u16Groupid );
-                        vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nEndPoint 0: %x",
-                                              psAplAib->psAplApsmeGroupTable->psAplApsmeGroupTableId[i].au8Endpoint[0] );
-                    }
-                }
-                else
-                {
-                    tsCLD_Groups_AddGroupRequestPayload    sRequest;
-
-                    sRequest.u16GroupId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-                    sRequest.sGroupName.u8Length       =  0;
-                    sRequest.sGroupName.u8MaxLength    =  0;
-                    sRequest.sGroupName.pu8Data    =  (uint8*)"";
-
-                    u8Status    =  eCLD_GroupsCommandAddGroupRequestSend( au8LinkRxBuffer [ 3 ],
-                                                                          au8LinkRxBuffer [ 4 ],
-                                                                          &sAddress,
-                                                                          &u8SeqNum,
-                                                                          &sRequest );
-                }
+                u8Status    =  eCLD_GroupsCommandAddGroupRequestSend( au8LinkRxBuffer [ 3 ],
+                                                                      au8LinkRxBuffer [ 4 ],
+                                                                      &sAddress,
+                                                                      &u8SeqNum,
+                                                                      &sRequest );
             }
             break;
 
             case (E_SL_MSG_REMOVE_GROUP):
             {
-                if ( 0x0000 == u16TargetAddress )
-                {
-                    uint16    u16GroupId;
+                /* Request is for a remote node */
+                tsCLD_Groups_RemoveGroupRequestPayload    sRequest;
 
-                    u16GroupId    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-
-                    /* Request is for the control bridge */
-                    u8Status    =  ZPS_eAplZdoGroupEndpointRemove ( u16GroupId,
-                                                                    au8LinkRxBuffer [ 4 ] );
-                }
-                else
-                {
-                    /* Request is for a remote node */
-                    tsCLD_Groups_RemoveGroupRequestPayload    sRequest;
-
-                    sRequest.u16GroupId    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-                    u8Status =  eCLD_GroupsCommandRemoveGroupRequestSend( au8LinkRxBuffer [ 3 ],
-                                                                          au8LinkRxBuffer [ 4 ] ,
-                                                                          &sAddress,
-                                                                          &u8SeqNum,
-                                                                          &sRequest);
-                }
+                sRequest.u16GroupId    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+                u8Status =  eCLD_GroupsCommandRemoveGroupRequestSend( au8LinkRxBuffer [ 3 ],
+                                                                      au8LinkRxBuffer [ 4 ] ,
+                                                                      &sAddress,
+                                                                      &u8SeqNum,
+                                                                      &sRequest);
             }
             break;
 
             case (E_SL_MSG_REMOVE_ALL_GROUPS):
             {
-                if (0x0000 == u16TargetAddress)
-                {
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nRemove All Groups" );
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nDst EndPoint: %x", au8LinkRxBuffer [ 4 ] );
+                tsZCL_Address    sAddress;
+                uint16           u16TargetAddress;
 
-                    /* Request is for the control bridge */
-                    u8Status =  ZPS_eAplZdoGroupAllEndpointRemove( au8LinkRxBuffer [ 4 ] );
-                }
-                else
-                {
-                    tsZCL_Address    sAddress;
-                    uint16           u16TargetAddress;
-
-                    u16TargetAddress                =  ZNC_RTN_U16 ( au8LinkRxBuffer , 1 );
-                    sAddress.eAddressMode           =  au8LinkRxBuffer[0];
-                    sAddress.uAddress.u16DestinationAddress =  u16TargetAddress;
-                    u8Status = eCLD_GroupsCommandRemoveAllGroupsRequestSend(au8LinkRxBuffer [ 3 ],
-                                                                            au8LinkRxBuffer [ 4 ],
-                                                                            &sAddress,
-                                                                            &u8SeqNum );
-                }
+                u16TargetAddress                =  ZNC_RTN_U16 ( au8LinkRxBuffer , 1 );
+                sAddress.eAddressMode           =  au8LinkRxBuffer[0];
+                sAddress.uAddress.u16DestinationAddress =  u16TargetAddress;
+                u8Status = eCLD_GroupsCommandRemoveAllGroupsRequestSend(au8LinkRxBuffer [ 3 ],
+                                                                        au8LinkRxBuffer [ 4 ],
+                                                                        &sAddress,
+                                                                        &u8SeqNum );
             }
             break;
 

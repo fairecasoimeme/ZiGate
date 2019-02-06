@@ -218,7 +218,7 @@ PUBLIC  teZCL_Status eCLD_GroupsCommandHandler(
 
 #ifdef GROUPS_SERVER
     /* Handle messages appropriate for the cluster type (Client/Server) */
-    if(psClusterInstance->bIsServer == TRUE)
+    if(psClusterInstance->bIsServer == TRUE || (pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr == 0x0000 && !sZCL_HeaderParams.bDirection == 1))
     {
     	uint16 u16ActualQuantity;
     	  tsZCL_RxPayloadItem asPayloadDefinition[] = {
@@ -286,7 +286,7 @@ PUBLIC  teZCL_Status eCLD_GroupsCommandHandler(
 #ifdef GROUPS_CLIENT
 
     /* Handle messages appropriate for the cluster type (Client/Server) */
-    if(psClusterInstance->bIsServer == FALSE)
+    if(psClusterInstance->bIsServer == FALSE && !sZCL_HeaderParams.bDirection == 0)
     {
     	uint16 u16ActualQuantity;
     	tsZCL_RxPayloadItem asPayloadDefinition[] = {
@@ -419,8 +419,12 @@ PRIVATE  teZCL_Status eCLD_GroupsHandleAddGroupRequest(
     /* Message data for callback */
     psCommon->sCallBackMessage.uMessage.psAddGroupRequestPayload = &sPayload;
 
-    /* call callback */
-    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    /* call callback if command didn't come from ZiGate */
+    if (pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr != 0x0000 && pZPSevent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr != 0x0000)
+    {
+        psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    }
+
     /* Exit if we're not in identify mode */
     if((psCommon->bIdentifying == FALSE) &&(psCommon->sCallBackMessage.u8CommandId == E_CLD_GROUPS_CMD_ADD_GROUP_IF_IDENTIFYING))
     {
@@ -557,8 +561,11 @@ PRIVATE  teZCL_Status eCLD_GroupsHandleViewGroupRequest(
     /* Message data for callback */
     psCommon->sCallBackMessage.uMessage.psViewGroupRequestPayload = &sPayload;
 
-    /* call callback */
-    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    /* call callback if command didn't come from ZiGate */
+    if (pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr != 0x0000 && pZPSevent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr != 0x0000)
+    {
+        psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    }
 
     /* Initialise group name string */
     sResponse.sGroupName.u8Length = 0;
@@ -675,8 +682,11 @@ PRIVATE  teZCL_Status eCLD_GroupsHandleGetGroupMembershipRequest(
     /* Message data for callback */
     psCommon->sCallBackMessage.uMessage.psGetGroupMembershipRequestPayload = &sPayload;
 
-    /* call callback */
-    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    /* call callback if command didn't come from ZiGate */
+    if (pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr != 0x0000 && pZPSevent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr != 0x0000)
+    {
+        psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    }
 
     // build address structure
     eZCL_BuildClientTransmitAddressStructure(&sZCL_Address, &psCommon->sReceiveEventAddress);
@@ -777,8 +787,11 @@ PRIVATE  teZCL_Status eCLD_GroupsHandleRemoveGroupRequest(
     /* Message data for callback */
     psCommon->sCallBackMessage.uMessage.psRemoveGroupRequestPayload = &sPayload;
 
-    /* call callback */
-    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    /* call callback if command didn't come from ZiGate */
+    if (pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr != 0x0000 && pZPSevent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr != 0x0000)
+    {
+        psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    }
 
 
     #if (defined CLD_SCENES) && (defined SCENES_SERVER) && (defined CLD_SCENES_ATTR_LAST_CONFIGURED_BY) 
@@ -885,8 +898,11 @@ PRIVATE  teZCL_Status eCLD_GroupsHandleRemoveAllGroupsRequest(
 
     DBG_vPrintf(TRACE_GROUPS, "\nRemoveAllGroupsRequest");
 
-    /* call callback */
-    psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    /* call callback if command didn't come from ZiGate */
+    if (pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr != 0x0000 && pZPSevent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr != 0x0000)
+    {
+        psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);
+    }
 
     #if (defined CLD_SCENES) && (defined SCENES_SERVER) && (defined CLD_SCENES_ATTR_LAST_CONFIGURED_BY) 
         if(pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode == E_ZCL_AM_IEEE)

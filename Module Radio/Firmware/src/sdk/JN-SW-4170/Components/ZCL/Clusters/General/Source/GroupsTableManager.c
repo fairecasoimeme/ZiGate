@@ -144,8 +144,8 @@ PUBLIC teZCL_Status eCLD_GroupsAddGroup(
         eZCL_GetMutex(psEndPointDefinition);
     #endif
 
-    /* group range is 1 - fff7 */
-    if((psPayload->u16GroupId < 1) || (psPayload->u16GroupId > 0xfff7))
+    /* group range is normally 1 - fff7, but since Ikea control outlet remote uses group 0 we accept that too */
+    if(psPayload->u16GroupId > 0xfff7)
     {
         return E_CLD_GROUPS_CMD_STATUS_INVALID_FIELD;
     }
