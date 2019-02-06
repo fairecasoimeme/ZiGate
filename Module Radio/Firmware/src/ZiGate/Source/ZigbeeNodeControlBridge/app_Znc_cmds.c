@@ -273,6 +273,8 @@ PUBLIC uint32 u32Channel;
 /***    Exported Public Functions                     ***/
 /****************************************************************************/
 extern bool_t                         bSetTclkFlashFeature ;
+extern uint8_t                        bLedActivate;
+extern bool_t						  bPowerCEFCC;
 extern PUBLIC bool_t zps_bGetFlashCredential ( uint64            u64IeeeAddr ,
                                                AESSW_Block_u*    puKey,
                                                uint16            *pu16Index,
@@ -574,6 +576,22 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             }
             break;
 
+            case (E_SL_MSG_SET_LED):
+			{
+            	bLedActivate     =   au8LinkRxBuffer [ 0 ];
+            	ZTIMER_eStop ( u8TmrToggleLED );
+            	ZTIMER_eStart( u8TmrToggleLED, ZTIMER_TIME_MSEC ( 1 ) );
+
+
+			}
+			break;
+
+            case (E_SL_MSG_SET_CE_FCC):
+			{
+				bPowerCEFCC     =   au8LinkRxBuffer [ 0 ];
+				vAppApiSetHighPowerMode(bPowerCEFCC, TRUE);
+			}
+			break;
             case (E_SL_MSG_START_NETWORK):
             {
                 APP_vControlNodeStartNetwork();
@@ -2510,7 +2528,8 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLeave ( uint16    u16DstAddr,
                                          uint8*    pu8Seq )
 {
     PDUM_thAPduInstance    hAPduInst;
-    ZPS_teStatus eStatus = ZPS_EVENT_ERROR; //Fred
+    //ZPS_teStatus eStatus = ZPS_EVENT_ERROR; //Fred
+
 
     hAPduInst = PDUM_hAPduAllocateAPduInstance ( apduZDP );
 

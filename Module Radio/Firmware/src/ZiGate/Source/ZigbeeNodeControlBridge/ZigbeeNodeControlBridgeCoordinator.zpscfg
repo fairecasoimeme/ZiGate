@@ -120,7 +120,7 @@
     <Clusters Name="XiaomiInformations" Id="0xFF01"/>
     <Clusters Name="XiaomiInformations2" Id="0xFF02"/>
   </Profiles>
-  <Coordinator Name="ZigbeeNodeControlBridge" DiscoveryNeighbourTableSize="8" ActiveNeighbourTableSize="70" RouteDiscoveryTableSize="2" RoutingTableSize="70" BroadcastTransactionTableSize="9" RouteRecordTableSize="1" AddressMapTableSize="70" SecurityMaterialSets="1" MaxNumSimultaneousApsdeReq="5" MaxNumSimultaneousApsdeAckReq="3" MACMutexName="mutexMAC" ZPSMutexName="mutexZPS" FragmentationMaxNumSimulRx="3" FragmentationMaxNumSimulTx="3" DefaultEventMessageName="APP_msgZpsEvents" MACDcfmIndMessage="zps_msgDcfmInd" MACTimeEventMessage="zps_msgTimeEvents" apsNonMemberRadius="2" apsDesignatedCoordinator="true" apsUseInsecureJoin="true" apsMaxWindowSize="8" apsInterframeDelay="10" APSDuplicateTableSize="4" apsSecurityTimeoutPeriod="6000" apsUseExtPANId="0x0000000000000000" SecurityEnabled="true" MACMlmeDcfmIndMessage="zps_msgMlmeDcfmInd" MACMcpsDcfmIndMessage="zps_msgMcpsDcfmInd" APSPersistenceTime="100" NumAPSMESimulCommands="4" StackProfile="2" InterPAN="true" GreenPowerSupport="false" NwkFcSaveCountBitShift="10" ApsFcSaveCountBitShift="10" MacTableSize="70" DefaultCallbackName="APP_vGenCallback" PermitJoiningTime="0" ChildTableSize="40">
+  <Coordinator Name="ZigbeeNodeControlBridge" DiscoveryNeighbourTableSize="8" ActiveNeighbourTableSize="60" RouteDiscoveryTableSize="2" RoutingTableSize="255" BroadcastTransactionTableSize="9" RouteRecordTableSize="1" AddressMapTableSize="70" SecurityMaterialSets="1" MaxNumSimultaneousApsdeReq="5" MaxNumSimultaneousApsdeAckReq="3" MACMutexName="mutexMAC" ZPSMutexName="mutexZPS" FragmentationMaxNumSimulRx="0" FragmentationMaxNumSimulTx="0" DefaultEventMessageName="APP_msgZpsEvents" MACDcfmIndMessage="zps_msgDcfmInd" MACTimeEventMessage="zps_msgTimeEvents" apsNonMemberRadius="2" apsDesignatedCoordinator="true" apsUseInsecureJoin="true" apsMaxWindowSize="8" apsInterframeDelay="10" APSDuplicateTableSize="4" apsSecurityTimeoutPeriod="6000" apsUseExtPANId="0x0000000000000000" SecurityEnabled="true" MACMlmeDcfmIndMessage="zps_msgMlmeDcfmInd" MACMcpsDcfmIndMessage="zps_msgMcpsDcfmInd" APSPersistenceTime="100" NumAPSMESimulCommands="4" StackProfile="2" InterPAN="false" GreenPowerSupport="false" NwkFcSaveCountBitShift="10" ApsFcSaveCountBitShift="10" MacTableSize="70" DefaultCallbackName="APP_vGenCallback" PermitJoiningTime="0" ChildTableSize="40">
     <Endpoints Id="0" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZDP" Message="" Name="ZDO">
       <InputClusters Cluster="NWK_addr_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="IEEE_addr_req" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
@@ -296,10 +296,10 @@
     <Endpoints Id="1" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="ZLO">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
-      <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Identify" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
-      <InputClusters Cluster="Level_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
-      <InputClusters Cluster="On_Off" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Level_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="On_Off" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Scenes" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Door_Lock" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Metering" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
@@ -346,7 +346,6 @@
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
-      
     </Endpoints>
     <Endpoints Id="10" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="ORVIBO">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
@@ -401,9 +400,9 @@
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
     <PDUConfiguration NumNPDUs="19" PDUMMutexName="mutexPDUM">
-      <APDUs Id="ZigbeeNodeControlBridge->apduZDP" Name="apduZDP" Size="100" Instances="4"/>
+      <APDUs Id="ZigbeeNodeControlBridge->apduZDP" Name="apduZDP" Size="100" Instances="9"/>
     </PDUConfiguration>
-    <ChannelMask Channel11="true" Channel12="false" Channel13="false" Channel14="false" Channel15="true" Channel16="false" Channel17="false" Channel18="false" Channel19="true" Channel20="true" Channel21="false" Channel22="false" Channel23="false" Channel24="false" Channel25="true" Channel26="false"/>
+    <ChannelMask Channel11="true" Channel12="false" Channel13="false" Channel14="false" Channel15="true" Channel16="false" Channel17="false" Channel18="false" Channel19="true" Channel20="true" Channel21="false" Channel22="false" Channel23="false" Channel24="false" Channel25="true" Channel26="true"/>
     <NodeDescriptor ManufacturerCode="4423" LogicalType="ZC" ComplexDescriptorAvailable="false" UserDescriptorAvailable="false" APSFlags="0" FrequencyBand="2.4GHz" AlternatePANCoordinator="true" DeviceType="true" PowerSource="true" RxOnWhenIdle="true" Security="false" AllocateAddress="true" MaximumBufferSize="127" MaximumIncomingTransferSize="0" MaximumOutgoingTransferSize="0" ExtendedActiveEndpointListAvailable="false" ExtendedSimpleDescriptorListAvailable="false" PrimaryTrustCenter="true" BackupTrustCenter="false" PrimaryBindingTableCache="false" BackupBindingTableCache="false" PrimaryDiscoveryCache="false" BackupDiscoveryCache="false" NetworkManager="true"/>
     <NodePowerDescriptor ConstantPower="true" RechargeableBattery="false" DisposableBattery="false" DefaultPowerSource="Constant Power" DefaultPowerMode="Synchronised with RxOnWhenIdle"/>
     <BindingTable Size="5"/>

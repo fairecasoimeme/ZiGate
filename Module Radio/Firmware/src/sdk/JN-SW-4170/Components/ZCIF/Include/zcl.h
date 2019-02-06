@@ -78,7 +78,7 @@ extern "C" {
 
 /* Number of ZCL endpoints */
 #ifndef ZCL_NUMBER_OF_ENDPOINTS
-    #define ZCL_NUMBER_OF_ENDPOINTS         80
+    #define ZCL_NUMBER_OF_ENDPOINTS         70
 #endif
 
 /* By default disable default responses */
