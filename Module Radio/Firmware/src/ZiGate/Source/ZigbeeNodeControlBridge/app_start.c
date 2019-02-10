@@ -97,7 +97,7 @@
 /***        Macro Definitions                                             ***/
 /****************************************************************************/
 #ifndef DEBUG_WDR
-#define DEBUG_WDR                                                 TRUE
+#define DEBUG_WDR                                                 FALSE
 #endif
 
 #ifndef UART_DEBUGGING
@@ -111,7 +111,7 @@
 //#define TRACE_APPSTART 												TRUE
 
 #ifndef TRACE_EXC
-#define TRACE_EXC                                                 TRUE
+#define TRACE_EXC                                                 FALSE
 #endif
 
 #if (JENNIC_CHIP_FAMILY == JN516x)
@@ -204,9 +204,9 @@ PRIVATE void APP_cbTimerZclTick (void*    pvParam);
 /***        Local Variables                                               ***/
 /****************************************************************************/
 
-
-
-PUBLIC tsLedState         s_sLedState =  { LED1_DIO_PIN,  ZTIMER_TIME_MSEC(1),  FALSE };
+bool_t                    bLedActivate =  TRUE;
+uint8_t					  bPowerCEFCC  =  APP_API_MODULE_HPM05;
+PUBLIC tsLedState         s_sLedState  =  { LED1_DIO_PIN,  ZTIMER_TIME_MSEC(1),  FALSE };
 #ifdef FULL_FUNC_DEVICE
 tsZllEndpointInfoTable    sEndpointTable;
 tsZllGroupInfoTable       sGroupTable;
@@ -318,7 +318,7 @@ PUBLIC void vAppMain(void)
 
 #if (JENNIC_CHIP_FAMILY == JN516x)
     vAHI_WatchdogException ( TRUE );
-    vAppApiSetHighPowerMode(APP_API_MODULE_HPM05, TRUE);
+    vAppApiSetHighPowerMode(bPowerCEFCC, TRUE);
 
 #else
     vAHI_WatchdogException ( TRUE , vWatchdogHandler );
@@ -357,7 +357,7 @@ PUBLIC void vAppMain(void)
         vSL_LogFlush ( );
     }
     vInitialiseApp ();
-    app_vFormatAndSendUpdateLists ( );
+    //app_vFormatAndSendUpdateLists ( );
 
     
     if (sZllState.eNodeState == E_RUNNING)
@@ -405,34 +405,41 @@ void APP_cbToggleLED ( void* pvParam )
 {
     tsLedState*    psLedState =  ( tsLedState* ) pvParam;
 
-    if( ZPS_vNwkGetPermitJoiningStatus ( ZPS_pvAplZdoGetNwkHandle ( ) ) )
+    if (bLedActivate)
     {
-        vAHI_DioSetOutput ( LED2_DIO_PIN, (psLedState->u32LedState) & LED_DIO_PINS );
-        vAHI_DioSetOutput ( LED1_DIO_PIN, (psLedState->u32LedState) & LED_DIO_PINS );
+    	vAHI_DioSetOutput ( LED_DIO_PINS, 0 );
+		if( ZPS_vNwkGetPermitJoiningStatus ( ZPS_pvAplZdoGetNwkHandle ( ) ) )
+		{
+			vAHI_DioSetOutput ( LED2_DIO_PIN, (psLedState->u32LedState) & LED_DIO_PINS );
+			vAHI_DioSetOutput ( LED1_DIO_PIN, (psLedState->u32LedState) & LED_DIO_PINS );
+		}
+		else
+		{
+			vAHI_DioSetOutput ( ( ~psLedState->u32LedState ) & LED_DIO_PINS, psLedState->u32LedState & LED_DIO_PINS );
+
+		}
+		psLedState->u32LedState =  ( ~psLedState->u32LedState ) & LED_DIO_PINS;
+
+		if( u8JoinedDevice == 10 )
+		{
+			if(  !ZPS_vNwkGetPermitJoiningStatus ( ZPS_pvAplZdoGetNwkHandle ( ) ) )
+			{
+				psLedState->u32LedToggleTime =  ZTIMER_TIME_MSEC ( 1 );
+			}
+
+			if( ZPS_vNwkGetPermitJoiningStatus ( ZPS_pvAplZdoGetNwkHandle ( ) ) )
+			{
+				psLedState->u32LedToggleTime =  ZTIMER_TIME_MSEC ( 500 );
+			}
+			u8JoinedDevice =  0;
+		}
+		u8JoinedDevice++;
+
+		ZTIMER_eStart( u8TmrToggleLED, psLedState->u32LedToggleTime );
+    }else{
+    	 vAHI_DioSetOutput(0, LED_DIO_PINS);
     }
-    else
-    {
-        vAHI_DioSetOutput ( ( ~psLedState->u32LedState ) & LED_DIO_PINS, psLedState->u32LedState & LED_DIO_PINS );
 
-    }
-    psLedState->u32LedState =  ( ~psLedState->u32LedState ) & LED_DIO_PINS;
-
-    if( u8JoinedDevice == 10 )
-    {
-        if(  !ZPS_vNwkGetPermitJoiningStatus ( ZPS_pvAplZdoGetNwkHandle ( ) ) )
-        {
-            psLedState->u32LedToggleTime =  ZTIMER_TIME_MSEC ( 1 );
-        }
-
-        if( ZPS_vNwkGetPermitJoiningStatus ( ZPS_pvAplZdoGetNwkHandle ( ) ) )
-        {
-            psLedState->u32LedToggleTime =  ZTIMER_TIME_MSEC ( 500 );
-        }
-        u8JoinedDevice =  0;
-    }
-    u8JoinedDevice++;
-
-    ZTIMER_eStart( u8TmrToggleLED, psLedState->u32LedToggleTime );
 }
 
 #ifdef FULL_FUNC_DEVICE
@@ -523,13 +530,13 @@ PRIVATE void vInitialiseApp ( void )
 #endif
   //  ZPS_u32MacSetTxBuffers  ( 5 );
 
-    tsZllEndpointInfoTable sEndpointTable;
+   // tsZllEndpointInfoTable sEndpointTable;
 
-    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "\nPDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
-    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
-    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+    //vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "\nPDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
+   // vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
+   // vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
 
-    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: test %d\n", sEndpointTable.u8NumRecords );
+   // vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: test %d\n", sEndpointTable.u8NumRecords );
 
     if ( sZllState.eNodeState == E_RUNNING )
     {
@@ -695,6 +702,7 @@ PUBLIC void APP_vInitResources ( void )
 #endif
 
     vZCL_RegisterHandleGeneralCmdCallBack (APP_vProfileWideCommandSupportedForCluster );
+    vZCL_RegisterCheckForManufCodeCallBack(APP_bZCL_IsManufacturerCodeSupported);
     DBG_vPrintf(TRACE_APPSTART, "APP: Initialising resources complete\n");
 
 }
@@ -1074,6 +1082,26 @@ bool_t APP_vProfileWideCommandSupportedForCluster ( uint16 u16Clusterid )
     }
     return FALSE;
 }
+
+bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
+{
+	switch(u16ManufacturerCode)
+	{
+		// Ikea
+		case(0x117C):
+		{
+			return TRUE;
+			break;
+		}
+
+		default:
+		{
+			return FALSE;
+		}
+	}
+	return FALSE;
+}
+
 /****************************************************************************/
 /***        END OF FILE                                                   ***/
 /****************************************************************************/

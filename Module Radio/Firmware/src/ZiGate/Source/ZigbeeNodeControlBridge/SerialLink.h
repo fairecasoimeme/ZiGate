@@ -129,6 +129,9 @@ typedef enum
     E_SL_MSG_GET_TIMESERVER									   =   0x0017,
     E_SL_MSG_GET_TIMESERVER_LIST							   =   0x8017,
 
+    E_SL_MSG_SET_LED										   =   0x0018,
+    E_SL_MSG_SET_CE_FCC										   =   0x0019,
+
     E_SL_MSG_BIND                                              =   0x0030,
     E_SL_MSG_BIND_RESPONSE                                     =   0x8030,
     E_SL_MSG_UNBIND                                            =   0x0031,
@@ -201,6 +204,7 @@ typedef enum
     E_SL_MSG_MOVE_STEP                                         =   0x0082,
     E_SL_MSG_MOVE_STOP_MOVE                                    =   0x0083,
     E_SL_MSG_MOVE_STOP_ONOFF                                   =   0x0084,
+    E_SL_MSG_MOVE_TO_LEVEL_UPDATE                              =   0x8085,
 
     /* Scenes Cluster */
     E_SL_MSG_VIEW_SCENE                                        =   0x00A0,
@@ -216,6 +220,7 @@ typedef enum
     E_SL_MSG_RECALL_SCENE                                      =   0x00A5,
     E_SL_MSG_SCENE_MEMBERSHIP_REQUEST                          =   0x00A6,
     E_SL_MSG_SCENE_MEMBERSHIP_RESPONSE                         =   0x80A6,
+    E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS					   =   0x80A7,
 
     /* Colour Cluster */
     E_SL_MSG_MOVE_TO_HUE                                       =   0x00B0,
@@ -261,6 +266,9 @@ typedef enum
 
     /* Door Lock Cluster */
     E_SL_MSG_LOCK_UNLOCK_DOOR                                   =  0x00F0,
+
+    /* Window Covering Cluster */
+    E_SL_MSG_WINDOW_COVERING_CMD                                =  0x00FA,
 
     /* ZHA Commands */
     E_SL_MSG_READ_ATTRIBUTE_REQUEST                             =  0x0100,

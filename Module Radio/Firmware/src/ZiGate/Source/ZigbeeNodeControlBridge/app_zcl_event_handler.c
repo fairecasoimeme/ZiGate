@@ -477,7 +477,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  u16SizeOfAttribute,                                                 u16Length );
             if ( u16SizeOfAttribute !=  0 )
             {
-            	vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
+                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
                 while ( i <  u16Elements )
                 {
                     if( ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_OSTRING ) ||
@@ -496,7 +496,8 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_FLOAT_DOUBLE ) ||
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT32 )||
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_INT24 )||
-                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT24 ))
+                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT24 )||
+                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT48 ))
 
                     {
                     	uint32    u32value =  *( ( uint32* ) psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData );
@@ -559,6 +560,8 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,             u16Length );
             ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,                   u16Length );
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,              u16Length );
+            //FRED
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->uMessage.sAttributeReportingConfigurationResponse.sAttributeReportingConfigurationRecord.u16AttributeEnum,              u16Length );
             ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeReportingConfigurationResponse.eCommandStatus,    u16Length );
             vSL_WriteMessage ( E_SL_MSG_CONFIG_REPORTING_RESPONSE,
                                u16Length,
@@ -603,6 +606,9 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0],         psEvent->uMessage.sAttributeDiscoveryResponse.bDiscoveryComplete,    u16Length );
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeDiscoveryResponse.eAttributeDataType,    u16Length );
             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeDiscoveryResponse.u16AttributeEnum,      u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+            ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,          u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,    u16Length );
 
             vSL_WriteMessage ( E_SL_MSG_ATTRIBUTE_DISCOVERY_RESPONSE,
                                u16Length,
@@ -818,6 +824,30 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                                        u8LinkQuality );
                 }
                 break;
+                case GENERAL_CLUSTER_ID_LEVEL_CONTROL:
+				{
+					tsCLD_LevelControlCallBackMessage*    psCallBackMessage =  ( tsCLD_LevelControlCallBackMessage* ) psEvent->uMessage.sClusterCustomMessage.pvCustomData;
+
+					vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- for levelcontrol cluster\r\n" );
+					vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "\r\nCMD: 0x%02x\r\n", psCallBackMessage->u8CommandId );
+
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode,    u16Length );
+					if ( psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode ==  0x03 )
+					{
+						ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u64Addr,    u16Length );
+					}
+					else
+					{
+						ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+					}
+
+					ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->u8CommandId,    u16Length );
+					vSL_WriteMessage ( E_SL_MSG_MOVE_TO_LEVEL_UPDATE,
+									   u16Length,
+									   au8LinkTxBuffer,
+									   u8LinkQuality );
+				}
+				break;
                 case GENERAL_CLUSTER_ID_IDENTIFY:
                     vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- for identify cluster\r\n" );
                 break;
@@ -857,8 +887,11 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         {
                             uint8    groupCount =  pCustom->uMessage.psGetGroupMembershipResponsePayload->u8GroupCount;
                             uint8    i          =  0;
+                            if (groupCount>CLD_GROUPS_MAX_NUMBER_OF_GROUPS)
+                            {
+                            	groupCount=CLD_GROUPS_MAX_NUMBER_OF_GROUPS;
+                            }
 
-                            ZNC_BUF_U16_UPD   ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,              u16Length );
                             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          pCustom->uMessage.psGetGroupMembershipResponsePayload->u8Capacity,    u16Length );
                             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          groupCount,                                                           u16Length );
 
@@ -874,8 +907,10 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
                         case (E_CLD_GROUPS_CMD_REMOVE_GROUP):
                         {
+
                             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],         pCustom->uMessage.psRemoveGroupResponsePayload->eStatus,       u16Length );
                             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psRemoveGroupResponsePayload->u16GroupId,    u16Length );
+
                             u16Command =  E_SL_MSG_REMOVE_GROUP_RESPONSE;
                         }
                         break;
@@ -883,6 +918,8 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         default:
                         break;
                     }
+                    //FRED Rajout srcAddr https://github.com/fairecasoimeme/ZiGate/issues/123
+                    ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
                     vSL_WriteMessage ( u16Command,
                                        u16Length,
                                        au8LinkTxBuffer,
@@ -1004,9 +1041,24 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                     }
                     break; // SCENE MEMBERSHIP RESPONSE
 
+                    case (E_CLD_SCENES_CMD_IKEA_REMOTE_SHORT_CLICK):
+                    case (E_CLD_SCENES_CMD_IKEA_REMOTE_BUTTON_DOWN):
+                    case (E_CLD_SCENES_CMD_IKEA_REMOTE_BUTTON_UP):
+                    {
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->u8CommandId,                                           u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Direction,  u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Attr1,      u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Attr2,      u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], pCustom->uMessage.psIkeaRemoteSceneCustomPayload->u8Attr3,      u16Length );
+                        u16Command = E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS;
+                    }
+                    break;//IKEA REMOTE CUSTOM
+
                     default:
                     break;
                 }
+                //FRED Rajout de srcAddr https://github.com/fairecasoimeme/ZiGate/issues/123
+                ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
                 vSL_WriteMessage( u16Command,
                                   u16Length,
                                   au8LinkTxBuffer,

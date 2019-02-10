@@ -83,9 +83,9 @@ PUBLIC void
 ZPS_vNwkHandleMlmeDcfmInd(void *pvNwk,
         MAC_DcfmIndHdr_s *psMlmeDcfmInd);
 
-PUBLIC void
-ZPS_vNwkHandleMcpsVsInd(void *pvNwk,
-                            MAC_tsMcpsVsDcfmInd *psMcpsDcfmInd);
+PUBLIC void
+ZPS_vNwkHandleMcpsVsInd(void *pvNwk,
+                            MAC_tsMcpsVsDcfmInd *psMcpsDcfmInd);
 PUBLIC void ZPS_vNwkHandleMcpsVsDcfm (void *pvNwk,
                             MAC_tsMcpsVsCfmData *psMcpsDcfmInd);
 #ifdef __cplusplus

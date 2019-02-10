@@ -94,7 +94,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0002030f
+#define VERSION    0x0003030f
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -273,6 +273,8 @@ PUBLIC uint32 u32Channel;
 /***    Exported Public Functions                     ***/
 /****************************************************************************/
 extern bool_t                         bSetTclkFlashFeature ;
+extern uint8_t                        bLedActivate;
+extern bool_t						  bPowerCEFCC;
 extern PUBLIC bool_t zps_bGetFlashCredential ( uint64            u64IeeeAddr ,
                                                AESSW_Block_u*    puKey,
                                                uint16            *pu16Index,
@@ -574,6 +576,22 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             }
             break;
 
+            case (E_SL_MSG_SET_LED):
+			{
+            	bLedActivate     =   au8LinkRxBuffer [ 0 ];
+            	ZTIMER_eStop ( u8TmrToggleLED );
+            	ZTIMER_eStart( u8TmrToggleLED, ZTIMER_TIME_MSEC ( 1 ) );
+
+
+			}
+			break;
+
+            case (E_SL_MSG_SET_CE_FCC):
+			{
+				bPowerCEFCC     =   au8LinkRxBuffer [ 0 ];
+				vAppApiSetHighPowerMode(bPowerCEFCC, TRUE);
+			}
+			break;
             case (E_SL_MSG_START_NETWORK):
             {
                 APP_vControlNodeStartNetwork();
@@ -1017,97 +1035,47 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             /* Group cluster commands */
             case (E_SL_MSG_ADD_GROUP):
             {
-                if ( 0x0000 == u16TargetAddress )
-                {
-                    uint16          u16GroupId;
-                    uint8           i;
-                    ZPS_tsAplAib    *psAplAib = ZPS_psAplAibGetAib();
+                tsCLD_Groups_AddGroupRequestPayload    sRequest;
 
-                    u16GroupId      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+                sRequest.u16GroupId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+                sRequest.sGroupName.u8Length       =  0;
+                sRequest.sGroupName.u8MaxLength    =  0;
+                sRequest.sGroupName.pu8Data    =  (uint8*)"";
 
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nAdd Group ID: %x", u16GroupId );
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nAdd EndPoint: %x", au8LinkRxBuffer[4] );
-
-                    /* Request to add the bridge to a group, no name supported... */
-                    u8Status    = ZPS_eAplZdoGroupEndpointAdd ( u16GroupId,
-                                                                au8LinkRxBuffer [ 4 ] );
-
-                    for ( i = 0; i < psAplAib->psAplApsmeGroupTable->u32SizeOfGroupTable; i++ )
-                    {
-                        vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nGroup ID: %x",
-                                              psAplAib->psAplApsmeGroupTable->psAplApsmeGroupTableId[i].u16Groupid );
-                        vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nEndPoint 0: %x",
-                                              psAplAib->psAplApsmeGroupTable->psAplApsmeGroupTableId[i].au8Endpoint[0] );
-                    }
-                }
-                else
-                {
-                    tsCLD_Groups_AddGroupRequestPayload    sRequest;
-
-                    sRequest.u16GroupId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-                    sRequest.sGroupName.u8Length       =  0;
-                    sRequest.sGroupName.u8MaxLength    =  0;
-                    sRequest.sGroupName.pu8Data    =  (uint8*)"";
-
-                    u8Status    =  eCLD_GroupsCommandAddGroupRequestSend( au8LinkRxBuffer [ 3 ],
-                                                                          au8LinkRxBuffer [ 4 ],
-                                                                          &sAddress,
-                                                                          &u8SeqNum,
-                                                                          &sRequest );
-                }
+                u8Status    =  eCLD_GroupsCommandAddGroupRequestSend( au8LinkRxBuffer [ 3 ],
+                                                                      au8LinkRxBuffer [ 4 ],
+                                                                      &sAddress,
+                                                                      &u8SeqNum,
+                                                                      &sRequest );
             }
             break;
 
             case (E_SL_MSG_REMOVE_GROUP):
             {
-                if ( 0x0000 == u16TargetAddress )
-                {
-                    uint16    u16GroupId;
+                /* Request is for a remote node */
+                tsCLD_Groups_RemoveGroupRequestPayload    sRequest;
 
-                    u16GroupId    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-
-                    /* Request is for the control bridge */
-                    u8Status    =  ZPS_eAplZdoGroupEndpointRemove ( u16GroupId,
-                                                                    au8LinkRxBuffer [ 4 ] );
-                }
-                else
-                {
-                    /* Request is for a remote node */
-                    tsCLD_Groups_RemoveGroupRequestPayload    sRequest;
-
-                    sRequest.u16GroupId    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-                    u8Status =  eCLD_GroupsCommandRemoveGroupRequestSend( au8LinkRxBuffer [ 3 ],
-                                                                          au8LinkRxBuffer [ 4 ] ,
-                                                                          &sAddress,
-                                                                          &u8SeqNum,
-                                                                          &sRequest);
-                }
+                sRequest.u16GroupId    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+                u8Status =  eCLD_GroupsCommandRemoveGroupRequestSend( au8LinkRxBuffer [ 3 ],
+                                                                      au8LinkRxBuffer [ 4 ] ,
+                                                                      &sAddress,
+                                                                      &u8SeqNum,
+                                                                      &sRequest);
             }
             break;
 
             case (E_SL_MSG_REMOVE_ALL_GROUPS):
             {
-                if (0x0000 == u16TargetAddress)
-                {
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nRemove All Groups" );
-                    vLog_Printf ( TRACE_APP, LOG_DEBUG, "\nDst EndPoint: %x", au8LinkRxBuffer [ 4 ] );
+                tsZCL_Address    sAddress;
+                uint16           u16TargetAddress;
 
-                    /* Request is for the control bridge */
-                    u8Status =  ZPS_eAplZdoGroupAllEndpointRemove( au8LinkRxBuffer [ 4 ] );
-                }
-                else
-                {
-                    tsZCL_Address    sAddress;
-                    uint16           u16TargetAddress;
-
-                    u16TargetAddress                =  ZNC_RTN_U16 ( au8LinkRxBuffer , 1 );
-                    sAddress.eAddressMode           =  au8LinkRxBuffer[0];
-                    sAddress.uAddress.u16DestinationAddress =  u16TargetAddress;
-                    u8Status = eCLD_GroupsCommandRemoveAllGroupsRequestSend(au8LinkRxBuffer [ 3 ],
-                                                                            au8LinkRxBuffer [ 4 ],
-                                                                            &sAddress,
-                                                                            &u8SeqNum );
-                }
+                u16TargetAddress                =  ZNC_RTN_U16 ( au8LinkRxBuffer , 1 );
+                sAddress.eAddressMode           =  au8LinkRxBuffer[0];
+                sAddress.uAddress.u16DestinationAddress =  u16TargetAddress;
+                u8Status = eCLD_GroupsCommandRemoveAllGroupsRequestSend(au8LinkRxBuffer [ 3 ],
+                                                                        au8LinkRxBuffer [ 4 ],
+                                                                        &sAddress,
+                                                                        &u8SeqNum );
             }
             break;
 
@@ -2040,6 +2008,55 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             break;
 #endif
 
+#ifdef CLD_WINDOWCOVERING
+            case (E_SL_MSG_WINDOW_COVERING_CMD):
+            {
+                switch(au8LinkRxBuffer [ 5 ]) {
+                    case (E_CLD_WINDOWCOVERING_CMD_UP_OPEN):
+                    case (E_CLD_WINDOWCOVERING_CMD_DOWN_CLOSE):
+                    case (E_CLD_WINDOWCOVERING_CMD_STOP):
+                    {
+                        u8Status    = eCLD_WindowCoveringCommandOpenCloseStopRequestSend ( au8LinkRxBuffer [ 3 ],       // u8SourceEndPointId,
+                                                                                           au8LinkRxBuffer [ 4 ],       // u8DestinationEndPointId,
+                                                                                           &sAddress,                   // *psDestinationAddress,
+                                                                                           &u8SeqNum,                   // *pu8TransactionSequenceNumber,
+                                                                                           au8LinkRxBuffer [ 5 ] );     // u8CommandId);
+                    }
+                    break;
+
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_LIFT_VALUE):
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_TILT_VALUE):
+                    {
+                        tsCLD_WindowCovering_GoToValueRequestPayload sGoToValueRequestPayload;
+                        sGoToValueRequestPayload.u16Value = ZNC_RTN_U16 ( au8LinkRxBuffer, 6 );
+                        u8Status    = eCLD_WindowCoveringCommandGotoValueRequestSend ( au8LinkRxBuffer [ 3 ],       // u8SourceEndPointId,
+                                                                                       au8LinkRxBuffer [ 4 ],       // u8DestinationEndPointId,
+                                                                                       &sAddress,                   // *psDestinationAddress,
+                                                                                       &u8SeqNum,                   // *pu8TransactionSequenceNumber,
+                                                                                       au8LinkRxBuffer [ 5 ],       // u8CommandId
+                                                                                       &sGoToValueRequestPayload ); // *psGoToValueRequestPayload);
+                    }
+                    break;
+
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_LIFT_PERCENTAGE):
+                    case (E_CLD_WINDOWCOVERING_CMD_GO_TO_TILT_PERCENTAGE):
+                    {
+                        tsCLD_WindowCovering_GoToPercentageRequestPayload sGoToPercentageRequestPayload;
+                        sGoToPercentageRequestPayload.u8Percentage = au8LinkRxBuffer[6];
+                        u8Status    = eCLD_WindowCoveringCommandGotoPercentageRequestSend ( au8LinkRxBuffer [ 3 ],            // u8SourceEndPointId,
+                                                                                            au8LinkRxBuffer [ 4 ],            // u8DestinationEndPointId,
+                                                                                            &sAddress,                        // *psDestinationAddress,
+                                                                                            &u8SeqNum,                        // *pu8TransactionSequenceNumber,
+                                                                                            au8LinkRxBuffer [ 5 ],            // u8CommandId
+                                                                                            &sGoToPercentageRequestPayload ); // *sGoToPercentageRequestPayload);
+                    }
+                    break;
+                }
+            }
+            break;
+
+#endif
+
 #ifdef CLD_ASC_LOG
             case E_SL_MSG_ASC_LOG_MSG:
             {
@@ -2511,7 +2528,8 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLeave ( uint16    u16DstAddr,
                                          uint8*    pu8Seq )
 {
     PDUM_thAPduInstance    hAPduInst;
-    ZPS_teStatus eStatus = ZPS_EVENT_ERROR; //Fred
+    //ZPS_teStatus eStatus = ZPS_EVENT_ERROR; //Fred
+
 
     hAPduInst = PDUM_hAPduAllocateAPduInstance ( apduZDP );
 

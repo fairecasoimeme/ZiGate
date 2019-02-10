@@ -115,10 +115,10 @@ typedef void (*pfnCommandCallback) (uint8 u8CommandId, uint8 *pu8Buffer, uint8 u
 /**** EXPORTED FUNCTIONS ****/
 /****************************/
 #ifdef ZPS_NWK_OPT_FS_DYNAMIC_SEC_LVL
-PUBLIC uint8 ZPS_u8NwkSecGetMicLen( uint8 u8SecurityLevel );
-#endif
-PUBLIC bool_t ZPS_bNwkSecFindMatSet( void *pvNwk, uint8 u8ActiveKSN, uint8 *u8SecMatIndex );
-PUBLIC bool_t ZPS_bNwkSecCheckFC( void *pvNwk, uint64 u64SrcAddr, uint32 u32RecFC);
+PUBLIC uint8 ZPS_u8NwkSecGetMicLen( uint8 u8SecurityLevel );
+#endif
+PUBLIC bool_t ZPS_bNwkSecFindMatSet( void *pvNwk, uint8 u8ActiveKSN, uint8 *u8SecMatIndex );
+PUBLIC bool_t ZPS_bNwkSecCheckFC( void *pvNwk, uint64 u64SrcAddr, uint32 u32RecFC);
 PUBLIC bool_t ZPS_bNwkSecHaveNetworkKey( void *pvNwk );
 PUBLIC bool_t ZPS_bNwkSecCheckMatSet( void *pvNwk, uint8 u8ActiveKSN );
 PUBLIC void ZPS_vNwkSecResetDevice(void *pvNwk,uint64 u64DevAddr);

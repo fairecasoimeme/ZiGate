@@ -1,48 +1,48 @@
-/*****************************************************************************
- *
- * MODULE:             ZPS NWK
- *
- * COMPONENT:          zps_nwk_sap.h
- *
- * AUTHOR:             RCC
- *
- * DESCRIPTION:        ZPS NWK SAP interface
- *
- * $HeadURL: https://www.collabnet.nxp.com/svn/lprf_sware/Projects/Zigbee%20Protocol%20Stack/Modules/NWK/Trunk/Include/zps_nwk_sap.h $
- *
- * $Revision: 91122 $
- *
- * $LastChangedBy: nxp29741 $
- *
- * $LastChangedDate: 2017-11-17 15:01:27 +0000 (Fri, 17 Nov 2017) $
- *
- * $Id: zps_nwk_sap.h 91122 2017-11-17 15:01:27Z nxp29741 $
- *
- *****************************************************************************
- *
- * This software is owned by NXP B.V. and/or its supplier and is protected
- * under applicable copyright laws. All rights are reserved. We grant You,
- * and any third parties, a license to use this software solely and
- * exclusively on NXP products [NXP Microcontrollers such as JN5168, JN5179].
- * You, and any third parties must reproduce the copyright and warranty notice
- * and any other legend of ownership on each copy or partial copy of the
- * software.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * Copyright NXP B.V. 2016. All rights reserved
- *
- ****************************************************************************/
+/*****************************************************************************
+ *
+ * MODULE:             ZPS NWK
+ *
+ * COMPONENT:          zps_nwk_sap.h
+ *
+ * AUTHOR:             RCC
+ *
+ * DESCRIPTION:        ZPS NWK SAP interface
+ *
+ * $HeadURL: https://www.collabnet.nxp.com/svn/lprf_sware/Projects/Zigbee%20Protocol%20Stack/Modules/NWK/Trunk/Include/zps_nwk_sap.h $
+ *
+ * $Revision: 91122 $
+ *
+ * $LastChangedBy: nxp29741 $
+ *
+ * $LastChangedDate: 2017-11-17 15:01:27 +0000 (Fri, 17 Nov 2017) $
+ *
+ * $Id: zps_nwk_sap.h 91122 2017-11-17 15:01:27Z nxp29741 $
+ *
+ *****************************************************************************
+ *
+ * This software is owned by NXP B.V. and/or its supplier and is protected
+ * under applicable copyright laws. All rights are reserved. We grant You,
+ * and any third parties, a license to use this software solely and
+ * exclusively on NXP products [NXP Microcontrollers such as JN5168, JN5179].
+ * You, and any third parties must reproduce the copyright and warranty notice
+ * and any other legend of ownership on each copy or partial copy of the
+ * software.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Copyright NXP B.V. 2016. All rights reserved
+ *
+ ****************************************************************************/
 
 /**
  * @defgroup g_zps_nwk_sap ZPS NWK layer Service Access Point (SAP)
@@ -417,7 +417,7 @@ extern "C" {
 typedef enum
 {
     ZPS_NWK_SAP_NLME = 0,   /**< SAP Type is NLME */
-    ZPS_NWK_SAP_NLDE = 1,   /**< SAP Type is NLDE */
+    ZPS_NWK_SAP_NLDE = 1,   /**< SAP Type is NLDE */
     NUM_ZPS_NWK_SAP
 } ZPS_teNwkSap;
 
@@ -450,7 +450,7 @@ typedef enum
     ZPS_NWK_ENUM_ROUTE_ERROR,                 /**< NLDE-DATA.request has failed due to routing failure on sending device (0xd1) */
     ZPS_NWK_ENUM_BT_TABLE_FULL,               /**< Broadcast or broadcast-mode multicast has failed as there is no room in BTT (0xd2) */
     ZPS_NWK_ENUM_FRAME_NOT_BUFFERED,           /**< Unicast mode multi-cast frame was discarded pending route discovery (0xd3) */
-    ZPS_NWK_ENUM_FRAME_IS_BUFFERED            /**< Unicast mode frame on the pending frame (0xd4) */
+    ZPS_NWK_ENUM_FRAME_IS_BUFFERED            /**< Unicast mode frame on the pending frame (0xd4) */
 } ZPS_teNwkEnum;
 
 /**
@@ -544,7 +544,7 @@ typedef enum
     ZPS_NWK_REJOIN_ORPHAN_REJOIN,   /**< Join or rejoin a network using the orphaning procedure */
     ZPS_NWK_REJOIN_NWK_REJOIN,      /**< Join or rejoin a network using the NWK rejoin procedure */
     ZPS_NWK_REJOIN_CHG_CHAN,        /**< Switch the operating channel for a device that is joined to a network */
-    ZPS_NWK_REJOIN_NO_DISC,
+    ZPS_NWK_REJOIN_NO_DISC,
     NUM_ZPS_NWK_REJOIN
 } ZPS_teNwkRejoin;
 
@@ -755,7 +755,7 @@ typedef struct
  */
 typedef struct
 {
-    uint64 u64DeviceAddress; /**< Device's IEEE address */
+    uint64 u64DeviceAddress; /**< Device's IEEE address */
     uint16 u16NwkAddress;
     uint8  u8Capability;     /**< Capability information of device */
 } ZPS_tsNwkNlmeReqDirectJoin;
@@ -894,14 +894,14 @@ typedef struct
     uint32                u32UnscannedChannels;                        /**< Unscanned Channels - NOT IN SPEC */
     ZPS_tsNwkNetworkDescr * psNwkDesc;
 } ZPS_tsNwkNlmeCfmNetworkDiscovery;
-
-typedef struct
-{
-    uint8                 u8Status;                                    /**< Status of network discovery @sa ZPS_teNwkEnum */
-    uint8                 u8NwkCount;                                  /**< Number of networks discovered */
-    uint32                u32UnscannedChannels;                        /**< Unscanned Channels - NOT IN SPEC */
-    ZPS_tsNwkNetworkDescr asNwkDescr[ZPS_NWK_MAX_DISC_NWK_DESCRS]; /**< List of Network Descriptors */
-} ZPS_tsNwkNlmeCfmNetworkDiscoveryCtx;
+
+typedef struct
+{
+    uint8                 u8Status;                                    /**< Status of network discovery @sa ZPS_teNwkEnum */
+    uint8                 u8NwkCount;                                  /**< Number of networks discovered */
+    uint32                u32UnscannedChannels;                        /**< Unscanned Channels - NOT IN SPEC */
+    ZPS_tsNwkNetworkDescr asNwkDescr[ZPS_NWK_MAX_DISC_NWK_DESCRS]; /**< List of Network Descriptors */
+} ZPS_tsNwkNlmeCfmNetworkDiscoveryCtx;
 
 /**
  * @brief Structure for NLME-NETWORK-FORMATION.confirm
@@ -964,7 +964,7 @@ typedef struct
  */
 typedef struct
 {
-    uint8  u8Status;         /**< Status of direct join @sa ZPS_teNwkEnum */
+    uint8  u8Status;         /**< Status of direct join @sa ZPS_teNwkEnum */
     bool_t bRejoin;
     uint64 u64DeviceAddress; /**< Device's IEEE address */
 } ZPS_tsNwkNlmeCfmLeave;
@@ -1037,7 +1037,7 @@ typedef struct
     uint32 u32MacTxUcastFail;						/**< Current value of u32MacTxUcastFail */
     uint32 u32MacTxUcast;                           /**< Current value of u32MacTxUcast */
     uint32 u32APSTxUcastRetry;						/**< Current value of u32APSTxUcastRetry */
-    uint32 u32APSTxUcastFail;						/**< Current value of u32APSTxUcastFail */
+    uint32 u32APSTxUcastFail;						/**< Current value of u32APSTxUcastFail */
     uint32 u32MacCCaFail;						    /**< Current value of u32MacCCaFail */
     uint8  u8Status;       							/**< Status of set @sa ZPS_teNwkEnum */
     uint8  u8InterfaceIndex;       					/**< MAC Interface ID */
@@ -1052,7 +1052,7 @@ typedef struct
  * Route discovery - confirmation
  */
 typedef struct
-{
+{
     uint16 u16DstAddress;      /**< destination address for which the route may be available */
     uint8 u8Status;            /**< Status of route discovery @sa ZPS_teNwkEnum */
     uint8 u8NetworkStatusCode; /**< Further information about a status of ROUTE_ERROR */
@@ -1065,11 +1065,11 @@ typedef struct
  */
 typedef struct
 {
-    uint8 u8Status;                                /**< Status of scan request */
-    uint8 u8ResultListSize;                        /**< Size of ED results list */
-    uint8 au8EnergyDetect[ZPS_NWK_MAX_ED_RESULTS]; /**< ED results list */
+    uint8 u8Status;                                /**< Status of scan request */
+    uint8 u8ResultListSize;                        /**< Size of ED results list */
+    uint8 au8EnergyDetect[ZPS_NWK_MAX_ED_RESULTS]; /**< ED results list */
 } ZPS_tsNwkNlmeCfmEdScan;
-
+
 /* @} */
 
 /*************************/
@@ -1112,7 +1112,7 @@ typedef struct
 typedef struct
 {
     uint64 u64DeviceAddr; /**< Device's IEEE address */
-    uint8  u8Rejoin;      /**< Whether the device wishes to rejoin or not */
+    uint8  u8Rejoin;      /**< Whether the device wishes to rejoin or not */
     bool_t bChild;        /**< Whether the leaving device is a child or not */
 } ZPS_tsNwkNlmeIndLeave;
 
@@ -1127,19 +1127,19 @@ typedef struct
     uint16 u16NwkAddr;    /**< Network address */
 } ZPS_tsNwkNlmeIndNwkStatus;
 
-
-typedef struct
-{
-    uint16    u16DstAddress;
-    uint8     u8Status;
-} ZPS_tsNwkNlmeCfmRouteRecord;
-
-typedef struct
-{
-    uint64    u64Address;
-    uint32    u32Count;
-    bool_t    bIncoming;
-}ZPS_tsNwkNlmeCfmFCOverflow;
+
+typedef struct
+{
+    uint16    u16DstAddress;
+    uint8     u8Status;
+} ZPS_tsNwkNlmeCfmRouteRecord;
+
+typedef struct
+{
+    uint64    u64Address;
+    uint32    u32Count;
+    bool_t    bIncoming;
+}ZPS_tsNwkNlmeCfmFCOverflow;
 
 typedef enum
 {
@@ -1360,8 +1360,8 @@ typedef enum
     ZPS_NWK_NLME_IND_JOIN,               /**< Use with ZPS_tsNwkNlmeIndJoin */
     ZPS_NWK_NLME_IND_LEAVE,              /**< Use with ZPS_tsNwkNlmeIndLeave */
     ZPS_NWK_NLME_IND_NWK_STATUS,         /**< Use with ZPS_tsNwkNlmeIndNwkStatus */
-    ZPS_NWK_NLME_IND_DUTYCYCLE,          /**< Use with ZPS_tsNwkNlmeIndDutyCycle */
-    ZPS_NWK_NLME_IND_ROUTE_RECORD,       /**< Use with ZPS_tsNwkNlmeCfmRouteRecord */
+    ZPS_NWK_NLME_IND_DUTYCYCLE,          /**< Use with ZPS_tsNwkNlmeIndDutyCycle */
+    ZPS_NWK_NLME_IND_ROUTE_RECORD,       /**< Use with ZPS_tsNwkNlmeCfmRouteRecord */
     ZPS_NWK_NLME_IND_FC_OVERFLOW,        /**< Use with ZPS_tsNwkNlmeCfmFCOverflow */
     NUM_ZPS_NWK_NLME_DCFM_IND
 } ZPS_teNwkNlmeDcfmIndType;
@@ -1387,9 +1387,9 @@ typedef union
     ZPS_tsNwkNlmeCfmReset            sDcfmReset;            /**< Reset confirm */
     ZPS_tsNwkNlmeIndJoin             sIndJoin;              /**< Join indication */
     ZPS_tsNwkNlmeIndLeave            sIndLeave;             /**< Leave indication */
-    ZPS_tsNwkNlmeIndNwkStatus        sIndNwkStatus;         /**< Network status indication */
-    ZPS_tsNwkNlmeIndDutyCycle        sIndDutyCycle;         /**< MAC Duty Cycle Indication */
-    ZPS_tsNwkNlmeCfmRouteRecord      sCfmRouteRecord;       /**< Route Record Received confirm */
+    ZPS_tsNwkNlmeIndNwkStatus        sIndNwkStatus;         /**< Network status indication */
+    ZPS_tsNwkNlmeIndDutyCycle        sIndDutyCycle;         /**< MAC Duty Cycle Indication */
+    ZPS_tsNwkNlmeCfmRouteRecord      sCfmRouteRecord;       /**< Route Record Received confirm */
     ZPS_tsNwkNlmeCfmFCOverflow       sCfmFCOverflow;        /**< FC overflow */
 } ZPS_tuNlmeDcfmIndParam;
 
@@ -1504,7 +1504,7 @@ typedef struct
     uint16 u16NwkDstAddr;                         /**< Destinatation (final) address */
     uint8  u8DstAddrMode;                         /**< Destination address mode */
     uint8  u8LinkQuality;                         /**< Sec */
-    uint8  u8SecurityUse;                         /**< Sec */
+    uint8  u8SecurityUse;                         /**< Sec */
     bool_t bFramePending;                         /**<Frame pending bit set?*/
     PDUM_thNPdu hNPdu;
 } ZPS_tsNwkNldeIndData;
@@ -1674,90 +1674,90 @@ typedef struct
     uint16                 u16Pad;        /**< To show padding octets */
     ZPS_tuNldeDcfmIndParam uParam;        /**< Union of all possible Indications */
 } ZPS_tsNwkNldeDcfmInd;
-
-/**
- * @brief Structure for inter pan .confirm
- *
- * Data transmit confirm. Use type ZPS_NWK_NLDE_CFM_DATA
- */
-typedef struct
-{
-    uint8 u8Status;     /**< Status of request @sa ZPS_teNwkEnum */
-    uint8 u8Handle;     /**< NHLE assigned handle */
-} ZPS_tsNwkInterPanCfmData;
-
-
-/**
- * @brief Structure for NLDE-DATA.indication
- *
- * Data received indication. Uses type ZPS_NWK_NLDE_IND_DATA
- */
-typedef struct
-{
-    uint16 u16DstPan;                         /**<  */
-    uint16 u16SrcPan;
-    uint64 u64SrcAddr;
-    uint8  u8DstAddrMode;
-    uint8 u8SrcAddrMode;
-    uint8  u8LinkQuality;                         /**< Sec */
-    union {
-        uint64 u64Addr;
-        uint16 u16Addr;
-     }uDstAddr;
-     PDUM_thNPdu hNPdu;
-} ZPS_tsNwkInterPanIndData;
-
-/****************************************************/
-/**** NLDE Deferred Confirm/Indication Interface ****/
-/****************************************************/
-
-/**
- * @defgroup g_zps_nwk_sap_nlde_scfm_ind_if Inter Pan Deferred Confirm/Indication Interface
- * @ingroup g_zps_nwk_sap_nlde grp_zps_nwk_vs
- *
- * The interface for the client to receive an Inter Pan Deferred Confirm or Indication
- * is via a function callback to the function registered using ZPS_vRegisterInterPanHandlers
- *
- * @{
- */
-
-/**
- * @brief Deferred Confirm/Indication type
- *
- * Indicates the type of deferred confirm or indication
- * @note NB Must not exceed 256 entries
- */
-typedef enum
-{
-    ZPS_NWK_INTERPAN_DCFM_DATA,
-    ZPS_NWK_INTERPAN_IND_DATA,
-    NUM_ZPS_NWK_INTERPAN_IND
-} ZPS_teNwkInterPanDcfmIndType;
-
-/**
- * @brief Inter Pam Deferred Confirm/Indication Parameter union
- *
- * Union of all the possible NLDE Deferred Confirms or Indications
- */
-typedef union
-{
-    ZPS_tsNwkInterPanCfmData  sDcfmData; /**< Deferred transmit data confirm */
-    ZPS_tsNwkInterPanIndData  sIndData;  /**< Received data indication */
-} ZPS_tuInterPanDcfmIndParam;
-
-/**
- * @brief Inter Pan Deferred Confirm/Indication
- *
- * The object passed in the NLDE Deferred Confirm/Indication callback
- */
-typedef struct
-{
-    uint8                  u8Type;        /**< Indication type (@sa ZPS_teNwkNldeDcfmIndType) */
-    uint8                  u8ParamLength; /**< Parameter length in following union */
-    uint16                 u16Pad;        /**< To show padding octets */
-    ZPS_tuInterPanDcfmIndParam uParam;        /**< Union of all possible Indications */
-} ZPS_tsNwkInterPanDcfmInd;
-
+
+/**
+ * @brief Structure for inter pan .confirm
+ *
+ * Data transmit confirm. Use type ZPS_NWK_NLDE_CFM_DATA
+ */
+typedef struct
+{
+    uint8 u8Status;     /**< Status of request @sa ZPS_teNwkEnum */
+    uint8 u8Handle;     /**< NHLE assigned handle */
+} ZPS_tsNwkInterPanCfmData;
+
+
+/**
+ * @brief Structure for NLDE-DATA.indication
+ *
+ * Data received indication. Uses type ZPS_NWK_NLDE_IND_DATA
+ */
+typedef struct
+{
+    uint16 u16DstPan;                         /**<  */
+    uint16 u16SrcPan;
+    uint64 u64SrcAddr;
+    uint8  u8DstAddrMode;
+    uint8 u8SrcAddrMode;
+    uint8  u8LinkQuality;                         /**< Sec */
+    union {
+        uint64 u64Addr;
+        uint16 u16Addr;
+     }uDstAddr;
+     PDUM_thNPdu hNPdu;
+} ZPS_tsNwkInterPanIndData;
+
+/****************************************************/
+/**** NLDE Deferred Confirm/Indication Interface ****/
+/****************************************************/
+
+/**
+ * @defgroup g_zps_nwk_sap_nlde_scfm_ind_if Inter Pan Deferred Confirm/Indication Interface
+ * @ingroup g_zps_nwk_sap_nlde grp_zps_nwk_vs
+ *
+ * The interface for the client to receive an Inter Pan Deferred Confirm or Indication
+ * is via a function callback to the function registered using ZPS_vRegisterInterPanHandlers
+ *
+ * @{
+ */
+
+/**
+ * @brief Deferred Confirm/Indication type
+ *
+ * Indicates the type of deferred confirm or indication
+ * @note NB Must not exceed 256 entries
+ */
+typedef enum
+{
+    ZPS_NWK_INTERPAN_DCFM_DATA,
+    ZPS_NWK_INTERPAN_IND_DATA,
+    NUM_ZPS_NWK_INTERPAN_IND
+} ZPS_teNwkInterPanDcfmIndType;
+
+/**
+ * @brief Inter Pam Deferred Confirm/Indication Parameter union
+ *
+ * Union of all the possible NLDE Deferred Confirms or Indications
+ */
+typedef union
+{
+    ZPS_tsNwkInterPanCfmData  sDcfmData; /**< Deferred transmit data confirm */
+    ZPS_tsNwkInterPanIndData  sIndData;  /**< Received data indication */
+} ZPS_tuInterPanDcfmIndParam;
+
+/**
+ * @brief Inter Pan Deferred Confirm/Indication
+ *
+ * The object passed in the NLDE Deferred Confirm/Indication callback
+ */
+typedef struct
+{
+    uint8                  u8Type;        /**< Indication type (@sa ZPS_teNwkNldeDcfmIndType) */
+    uint8                  u8ParamLength; /**< Parameter length in following union */
+    uint16                 u16Pad;        /**< To show padding octets */
+    ZPS_tuInterPanDcfmIndParam uParam;        /**< Union of all possible Indications */
+} ZPS_tsNwkInterPanDcfmInd;
+
 
 /* @} */
 
@@ -1838,13 +1838,13 @@ PUBLIC void
 ZPS_vNwkRegisterNldeDcfmIndCallbacks(void *pvNwk,
                                      ZPS_tsNwkDcfmIndHdr * (*prGetBufCB)(void *),
                                      void (*prPostCB)(void *, ZPS_tsNwkDcfmIndHdr *),
-                                     void *pvParam);
-
-PUBLIC uint8
-ZPS_u8NwkCalcNldeReqOverhead(void *pvNwk,
-                             uint16 u16NwkDstAddr);
+                                     void *pvParam);
 
-PUBLIC void zps_vNwkSetZgpAlias(void* pvNwk,uint16 u16AliasShortAddress, uint8 u8AliasSeq, uint8 u8ApsFrameCounter);
+PUBLIC uint8
+ZPS_u8NwkCalcNldeReqOverhead(void *pvNwk,
+                             uint16 u16NwkDstAddr);
+
+PUBLIC void zps_vNwkSetZgpAlias(void* pvNwk,uint16 u16AliasShortAddress, uint8 u8AliasSeq, uint8 u8ApsFrameCounter);
 PUBLIC void zps_vZgpDeviceActive(void *pvNwk,uint16 u16Address);
 #ifdef __cplusplus
 };
