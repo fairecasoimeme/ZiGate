@@ -375,6 +375,13 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     //vSL_WriteMessage ( 0x9999, u16Length,au8LinkTxBuffer,u8LinkQuality);
     u16Length =  0;
 
+    bool	bRawMode = TRUE;
+
+    if (bRawMode){
+    	Znc_vSendDataIndicationToHost(psEvent->pZPSevent, au8LinkTxBuffer);
+    	return;
+    }
+
     
     switch (psEvent->eEventType)
     {
@@ -477,7 +484,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  u16SizeOfAttribute,                                                 u16Length );
             if ( u16SizeOfAttribute !=  0 )
             {
-                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
+                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElï¿½ment : %d\n",i);
                 while ( i <  u16Elements )
                 {
                     if( ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_OSTRING ) ||
