@@ -375,14 +375,11 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     //vSL_WriteMessage ( 0x9999, u16Length,au8LinkTxBuffer,u8LinkQuality);
     u16Length =  0;
 
-    bool	bRawMode = TRUE;
-
     if (bRawMode){
-    	Znc_vSendDataIndicationToHost(psEvent->pZPSevent, au8LinkTxBuffer);
+    	Znc_vSendDataIndicationToHost(&psEvent->pZPSevent, au8LinkTxBuffer);
     	return;
     }
 
-    
     switch (psEvent->eEventType)
     {
         case E_ZCL_CBET_LOCK_MUTEX:

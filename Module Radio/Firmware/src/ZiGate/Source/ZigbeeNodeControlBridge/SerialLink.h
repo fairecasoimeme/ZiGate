@@ -87,6 +87,7 @@ typedef enum
     E_SL_MSG_STATUS                                            =   0x8000,
     E_SL_MSG_LOG                                               =   0x8001,
 
+	E_SL_MSG_SET_RAWMODE									   =   0x0002,
     E_SL_MSG_DATA_INDICATION                                   =   0x8002,
 
     E_SL_MSG_NODE_CLUSTER_LIST                                 =   0x8003,

@@ -342,6 +342,12 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
         switch ( u16PacketType )
         {
+        	case (E_SL_MSG_SET_RAWMODE):
+			{
+				bRawMode     =   au8LinkRxBuffer [ 0 ];
+			}
+			break;
+
             case (E_SL_MSG_GET_VERSION):
             {
                 uint32     u32Version = VERSION;

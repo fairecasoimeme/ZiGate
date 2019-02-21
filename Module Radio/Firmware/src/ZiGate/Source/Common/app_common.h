@@ -188,6 +188,8 @@ PUBLIC uint16 APP_u16ZncWriteDataPattern( uint8 *pu8Data,
                                          uint32 u32Size);
 PUBLIC void APP_vSendDataIndicationToHost( ZPS_tsAfEvent *psStackEvent,
                                            uint8* pau8StatusBuffer);
+PUBLIC void Znc_vSendDataIndicationToHost( ZPS_tsAfEvent *psStackEvent,
+                                           uint8* pau8StatusBuffer);
 PUBLIC void APP_vSaveAllRecords(void);
 PUBLIC void APP_vSendJoinedFormEventToHost ( uint8    u8FormJoin,
                                              uint8    *pu8Buffer );
@@ -238,6 +240,7 @@ extern uint64                     u64CallbackMacAddress;
 extern ZPS_tsAfFlashInfoSet       sSet;
 extern uint8                      au8LinkRxBuffer[256];
 extern tsZLO_ControlBridgeDevice    sControlBridge;
+extern bool_t						  bRawMode;
 /****************************************************************************/
 /****************************************************************************/
 /****************************************************************************/
