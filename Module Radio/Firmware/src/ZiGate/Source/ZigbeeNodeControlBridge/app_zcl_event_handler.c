@@ -818,6 +818,13 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                     }
 
                     ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->u8CommandId,    u16Length );
+
+                    if (psCallBackMessage->u8CommandId ==0x40)
+					{
+						ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psOffWithEffectRequestPayload->u8EffectId,    u16Length );
+						ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psOffWithEffectRequestPayload->u8EffectVariant,    u16Length );
+					}
+
                     vSL_WriteMessage ( E_SL_MSG_ONOFF_UPDATE,
                                        u16Length,
                                        au8LinkTxBuffer,
@@ -842,6 +849,18 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 					}
 
 					ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->u8CommandId,    u16Length );
+					if (psCallBackMessage->u8CommandId == 0x04)
+					{
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveToLevelCommandPayload->u8Level,    u16Length );
+						ZNC_BUF_U16_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveToLevelCommandPayload->u16TransitionTime,    u16Length );
+
+					}else if (psCallBackMessage->u8CommandId == 0x02)
+					{
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u8StepMode,    u16Length );
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u8StepSize,    u16Length );
+						ZNC_BUF_U16_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u16TransitionTime,    u16Length );
+
+					}
 					vSL_WriteMessage ( E_SL_MSG_MOVE_TO_LEVEL_UPDATE,
 									   u16Length,
 									   au8LinkTxBuffer,
