@@ -174,7 +174,7 @@ PUBLIC void vDisplayAddressMapTable(void)
 
     for( i=0;i<thisNib->sTblSize.u16AddrMap;i++)
     {
-        DBG_vPrintf(TRACE_ZBP_UTILS,"\nShort Addr: %04x, Ext Addr: %016llx,", thisNib->sTbl.pu16AddrMapNwk[i], ZPS_u64NwkNibGetMappedIeeeAddr(ZPS_pvAplZdoGetNwkHandle(),thisNib->sTbl.pu16AddrLookup[i]));
+        DBG_vPrintf(TRACE_ZBP_UTILS,"\nShort Addr: %04x, Ext Addr: %016llx,", thisNib->sTbl.pu16AddrMapNwk[i], ZPS_u64NwkNibGetMappedIeeeAddr(ZPS_pvAplZdoGetNwkHandle(),thisNib->sTbl.psNtActv[i].u16Lookup));
     }
 }
 
@@ -201,8 +201,9 @@ PUBLIC void vDisplayNT( void )
 
     for( i = 0 ; i < thisNib->sTblSize.u16NtActv ; i++ )
     {
-        DBG_vPrintf(TRACE_ZBP_UTILS, "SAddr: 0x%04x - ExtAddr: 0x%016llx - LQI: %i - Failed TX's: %i - Auth: %i - %i %i %i %i %i %i - Active: %i - %i %i %i\n",
+        DBG_vPrintf(TRACE_ZBP_UTILS, "SAddr: 0x%04x - 0x%04x ExtAddr: 0x%016llx - LQI: %i - Failed TX's: %i - Auth: %i - %i %i %i %i %i %i - Active: %i - %i %i %i\n",
                     thisNib->sTbl.psNtActv[i].u16NwkAddr,
+                    thisNib->sTbl.psNtActv[i].u16Lookup,
                     ZPS_u64NwkNibGetMappedIeeeAddr(ZPS_pvAplZdoGetNwkHandle(),thisNib->sTbl.psNtActv[i].u16Lookup),
                     thisNib->sTbl.psNtActv[i].u8LinkQuality,
                     thisNib->sTbl.psNtActv[i].u8TxFailed,
@@ -567,8 +568,10 @@ void vDisplayNWKKey(void)
         DBG_vPrintf(TRACE_ZBP_UTILS, "APP: Key");
         for(i = 0;i<16;i++)
         {
-             DBG_vPrintf(TRACE_ZBP_UTILS, "%x", thisNib->sTbl.psSecMatSet[j].au8Key[i]);
+             DBG_vPrintf(TRACE_ZBP_UTILS, "%x ", thisNib->sTbl.psSecMatSet[j].au8Key[i]);
         } 
+        DBG_vPrintf(TRACE_ZBP_UTILS, " | %x ", thisNib->sTbl.psSecMatSet[j].u8KeySeqNum);
+        DBG_vPrintf(TRACE_ZBP_UTILS, " | %x ", thisNib->sTbl.psSecMatSet[j].u8KeyType);
 
          DBG_vPrintf(TRACE_ZBP_UTILS, "\r\n");
      }

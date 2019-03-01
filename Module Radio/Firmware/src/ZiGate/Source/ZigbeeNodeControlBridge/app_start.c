@@ -108,7 +108,13 @@
 #define TRACE_APPSTART                                            FALSE
 #endif
 
-//#define TRACE_APPSTART 												TRUE
+#ifndef TRACE_MIGRATION
+#define TRACE_MIGRATION                                           FALSE
+#endif
+
+#ifndef VERSION
+#define VERSION    0x00030310
+#endif
 
 #ifndef TRACE_EXC
 #define TRACE_EXC                                                 FALSE
@@ -196,6 +202,7 @@ PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
 #endif
 #endif
 PRIVATE void APP_cbTimerZclTick (void*    pvParam);
+PRIVATE void APP_MigratePDM( void );
 /****************************************************************************/
 /***        Exported Variables                                            ***/
 /****************************************************************************/
@@ -501,6 +508,7 @@ PRIVATE void vInitialiseApp ( void )
 
 
     PDM_eInitialise ( 63 );
+    APP_MigratePDM();
     PDUM_vInit ( );
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
 #if (defined PDM_EEPROM)
@@ -530,13 +538,14 @@ PRIVATE void vInitialiseApp ( void )
 #endif
   //  ZPS_u32MacSetTxBuffers  ( 5 );
 
-   // tsZllEndpointInfoTable sEndpointTable;
+#if TRACE_EXC != FALSE
+    tsZllEndpointInfoTable sEndpointTable;
+    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "\nPDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
+    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
+    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
 
-    //vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "\nPDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
-   // vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
-   // vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
-
-   // vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: test %d\n", sEndpointTable.u8NumRecords );
+    vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: test %d\n", sEndpointTable.u8NumRecords );
+#endif
 
     if ( sZllState.eNodeState == E_RUNNING )
     {
@@ -1100,6 +1109,439 @@ bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
 		}
 	}
 	return FALSE;
+}
+
+/****************************************************************************
+ *
+ * NAME: APP_MigratePDM
+ *
+ * DESCRIPTION:
+ * Handles migrating devices in case of PDM size change between versions
+ * If old structure size was larger than new one excess data is discarded
+ *
+ * 1. Check if PDM has version information
+ *   - If not found then try guessing version based on PDM data sizes
+ *   - In case on empty PDM add current firmware version info to PDM
+ * 2. Check if Migration is needed
+ * 3. Read data from EEPROM to memory
+ * 4. Erase EEPROM
+ * 5. Write data back to EEPROM
+ *
+ * RETURNS:
+ * void
+ *
+ ****************************************************************************/
+PRIVATE void APP_MigratePDM( void )
+{
+    // There should be no need to add anymore PDM sizes after 3.10 version
+    // since there should always be version information in PDM after that
+    // This is used for figuring version if there is no version info in PDM
+    struct VersionPDMSizes
+    {
+        uint32 version;
+        uint16 pdm_sizes[14];
+    } pdm_sizes[3] = {
+        {0x0003030e, {32, 20, 40, 20, 96, 320, 240, 24, 1000, 160, 640, 160, 32, 52}},
+        {0x0003030f, {32, 20, 40, 20, 96, 280, 240, 24,  800, 140, 560, 140, 32, 52}},
+        {0x00030310, {32, 20, 40, 20, 96, 280, 240, 24,  800, 140, 560, 140, 32, 52}},
+    };
+
+    typedef struct
+    {
+        uint32 version;
+        uint8 u8BindingTableSize;
+        uint8 u8GroupTableSize;
+        uint8 u8TrustCenterDeviceTableSize;
+        uint8 u8MaxTcLkDevices;
+        uint8 u8ChildTableSize;
+        uint8 u8ActiveNeighbourTableSize;
+        uint8 u8AddressMapTable;
+        uint8 u8MacTableSize;
+    } VersionStructSizes;
+    // Keeps track of structure sizes of every version
+    // so user can change firmware version without losing paired devices
+    VersionStructSizes struct_sizes[3] = {
+        {0x00030310, 5, 5, 70, 60, 40, 60, 70, 70},
+        {0x0003030f, 5, 5, 70, 60, 40, 60, 70, 70},
+        {0x0003030e, 5, 5, 80, 60, 50, 80, 80, 80},
+    };
+
+    uint32 version;
+    uint16 u16DataBytesRead;
+    bool found;
+    uint16 dataLength = 0;
+    uint8 version_i;
+
+    uint16 i;
+    uint8 i2;
+
+    // Check if PDM has version information
+    if (PDM_bDoesDataExist( PDM_ID_APP_VERSION, &u16DataBytesRead )) {
+        PDM_eReadDataFromRecord ( PDM_ID_APP_VERSION, &version, sizeof ( version ), &u16DataBytesRead );
+    }
+    else {
+        vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: No version info in PDM\n" );
+
+        // Try detect firmware when there is no version info
+        uint16 pdm_addresses[14] = { 0x0001, 0xf000, 0xf001, 0xf002, 0xf003, 0xf004, 0xf005,
+                                     0xf100, 0xf101, 0xf102, 0xf103, 0xf104, 0xf105, 0xf106 };
+        uint16 found_content_sizes[14] = {0};
+        uint8 hits = 0;
+        for (i=0; i<14; i++)
+        {
+            found = PDM_bDoesDataExist(pdm_addresses[i], &dataLength);
+            if (found != 0)
+            {
+                found_content_sizes[i] = dataLength;
+                hits++;
+            }
+        }
+        vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Compare PDM content sizes against known values\n" );
+
+        // PDM content found. Try resolving version
+        if (hits > 0)
+        {
+            // Compare found sizes to know sizes
+            found = 0;
+            for (i=0; i<sizeof(pdm_sizes) / sizeof(pdm_sizes[0]); i++)
+            {
+                hits = 0;
+                for (i2=0; i2<14; i2++)
+                {
+                    if (pdm_sizes[i].pdm_sizes[i2] == found_content_sizes[i2])
+                    {
+                        hits++;
+                    }
+                }
+                if (hits == 14)
+                {
+                    version = pdm_sizes[i].version;
+                    vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Resolved: %x\n", version );
+                    found = 1;
+                    break;
+                }
+            }
+            if (found == 0)
+            {
+                vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Couldn't resolve version using PDM sizes\n", version );
+                return;
+            }
+
+        }
+        // PDM is empty mark => mark that we are using current firmware
+        else
+        {
+            version = VERSION;
+            vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: PDM is empty. Using current version: %x\n", version );
+        }
+        // Save version info to PDM
+        PDM_eSaveRecordData(PDM_ID_APP_VERSION, &version, sizeof ( version ));
+    }
+    // Check if there is need for migration
+    if (version == VERSION) {
+        vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: No need to migrate\n" );
+        return;
+    }
+    // Try finding correct structure sizes for version that was found from PDM
+    found = 0;
+    for(version_i = 0; version_i < sizeof(struct_sizes) / sizeof(struct_sizes[0]); version_i++)
+    {
+        if ( struct_sizes[version_i].version == version )
+        {
+            vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: found sizes for migration\n" );
+            found = 1;
+            break;
+        }
+    }
+    if (found == 0) {
+        vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Couldn't find sizes for migration\n" );
+        return;
+    }
+
+    vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Reading old data from EEPROM\n" );
+
+    /***********************
+    *                      *
+    *  Load data from PDM  *
+    *                      *
+    ***********************/
+    uint8 size;
+
+    /*******************************************
+    * Address: 0x0000 - ZllState               *
+    *  - Size should always be same            *
+    *******************************************/
+    tsZllState tmptsZllState;
+    PDM_eReadDataFromRecord ( PDM_ID_APP_ZLL_CMSSION, &tmptsZllState, sizeof ( tsZllState ), &u16DataBytesRead );
+
+    /*******************************************
+    * Address: 0xF000 - ZPS_tsAplAib           *
+    *  - Six first values are persisted to PDM *
+    *  - Size should always be same            *
+    *******************************************/
+    ZPS_tsAplAib tmpZPS_tsAplAib;
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_AIB, &tmpZPS_tsAplAib, 20, &u16DataBytesRead );
+
+    /*******************************************
+    * Address: 0xF001 - Bind table             *
+    *  - struct_sizes.u8BindingTableSize       *
+    *  Structure size is 8                     *
+    *******************************************/
+    size = struct_sizes[version_i].u8BindingTableSize;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8BindingTableSize < struct_sizes[0].u8BindingTableSize) { size = struct_sizes[0].u8BindingTableSize; }
+
+    // Read data
+    uint8 tmpBindingTable[size*8];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_BINDS, &tmpBindingTable,
+                              struct_sizes[version_i].u8BindingTableSize * 8, &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8BindingTableSize < struct_sizes[0].u8BindingTableSize)
+    {
+        for(i = struct_sizes[version_i].u8BindingTableSize*8; i < size*8; i++)
+        {
+            tmpBindingTable[i] = 0;
+        }
+    }
+
+    /*******************************************
+    * Address: 0xF002 - Group table            *
+    *  - struct_sizes.u8GroupTableSize         *
+    *******************************************/
+    size = struct_sizes[version_i].u8GroupTableSize;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8GroupTableSize < struct_sizes[0].u8GroupTableSize) { size = struct_sizes[0].u8GroupTableSize; }
+
+    // Read data
+    ZPS_tsAPdmGroupTableEntry tmpZPS_tsAPdmGroupTableEntry[size];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_GROUPS, &tmpZPS_tsAPdmGroupTableEntry,
+                              struct_sizes[version_i].u8GroupTableSize * sizeof(ZPS_tsAPdmGroupTableEntry), &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8GroupTableSize < struct_sizes[0].u8GroupTableSize)
+    {
+        for(i = struct_sizes[version_i].u8GroupTableSize; i < size; i++)
+        {
+            tmpZPS_tsAPdmGroupTableEntry[i].u16BitMap = 0;
+            tmpZPS_tsAPdmGroupTableEntry[i].u16Groupid = 0;
+        }
+    }
+
+    // Address: 0xF003 - APS Keys
+    //  - Size should always be same
+    ZPS_tsAplApsKeyDescriptorEntry tmpZPS_tsAplApsKeyDescriptorEntry[4];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_APS_KEYS, &tmpZPS_tsAplApsKeyDescriptorEntry,
+                              sizeof(tmpZPS_tsAplApsKeyDescriptorEntry), &u16DataBytesRead );
+
+    /*******************************************
+    * Address: 0xF004 - Trust Table            *
+    *  - s_asTrustCenterDeviceTable            *
+    *******************************************/
+    size = struct_sizes[version_i].u8TrustCenterDeviceTableSize;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8TrustCenterDeviceTableSize < struct_sizes[0].u8TrustCenterDeviceTableSize) { size = struct_sizes[0].u8TrustCenterDeviceTableSize; }
+
+    // Read data
+    uint8 tmpzps_tsAplTCDeviceTable[size * 4];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_TC_TABLE, &tmpzps_tsAplTCDeviceTable,
+                              struct_sizes[version_i].u8TrustCenterDeviceTableSize * 4, &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8TrustCenterDeviceTableSize < struct_sizes[0].u8TrustCenterDeviceTableSize)
+    {
+        for(i = struct_sizes[version_i].u8TrustCenterDeviceTableSize; i < size; i++)
+        {
+            tmpzps_tsAplTCDeviceTable[i*4] = 0xff;
+            tmpzps_tsAplTCDeviceTable[i*4 + 1] = 0xff;
+            tmpzps_tsAplTCDeviceTable[i*4 + 2] = 0;
+            tmpzps_tsAplTCDeviceTable[i*4 + 3] = 0;
+        }
+    }
+
+    /*******************************************
+    *  Address: 0xF005 - Trust table location  *
+    *   - ZPS_TclkDescriptorEntry              *
+    *   - struct_sizes.u8MaxTcLkDevices        *
+    *******************************************/
+    size = struct_sizes[version_i].u8MaxTcLkDevices;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8MaxTcLkDevices < struct_sizes[0].u8MaxTcLkDevices) { size = struct_sizes[0].u8MaxTcLkDevices; }
+
+    // Read data
+    ZPS_TclkDescriptorEntry tmpZPS_TclkDescriptorEntry[size];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_TC_LOCATIONS, &tmpZPS_TclkDescriptorEntry,
+                              struct_sizes[version_i].u8MaxTcLkDevices * sizeof(ZPS_TclkDescriptorEntry), &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8MaxTcLkDevices < struct_sizes[0].u8MaxTcLkDevices)
+    {
+        for(i = struct_sizes[version_i].u8MaxTcLkDevices; i < size; i++)
+        {
+            tmpZPS_TclkDescriptorEntry[i].u16CredOffset = 0xffff;
+            tmpZPS_TclkDescriptorEntry[i].u16TclkRetries = 0xffff;
+        }
+    }
+
+    /*******************************************
+    * Address: 0xF100 - Network Nib Persist    *
+    *  - ZPS_tsNWkNibPersist                   *
+    *  - Size should always be same unless     *
+    *    NXP changes structure size            *
+    *******************************************/
+    ZPS_tsNWkNibPersist tmpZPS_tsNWkNibPersist;
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_NIB_PERSIST, &tmpZPS_tsNWkNibPersist,
+                              sizeof(tmpZPS_tsNWkNibPersist), &u16DataBytesRead );
+
+    /*******************************************
+    * Address: 0xF101 - Active Network Entry   *
+    *  - ZPS_tsNwkActvNtEntry                  *
+    *  - struct_sizes.u8ChildTableSize         *
+    *******************************************/
+    size = struct_sizes[version_i].u8ChildTableSize;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8ChildTableSize < struct_sizes[0].u8ChildTableSize) { size = struct_sizes[0].u8ChildTableSize; }
+
+    // Read data
+    uint8 tmpNwkActvNtTable[size*sizeof(ZPS_tsNwkActvNtEntry)];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_CHILD_TABLE, &tmpNwkActvNtTable,
+                              struct_sizes[version_i].u8ChildTableSize * sizeof(ZPS_tsNwkActvNtEntry), &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8ChildTableSize < struct_sizes[0].u8ChildTableSize)
+    {
+        vLog_Printf (1,LOG_DEBUG, "\n");
+        for(i = struct_sizes[version_i].u8ActiveNeighbourTableSize; i < size; i++)
+        {
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry)] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 1] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 2] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 3] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 4] = 0xff;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 5] = 0xff;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 6] = 0xff;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 7] = 0xfe;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 8] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 9] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 10] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 11] = 0xff;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 12] = 0x7f;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 13] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 14] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 15] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 16] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 17] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 18] = 0;
+            tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry) + 19] = 0;
+        }
+    }
+
+    /*******************************************
+    * Address: 0xF102 - Short Address map      *
+    *  - sTbl.pu16AddrMapNwk                   *
+    *  - struct_sizes.u8AddressMapTable        *
+    *******************************************/
+    size = struct_sizes[version_i].u8AddressMapTable;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8AddressMapTable < struct_sizes[0].u8AddressMapTable) { size = struct_sizes[0].u8AddressMapTable; }
+
+    // Read data
+    uint16 tmppu16AddrMapNwk[size];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_SHORT_ADDRESS_MAP, &tmppu16AddrMapNwk,
+                              sizeof(uint16) * struct_sizes[version_i].u8AddressMapTable, &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8AddressMapTable < struct_sizes[0].u8AddressMapTable)
+    {
+        for(i = struct_sizes[version_i].u8AddressMapTable; i < size; i++)
+        {
+            tmppu16AddrMapNwk[i] = 0xfffe;
+        }
+    }
+
+    /*******************************************
+    * Address: 0xF103 - IEEE Address map       *
+    *  - s_au64NwkAddrMapExt                   *
+    *  - struct_sizes.MacTableSize             *
+    *******************************************/
+    size = struct_sizes[version_i].u8MacTableSize;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8MacTableSize < struct_sizes[0].u8MacTableSize) { size = struct_sizes[0].u8MacTableSize; }
+
+    // Read data
+    uint64 tmps_au64NwkAddrMapExt[size];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_NWK_ADDRESS_MAP, &tmps_au64NwkAddrMapExt,
+                              sizeof(uint64) * struct_sizes[version_i].u8MacTableSize, &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8MacTableSize < struct_sizes[0].u8MacTableSize)
+    {
+        for(i = struct_sizes[version_i].u8MacTableSize; i < size; i++)
+        {
+            tmps_au64NwkAddrMapExt[i] = 0;
+        }
+    }
+
+    /*******************************************
+    * Address: 0xF104 - Address Map Table      *
+    *  - AddressMapTableSize                   *
+    *  - struct_sizes.u8AddressMapTable        *
+    *  - Seems always be FF                    *
+    *******************************************/
+    size = struct_sizes[version_i].u8AddressMapTable;
+    // If old structure size is smaller than current one we need to larger structure for restoring it
+    if (struct_sizes[version_i].u8AddressMapTable < struct_sizes[0].u8AddressMapTable) { size = struct_sizes[0].u8AddressMapTable; }
+
+    // Read data
+    uint16 tmps_AddressMapTable[struct_sizes[version_i].u8AddressMapTable];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_ADDRESS_MAP_TABLE, &tmps_AddressMapTable,
+                              sizeof(uint16) * struct_sizes[version_i].u8AddressMapTable, &u16DataBytesRead );
+
+    // Fill structure if needed
+    if (struct_sizes[version_i].u8AddressMapTable < struct_sizes[0].u8AddressMapTable)
+    {
+        for(i = struct_sizes[version_i].u8AddressMapTable; i < size; i++)
+        {
+            tmps_AddressMapTable[i] = 0xffff;
+        }
+    }
+
+    /*******************************************
+    * Address: 0xF105 - Security Material Sets *
+    *  - ZPS_tsNwkSecMaterialSet               *
+    *  SecurityMaterialSets changes this size, *
+    *  but has been 1 in all latest ZiGate     *
+    *  version so no need for variable         *
+    *******************************************/
+    ZPS_tsNwkSecMaterialSet tmpZPS_tsNwkSecMaterialSet[1];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_SEC_MATERIAL_KEY, &tmpZPS_tsNwkSecMaterialSet,
+                              sizeof(tmpZPS_tsNwkSecMaterialSet), &u16DataBytesRead );
+
+    // ERASE EEPROM
+    vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Resetting EEPROM\n" );
+    PDM_vDeleteAllDataRecords();
+
+    // Restoring data to EEPROM
+    vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Restoring data to EEPROM\n" );
+
+    PDM_eSaveRecordData(PDM_ID_APP_ZLL_CMSSION,             &tmptsZllState,                     sizeof( tsZllState ));
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_AIB,                &tmpZPS_tsAplAib,                   20);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_BINDS,              &tmpBindingTable,                   8 * struct_sizes[0].u8BindingTableSize);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_GROUPS,             &tmpZPS_tsAPdmGroupTableEntry,      sizeof( ZPS_tsAPdmGroupTableEntry ) * struct_sizes[0].u8GroupTableSize);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_APS_KEYS,           &tmpZPS_tsAplApsKeyDescriptorEntry, sizeof( tmpZPS_tsAplApsKeyDescriptorEntry ));
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_TC_TABLE,           &tmpzps_tsAplTCDeviceTable,         4 * struct_sizes[0].u8TrustCenterDeviceTableSize);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_TC_LOCATIONS,       &tmpZPS_TclkDescriptorEntry,        sizeof( ZPS_TclkDescriptorEntry ) * struct_sizes[0].u8MaxTcLkDevices );
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_NIB_PERSIST,        &tmpZPS_tsNWkNibPersist,            sizeof( tmpZPS_tsNWkNibPersist ));
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_CHILD_TABLE,        &tmpNwkActvNtTable,                 sizeof( ZPS_tsNwkActvNtEntry ) * struct_sizes[0].u8ChildTableSize );
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_SHORT_ADDRESS_MAP,  &tmppu16AddrMapNwk,                 sizeof(uint16) * struct_sizes[0].u8AddressMapTable);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_NWK_ADDRESS_MAP,    &tmps_au64NwkAddrMapExt,            sizeof(uint64) * struct_sizes[0].u8MacTableSize );
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_ADDRESS_MAP_TABLE,  &tmps_AddressMapTable,              sizeof(uint16) * struct_sizes[0].u8AddressMapTable);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_SEC_MATERIAL_KEY,   &tmpZPS_tsNwkSecMaterialSet,        sizeof( tmpZPS_tsNwkSecMaterialSet ));
+
+    // Update version info to PDM
+    vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Data restored. Updating version info\n" );
+    version = VERSION;
+    PDM_eSaveRecordData(PDM_ID_APP_VERSION, &version, sizeof ( version ));
 }
 
 /****************************************************************************/
