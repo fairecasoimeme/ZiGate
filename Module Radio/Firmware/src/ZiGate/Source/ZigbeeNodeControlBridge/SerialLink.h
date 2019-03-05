@@ -141,6 +141,10 @@ typedef enum
     E_SL_MSG_UNBIND_GROUP                                      =   0x0033,
     E_SL_MSG_UNBIND_GROUP_RESPONSE                             =   0x8033,
 
+#ifdef PDM_DEBUG
+    E_SL_MSG_DEBUG_PDM                                         =   0x0034,
+#endif
+
     E_SL_MSG_MANY_TO_ONE_ROUTE_REQUEST                         =   0x004F,
     E_SL_MSG_COMPLEX_DESCRIPTOR_REQUEST                        =   0x0531,
     E_SL_MSG_COMPLEX_DESCRIPTOR_RESPONSE                       =   0x8531,

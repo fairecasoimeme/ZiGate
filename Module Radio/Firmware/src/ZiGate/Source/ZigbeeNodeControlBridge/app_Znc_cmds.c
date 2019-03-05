@@ -94,7 +94,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003030f
+#define VERSION    0x00030310
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -248,6 +248,10 @@ PRIVATE void APP_vUpdateReportableChange( tuZCL_AttributeReportable *puAttribute
                                           teZCL_ZCLAttributeType    eAttributeDataType,
                                           uint8                     *pu8Buffer,
                                           uint8                     *pu8Offset );
+
+#ifdef PDM_DEBUG
+PRIVATE void APP_CustomPDMDebug( void );
+#endif
 /****************************************************************************/
 /***    Exported Variables                        ***/
 /****************************************************************************/
@@ -597,6 +601,37 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 APP_vControlNodeStartNetwork();
             }
             break;
+
+#ifdef PDM_DEBUG
+            case (E_SL_MSG_DEBUG_PDM):
+            {
+                uint16 id = 0x0000;
+                uint16 dataLength = 0;
+                bool found;
+                uint16 i = 0;
+                uint16 u16DataBytesRead;
+                uint8 tmpMap[1000];
+                for(id=0x0000; id<0xffff;id++)
+                {
+                    dataLength = 0;
+                    found = 0;
+                    found = PDM_bDoesDataExist(id, &dataLength);
+                    if (found != 0)
+                    {
+                        vLog_Printf (1,LOG_DEBUG, "ID: 0x%04x | %d | %d\n", id, found, dataLength);
+                        PDM_eReadDataFromRecord ( 0x0001, &tmpMap, 32, &u16DataBytesRead );
+                        for(i = 0;i<u16DataBytesRead;i++)
+                        {
+                            vLog_Printf (1,LOG_DEBUG, "%02x ", tmpMap[i]);
+                        }
+                        vLog_Printf ( 1,LOG_DEBUG,  "\n- - - -\n");
+                    }
+                }
+                APP_CustomPDMDebug();
+
+            }
+            break;
+#endif
 
 #ifdef FULL_FUNC_DEVICE
             case (E_SL_MSG_START_SCAN):
@@ -2254,15 +2289,15 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 uint8                              u8SrcEndPoint;
 	            uint8                              u8DstEndPoint;
 	            tsOTA_ImageBlockResponsePayload    sImageBlockResponsePayload;
-	
+
 	            u8SrcEndPoint                                                           =  au8LinkRxBuffer[3];
 	            u8DstEndPoint                                                           =  au8LinkRxBuffer[4];
 	            sImageBlockResponsePayload.u8Status                                     =  au8LinkRxBuffer[6];
-	
+
 	            sImageBlockResponsePayload.uMessage.sWaitForData.u32CurrentTime         =  ZNC_RTN_U32 ( au8LinkRxBuffer, 7  );
 	            sImageBlockResponsePayload.uMessage.sWaitForData.u32RequestTime         =  ZNC_RTN_U32 ( au8LinkRxBuffer, 11  );
 	            sImageBlockResponsePayload.uMessage.sWaitForData.u16BlockRequestDelayMs =  ZNC_RTN_U16 ( au8LinkRxBuffer, 15  );
-	
+
 	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nAddr Mode: %x", sAddress.eAddressMode);
 	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nAddr: %x", sAddress.uAddress.u16DestinationAddress);
 	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nSrcEndPoint: %x", u8SrcEndPoint);
@@ -2271,7 +2306,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nCurrentTime: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u32CurrentTime);
 	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nRequestTime: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u32RequestTime);
 	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nBlockDelay: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u16BlockRequestDelayMs);
-	
+
 	            u8Status = eOTA_ServerImageBlockResponse( u8SrcEndPoint,                    /* u8SourceEndpoint */
 	                                                          u8DstEndPoint,                    /*  u8DestinationEndpoint */
 	                                                          &sAddress,                        /*  *psDestinationAddress */
@@ -3961,6 +3996,227 @@ PRIVATE void APP_vUpdateReportableChange( tuZCL_AttributeReportable *puAttribute
          *  */
     }
 }
+#ifdef PDM_DEBUG
+/****************************************************************************
+ **
+ ** NAME:       APP_CustomPDMDebug
+ **
+ **
+ ****************************************************************************/
+PRIVATE void APP_CustomPDMDebug( void )
+{
+    uint16 u16DataBytesRead;
+    uint8 i;
+    uint8 i2;
+    // 0x0000
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0x0000 - ");
+    tsZllState tmptsZllState;
+    PDM_eReadDataFromRecord ( PDM_ID_APP_ZLL_CMSSION, &tmptsZllState,
+                              sizeof ( tsZllState ), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
 
+    vLog_Printf ( 1,LOG_DEBUG,  "eState: %x\n", tmptsZllState.eState);
+    vLog_Printf ( 1,LOG_DEBUG,  "eNodeState: %x\n", tmptsZllState.eNodeState);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8DeviceType: %02x\n", tmptsZllState.u8DeviceType);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8MyChannel: %02x\n", tmptsZllState.u8MyChannel);
+    vLog_Printf ( 1,LOG_DEBUG,  "u16MyAddr: %04x\n", tmptsZllState.u16MyAddr);
+    vLog_Printf ( 1,LOG_DEBUG,  "bValid: %d\n", tmptsZllState.bValid);
+    vLog_Printf ( 1,LOG_DEBUG,  "u64IeeeAddrOfServer: %016llx\n", tmptsZllState.u64IeeeAddrOfServer);
+    vLog_Printf ( 1,LOG_DEBUG,  "u16NwkAddrOfServer: %04x\n", tmptsZllState.u16NwkAddrOfServer);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8OTAserverEP: %d\n", tmptsZllState.u8OTAserverEP);
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF000
+    //  We only need 6 first values from structure. Combined size of those is 20
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF000 - ");
+    ZPS_tsAplAib tmpZPS_tsAplAib;
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_AIB, &tmpZPS_tsAplAib,
+                              20, &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    vLog_Printf ( 1,LOG_DEBUG,  "u64ApsTrustCenterAddress: %016llx\n", tmpZPS_tsAplAib.u64ApsTrustCenterAddress);
+    vLog_Printf ( 1,LOG_DEBUG,  "u64ApsUseExtendedPanid: %016llx\n", tmpZPS_tsAplAib.u64ApsUseExtendedPanid);
+    vLog_Printf ( 1,LOG_DEBUG,  "bApsDesignatedCoordinator: %d\n", tmpZPS_tsAplAib.bApsDesignatedCoordinator);
+    vLog_Printf ( 1,LOG_DEBUG,  "bApsUseInsecureJoin: %d\n", tmpZPS_tsAplAib.bApsUseInsecureJoin);
+    vLog_Printf ( 1,LOG_DEBUG,  "bDecryptInstallCode: %d\n", tmpZPS_tsAplAib.bDecryptInstallCode);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8KeyType: %02x\n", tmpZPS_tsAplAib.u8KeyType);
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF002
+    //  Size will change if max group number is changed or if group name size changes
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF002 - ");
+    ZPS_tsAPdmGroupTableEntry tmpZPS_tsAPdmGroupTableEntry[CLD_GROUPS_MAX_NUMBER_OF_GROUPS];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_GROUPS, &tmpZPS_tsAPdmGroupTableEntry,
+                              sizeof(tmpZPS_tsAPdmGroupTableEntry), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    for(i = 0; i<CLD_GROUPS_MAX_NUMBER_OF_GROUPS; i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG,  "== GROUP %d =====\n",i);
+        vLog_Printf ( 1,LOG_DEBUG,  "u16GroupId: %04x\n", tmpZPS_tsAPdmGroupTableEntry[i].u16Groupid);
+        vLog_Printf ( 1,LOG_DEBUG,  "u16BitMap: %04x\n", tmpZPS_tsAPdmGroupTableEntry[i].u16BitMap);
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF003
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF003 - ");
+    ZPS_tsAplApsKeyDescriptorEntry tmpZPS_tsAplApsKeyDescriptorEntry[4];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_APS_KEYS, &tmpZPS_tsAplApsKeyDescriptorEntry,
+                              sizeof(tmpZPS_tsAplApsKeyDescriptorEntry), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    for(i = 0; i<4; i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG,  "== APS KEY %d =====\n",i);
+        vLog_Printf ( 1,LOG_DEBUG,  "u32OutgoingFrameCounter: %08x\n", tmpZPS_tsAplApsKeyDescriptorEntry[i].u32OutgoingFrameCounter);
+        vLog_Printf ( 1,LOG_DEBUG,  "u16ExtAddrLkup: %04x\n", tmpZPS_tsAplApsKeyDescriptorEntry[i].u16ExtAddrLkup);
+        vLog_Printf ( 1,LOG_DEBUG,  "au8LinkKey: ", tmpZPS_tsAplApsKeyDescriptorEntry[i].au8LinkKey);
+        for(i2 = 0; i2<sizeof(tmpZPS_tsAplApsKeyDescriptorEntry[i].au8LinkKey); i2++)
+        {
+            vLog_Printf ( 1,LOG_DEBUG,  "%02x ", tmpZPS_tsAplApsKeyDescriptorEntry[i].au8LinkKey[i2]);
+        }
+        vLog_Printf ( 1,LOG_DEBUG,  "\n");
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF005
+    // Size will change if ActiveNeighbourTableSize changes
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF005 - ");
+    ZPS_TclkDescriptorEntry tmpZPS_TclkDescriptorEntry[60];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_TC_LOCATIONS, &tmpZPS_TclkDescriptorEntry,
+                              sizeof(tmpZPS_TclkDescriptorEntry), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    for(i = 0; i<60; i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG,  "%02d: ",i);
+        vLog_Printf ( 1,LOG_DEBUG,  "u16CredOffset: %04x ", tmpZPS_TclkDescriptorEntry[i].u16CredOffset);
+        vLog_Printf ( 1,LOG_DEBUG,  "u16TclkRetries: %04x ", tmpZPS_TclkDescriptorEntry[i].u16TclkRetries);
+        vLog_Printf ( 1,LOG_DEBUG,  "\n");
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF100
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF100 - ");
+    ZPS_tsNWkNibPersist tmpZPS_tsNWkNibPersist;
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_NIB_PERSIST, &tmpZPS_tsNWkNibPersist,
+                              sizeof(tmpZPS_tsNWkNibPersist), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    vLog_Printf ( 1,LOG_DEBUG,  "u8UpdateId: %02x\n", tmpZPS_tsNWkNibPersist.u8UpdateId);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8ActiveKeySeqNumber: %02x\n", tmpZPS_tsNWkNibPersist.u8ActiveKeySeqNumber);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8VsDepth: %02x\n", tmpZPS_tsNWkNibPersist.u8VsDepth);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8CapabilityInformation: %02x\n", tmpZPS_tsNWkNibPersist.u8CapabilityInformation);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8VsChannel: %02x\n", tmpZPS_tsNWkNibPersist.u8VsChannel);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8ParentTimeoutMethod: %02x\n", tmpZPS_tsNWkNibPersist.u8ParentTimeoutMethod);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8VsAuxChannel: %02x\n", tmpZPS_tsNWkNibPersist.u8VsAuxChannel);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8MacEnhanced: %02x\n", tmpZPS_tsNWkNibPersist.u8MacEnhanced);
+    vLog_Printf ( 1,LOG_DEBUG,  "u16VsPanId: %04x\n", tmpZPS_tsNWkNibPersist.u16VsPanId);
+    vLog_Printf ( 1,LOG_DEBUG,  "u16NwkAddr: %04x\n", tmpZPS_tsNWkNibPersist.u16NwkAddr);
+    vLog_Printf ( 1,LOG_DEBUG,  "u16VsParentAddr: %04x\n", tmpZPS_tsNWkNibPersist.u16VsParentAddr);
+    vLog_Printf ( 1,LOG_DEBUG,  "u64ExtPanId: %016llx\n", tmpZPS_tsNWkNibPersist.u64ExtPanId);
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+
+    // 0xF101
+    // Max size is 800, so only 40 devices can be saved. Needed elements change if ActiveNeighbourTableSize changes
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF101 - ");
+    ZPS_tsNwkActvNtEntry tmpZPS_tsNwkActvNtEntry[40];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_CHILD_TABLE, &tmpZPS_tsNwkActvNtEntry,
+                              sizeof(tmpZPS_tsNwkActvNtEntry), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    for(i = 0; i<40; i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG, "%02d: SAddr: 0x%04x - 0x%04x - LQI: %i - Failed TX's: %i - Auth: %i - %i %i %i %i %i %i - Active: %i - %i %i %i\n",
+                i,
+                tmpZPS_tsNwkActvNtEntry[i].u16NwkAddr,
+                tmpZPS_tsNwkActvNtEntry[i].u16Lookup,
+                tmpZPS_tsNwkActvNtEntry[i].u8LinkQuality,
+                tmpZPS_tsNwkActvNtEntry[i].u8TxFailed,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1Authenticated,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1DeviceType,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1ExpectAnnc,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1LinkStatusDone,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1PowerSource,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1RxOnWhenIdle,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1SecurityMode,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1Used,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u2Relationship,
+                tmpZPS_tsNwkActvNtEntry[i].u8Age,
+                tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u3OutgoingCost
+        );
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%04x, ", tmpZPS_tsNwkActvNtEntry[i].u16Lookup);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%04x, ", tmpZPS_tsNwkActvNtEntry[i].u16NwkAddr);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].u8TxFailed);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].u8LinkQuality);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].u8Age);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].u8ZedTimeoutindex);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].i8TXPower);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].u8MacID);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1Used);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1DeviceType);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1PowerSource);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1RxOnWhenIdle);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u2Relationship);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1SecurityMode);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1Authenticated);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1LinkStatusDone);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u3OutgoingCost);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u3Reserve);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.bfBitfields.u1ExpectAnnc);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.au8Field[0]);
+        vLog_Printf ( 1,LOG_DEBUG,  "0x%02x, ", tmpZPS_tsNwkActvNtEntry[i].uAncAttrs.au8Field[1]);
+        vLog_Printf ( 1,LOG_DEBUG,  "\n");
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF102
+    // Size changes if AddressMapTableSize changes
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF102 - ");
+    uint16 tmppu16AddrMapNwk[70];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_SHORT_ADDRESS_MAP, &tmppu16AddrMapNwk,
+                              sizeof(tmppu16AddrMapNwk), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    for(i = 0; i<70; i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG, "%02d: 0x%04x\n", i, tmppu16AddrMapNwk[i]);
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF103
+    // Size changes if AddressMapTableSize changes
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF103 - ");
+    uint64 tmps_au64NwkAddrMapExt[70];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_NWK_ADDRESS_MAP, &tmps_au64NwkAddrMapExt,
+                              sizeof(tmps_au64NwkAddrMapExt), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    for(i = 0; i<70; i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG, "%02d: %016llx\n", i, tmps_au64NwkAddrMapExt[i]);
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+
+    // 0xF105
+    // Size changes if SecurityMaterialSets changes
+    vLog_Printf ( 1,LOG_DEBUG,  "\nAddress 0xF105 - ");
+    ZPS_tsNwkSecMaterialSet tmpZPS_tsNwkSecMaterialSet[1];
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_SEC_MATERIAL_KEY, &tmpZPS_tsNwkSecMaterialSet,
+                              sizeof(tmpZPS_tsNwkSecMaterialSet), &u16DataBytesRead );
+    vLog_Printf ( 1 ,LOG_DEBUG,  "PDM: u16DataBytesRead %d\n", u16DataBytesRead );
+
+    vLog_Printf ( 1,LOG_DEBUG,  "u8KeySeqNum: %02x\n", tmpZPS_tsNwkSecMaterialSet[0].u8KeySeqNum);
+    vLog_Printf ( 1,LOG_DEBUG,  "u8KeyType: %02x\n", tmpZPS_tsNwkSecMaterialSet[0].u8KeyType);
+    vLog_Printf ( 1,LOG_DEBUG,  "au8Key: ");
+    for(i = 0; i<sizeof(tmpZPS_tsNwkSecMaterialSet[0].au8Key); i++)
+    {
+        vLog_Printf ( 1,LOG_DEBUG,  "%02x ", tmpZPS_tsNwkSecMaterialSet[0].au8Key[i]);
+    }
+    vLog_Printf ( 1,LOG_DEBUG,  "\n");
+    vLog_Printf ( 1,LOG_DEBUG,  "- - - - - - - - - - - - - - - - - - - - - - - - \n");
+}
+#endif
 /***    END OF FILE                           ***/
 /****************************************************************************/
