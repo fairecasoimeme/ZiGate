@@ -869,29 +869,16 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                                            u8LinkQuality );
                     break;
 
-                    default:
-                    {
-                        ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sUnbindRsp.u8Status,    u16Length );
-                        switch ( sApsZdpEvent.u16ClusterId )
-                        {
-                             case ZPS_ZDP_MGMT_LEAVE_RSP_CLUSTER_ID:
-                                 vSL_WriteMessage ( E_SL_MSG_MANAGEMENT_LEAVE_RESPONSE,
-                                                    u16Length,
-                                                    au8LinkTxBuffer,
-                                                    u8LinkQuality );
-                             break;
+                    case ZPS_ZDP_MGMT_PERMIT_JOINING_RSP_CLUSTER_ID:
+                        ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sPermitJoiningRsp.u8Status,    u16Length );
+                        vSL_WriteMessage ( E_SL_MSG_PERMIT_JOINING_RESPONSE,
+                                           u16Length,
+                                           au8LinkTxBuffer,
+                                           u8LinkQuality );
+                     break;
 
-                             case ZPS_ZDP_MGMT_PERMIT_JOINING_RSP_CLUSTER_ID:
-                                 vSL_WriteMessage ( E_SL_MSG_PERMIT_JOINING_RESPONSE,
-                                                    u16Length,
-                                                    au8LinkTxBuffer,
-                                                    u8LinkQuality );
-                             break;
-                             default:
-                             break;
-                        }
-                    }
-                        break;
+                    default:
+                    break;
                     }
                 }
             }
