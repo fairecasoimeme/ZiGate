@@ -3126,7 +3126,7 @@ PRIVATE void APP_vControlNodeScanStart(void)
 PRIVATE void APP_vControlNodeStartNetwork(void)
 {
     ZPS_tsAplAib*    psAib =  ZPS_psAplAibGetAib();
-    uint8            au8Buffer[1];
+    uint8            au8Buffer[26];
     uint8            u8Status;
 #ifdef FULL_FUNC_DEVICE
     if( sZllState.eState == FACTORY_NEW )
@@ -3148,11 +3148,18 @@ PRIVATE void APP_vControlNodeStartNetwork(void)
             u8Status =  BDB_eNfStartNwkFormation();
             if ( BDB_E_SUCCESS != u8Status )
             {
-                au8Buffer[0] =  u8Status;
-                vSL_WriteMessage ( E_SL_MSG_NETWORK_JOINED_FORMED,
-                                   sizeof(uint8)  ,
-                                   au8Buffer,
-                                   0 );
+                if (BDB_E_ERROR_NODE_IS_ON_A_NWK == u8Status)
+                {
+                    APP_vSendJoinedFormEventToHost(BDB_E_ERROR_NODE_IS_ON_A_NWK, au8Buffer);
+                }
+                else
+                {
+                    au8Buffer[0] =  u8Status;
+                    vSL_WriteMessage ( E_SL_MSG_NETWORK_JOINED_FORMED,
+                                       sizeof(uint8)  ,
+                                       au8Buffer,
+                                       0 );
+                }
             }
         }
 #ifdef FULL_FUNC_DEVICE
@@ -3422,8 +3429,7 @@ PUBLIC void APP_vSendJoinedFormEventToHost ( uint8    u8FormJoin,
     uint8            u8Length = 0;
     static bool_t    bReportSent   =  FALSE;
 
-
-    if (bReportSent)
+    if (bReportSent && u8FormJoin != 4)
     {
         return;
     }
@@ -3434,7 +3440,6 @@ PUBLIC void APP_vSendJoinedFormEventToHost ( uint8    u8FormJoin,
     u64IeeeAddr =  ZPS_u64NwkNibGetExtAddr ( ZPS_pvAplZdoGetNwkHandle ( ) );
 
     eAppApiPlmeGet ( PHY_PIB_ATTR_CURRENT_CHANNEL, &u32Channel );
-
     *pu8BufferCpy = u8FormJoin;
 
     ZNC_BUF_U8_UPD  ( &pu8BufferCpy [ 1 ],          u8FormJoin,           u8Length );
@@ -3447,12 +3452,17 @@ PUBLIC void APP_vSendJoinedFormEventToHost ( uint8    u8FormJoin,
                        ( sizeof(uint8) + sizeof(uint16) + sizeof(uint64) + sizeof(uint8) ),
                        pu8Buffer,
                        0 );
-    ZTIMER_eStart ( u8TmrToggleLED, s_sLedState.u32LedToggleTime );
 
-    /* Initialise the OTA  */
+    // No need to do these things if we are already in network
+    if (u8FormJoin != 4)
+    {
+        ZTIMER_eStart ( u8TmrToggleLED, s_sLedState.u32LedToggleTime );
+
+        /* Initialise the OTA  */
 #ifdef CLD_OTA
-    vAppInitOTA();
+        vAppInitOTA();
 #endif
+    }
 
 }
 
