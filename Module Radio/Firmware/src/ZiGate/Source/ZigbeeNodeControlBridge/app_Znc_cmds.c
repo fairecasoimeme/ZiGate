@@ -329,11 +329,33 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                )
       )
     {
-		if (u16PacketType >= E_SL_MSG_AHI_START && u16PacketType <= E_SL_MSG_AHI_END)
-    	{
-			#ifdef APP_AHI_CONTROL
-				APP_vCMDHandleAHICommand(u16PacketType, u16PacketLength, au8LinkRxBuffer, &u8Status);
-			#endif
+        if (u16PacketType >= E_SL_MSG_AHI_START && u16PacketType <= E_SL_MSG_AHI_END)
+        {
+            #ifdef APP_AHI_CONTROL
+            uint32 u32AHIresponse;
+            u32AHIresponse = APP_vCMDHandleAHICommand(u16PacketType, u16PacketLength, au8LinkRxBuffer, &u8Status);
+            if (u16PacketType == E_SL_MSG_AHI_GET_TX_POWER)
+            {
+                ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
+                ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
+                vSL_WriteMessage ( E_SL_MSG_STATUS,
+                                   u8Length,
+                                   au8values,
+                                   0 );
+
+                // Only return value if command succeed.
+                // TX power value range is 0x00-0xbf so uint8 is big enough
+                if ( u8Status == E_AHI_SUCCESS)
+                {
+                    ZNC_BUF_U8_UPD  ( &au8values[ 0 ], (0x3f & u32AHIresponse) & 0xFF,      u8Length );
+                    vSL_WriteMessage ( E_SL_MSG_AHI_GET_TX_POWER_RSP,
+                                      sizeof ( uint8 ),
+                                      au8values,
+                                      0);
+                }
+            }
+            #endif
     	}
 		else
     	{

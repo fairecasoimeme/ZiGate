@@ -334,6 +334,8 @@ typedef enum
     E_SL_MSG_AHI_DIO_READ_INPUT                                 =  0x0803,
     E_SL_MSG_AHI_DIO_READ_INPUT_RSP                             =  0x8803,
     E_SL_MSG_AHI_SET_TX_POWER                                   =  0x0806,
+    E_SL_MSG_AHI_GET_TX_POWER                                   =  0x0807,
+    E_SL_MSG_AHI_GET_TX_POWER_RSP                               =  0x8807,
 } teSL_MsgType;
 typedef enum
 {
