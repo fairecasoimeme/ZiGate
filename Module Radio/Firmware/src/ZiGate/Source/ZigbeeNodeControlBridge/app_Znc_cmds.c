@@ -354,6 +354,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                       au8values,
                                       0);
                 }
+                return;
             }
             #endif
     	}
