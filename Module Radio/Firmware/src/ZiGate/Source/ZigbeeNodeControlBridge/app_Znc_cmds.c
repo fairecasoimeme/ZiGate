@@ -598,7 +598,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             case (E_SL_MSG_RESET):
             {
                 bResetIssued    =  TRUE;
-                ZTIMER_eStart( u8IdTimer, ZTIMER_TIME_MSEC ( 1 ) );
+                ZTIMER_eStart( u8IdTimer, ZTIMER_TIME_MSEC ( 20 ) );
 
             }
             break;
