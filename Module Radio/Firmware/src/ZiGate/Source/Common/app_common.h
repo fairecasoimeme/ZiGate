@@ -139,10 +139,10 @@ extern uint8 u8GPZCLTimerEvent;
 typedef enum
 {
     E_STARTUP,
+    E_RUNNING,
 #ifdef FULL_FUNC_DEVICE
     E_NFN_START,
 #endif
-    E_RUNNING,
 } teNODE_STATES;
 
 typedef struct {
