@@ -344,7 +344,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
         {
             case (E_SL_MSG_SET_RAWMODE):
             {
-                bRawMode     =   au8LinkRxBuffer [ 0 ];
+            	sZllState.bRawMode     =   au8LinkRxBuffer [ 0 ];
             }
             break;
 

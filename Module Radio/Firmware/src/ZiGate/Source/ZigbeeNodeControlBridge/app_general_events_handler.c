@@ -499,7 +499,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
     {
         case ZPS_EVENT_APS_DATA_INDICATION:
         {
-            if (bRawMode){
+            if (sZllState.bRawMode){
                     Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
                     return;
                 }

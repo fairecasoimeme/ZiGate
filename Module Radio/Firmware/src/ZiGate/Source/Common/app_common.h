@@ -166,6 +166,7 @@ typedef struct {
     uint16 u16NwkAddrOfServer;
     uint8 u8OTAserverEP;
 #endif
+    bool_t bRawMode;
 }tsZllState;
 
 typedef struct {
@@ -240,7 +241,6 @@ extern uint64                     u64CallbackMacAddress;
 extern ZPS_tsAfFlashInfoSet       sSet;
 extern uint8                      au8LinkRxBuffer[256];
 extern tsZLO_ControlBridgeDevice    sControlBridge;
-bool_t                              bRawMode;
 /****************************************************************************/
 /****************************************************************************/
 /****************************************************************************/

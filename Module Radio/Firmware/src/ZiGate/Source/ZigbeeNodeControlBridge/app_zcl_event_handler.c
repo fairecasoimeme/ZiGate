@@ -375,7 +375,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     //vSL_WriteMessage ( 0x9999, u16Length,au8LinkTxBuffer,u8LinkQuality);
     u16Length =  0;
 
-    if (bRawMode){
+    if (sZllState.bRawMode){
         ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
         if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE && psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT )
         {
