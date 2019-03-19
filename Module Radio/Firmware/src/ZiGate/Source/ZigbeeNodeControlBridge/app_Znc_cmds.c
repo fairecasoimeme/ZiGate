@@ -274,7 +274,7 @@ PUBLIC uint32 u32Channel;
 /****************************************************************************/
 extern bool_t                         bSetTclkFlashFeature ;
 extern uint8_t                        bLedActivate;
-extern bool_t						  bPowerCEFCC;
+extern bool_t                          bPowerCEFCC;
 extern PUBLIC bool_t zps_bGetFlashCredential ( uint64            u64IeeeAddr ,
                                                AESSW_Block_u*    puKey,
                                                uint16            *pu16Index,
@@ -325,14 +325,14 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                )
       )
     {
-		if (u16PacketType >= E_SL_MSG_AHI_START && u16PacketType <= E_SL_MSG_AHI_END)
-    	{
-			#ifdef APP_AHI_CONTROL
-				APP_vCMDHandleAHICommand(u16PacketType, u16PacketLength, au8LinkRxBuffer, &u8Status);
-			#endif
-    	}
-		else
-    	{
+        if (u16PacketType >= E_SL_MSG_AHI_START && u16PacketType <= E_SL_MSG_AHI_END)
+        {
+            #ifdef APP_AHI_CONTROL
+                APP_vCMDHandleAHICommand(u16PacketType, u16PacketLength, au8LinkRxBuffer, &u8Status);
+            #endif
+        }
+        else
+        {
         u16TargetAddress                           =  ZNC_RTN_U16( au8LinkRxBuffer , 1);
         sAddress.eAddressMode                      =  au8LinkRxBuffer[0];
         sAddress.uAddress.u16DestinationAddress    =  u16TargetAddress;
@@ -342,11 +342,11 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
         switch ( u16PacketType )
         {
-        	case (E_SL_MSG_SET_RAWMODE):
-			{
-				bRawMode     =   au8LinkRxBuffer [ 0 ];
-			}
-			break;
+            case (E_SL_MSG_SET_RAWMODE):
+            {
+                bRawMode     =   au8LinkRxBuffer [ 0 ];
+            }
+            break;
 
             case (E_SL_MSG_GET_VERSION):
             {
@@ -413,30 +413,30 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
             case E_SL_MSG_SET_TIMESERVER:
             {
-            	uint32    u32Value;
-            	u32Value      =  ZNC_RTN_U32 ( au8LinkRxBuffer, 0 );
-            	sControlBridge.sTimeServerCluster.utctTime=u32Value;
+                uint32    u32Value;
+                u32Value      =  ZNC_RTN_U32 ( au8LinkRxBuffer, 0 );
+                sControlBridge.sTimeServerCluster.utctTime=u32Value;
 
             }
             break;
             case E_SL_MSG_GET_TIMESERVER:
-			{
-				uint32    u32Value = sControlBridge.sTimeServerCluster.utctTime;
+            {
+                uint32    u32Value = sControlBridge.sTimeServerCluster.utctTime;
 
-				ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
-				ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
-				ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
-				vSL_WriteMessage ( E_SL_MSG_STATUS,
-								   u8Length,
-								   au8values,
-								   0 );
-				vSL_WriteMessage ( E_SL_MSG_GET_TIMESERVER_LIST,
-													sizeof ( uint32 ),
-													( uint8* ) &u32Value,
-												   0 );
-				return;
-			}
-			break;
+                ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
+                ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
+                vSL_WriteMessage ( E_SL_MSG_STATUS,
+                                   u8Length,
+                                   au8values,
+                                   0 );
+                vSL_WriteMessage ( E_SL_MSG_GET_TIMESERVER_LIST,
+                                                    sizeof ( uint32 ),
+                                                    ( uint8* ) &u32Value,
+                                                   0 );
+                return;
+            }
+            break;
             case (E_SL_MSG_GET_PERMIT_JOIN):
             {
                 APP_tsEvent    sAppEvent;
@@ -447,55 +447,55 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             break;
 
             case (E_SL_MSG_NETWORK_STATE_REQ):
-		    {
-			   APP_tsEvent    sAppEvent;
+            {
+               APP_tsEvent    sAppEvent;
 
-			   sAppEvent.eType = APP_E_EVENT_NETWORK_STATE;
-			   ZQ_bQueueSend( &APP_msgAppEvents, &sAppEvent);
-		    }
-		    break;
+               sAppEvent.eType = APP_E_EVENT_NETWORK_STATE;
+               ZQ_bQueueSend( &APP_msgAppEvents, &sAppEvent);
+            }
+            break;
 
             case (E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE):
-			{
+            {
 
-				ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
-				ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
-				ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
-				vSL_WriteMessage ( E_SL_MSG_STATUS,
-								   u8Length,
-								   au8values,
-								   0 );
-				uint8 i = 0;
+                ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
+                ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
+                vSL_WriteMessage ( E_SL_MSG_STATUS,
+                                   u8Length,
+                                   au8values,
+                                   0 );
+                uint8 i = 0;
 
-				ZPS_tsNwkNib * thisNib;
+                ZPS_tsNwkNib * thisNib;
 
-				void * thisNet = ZPS_pvAplZdoGetNwkHandle();
-				thisNib = ZPS_psNwkNibGetHandle(thisNet);
+                void * thisNet = ZPS_pvAplZdoGetNwkHandle();
+                thisNib = ZPS_psNwkNibGetHandle(thisNet);
 
-				uint16                 u16Length =  0;
-				uint8                  au8LinkTxBuffer[1024];
+                uint16                 u16Length =  0;
+                uint8                  au8LinkTxBuffer[1024];
 
-				for( i = 0; i < thisNib->sTblSize.u16NtActv; i++)
-				{
-					if (thisNib->sTbl.psNtActv[i].u16NwkAddr < 0xfffe )
-					{
-						ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ], i,     u16Length );
-						ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [ u16Length ], thisNib->sTbl.psNtActv[i].u16NwkAddr,                                   u16Length );
-						ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [ u16Length ], ZPS_u64NwkNibGetMappedIeeeAddr(ZPS_pvAplZdoGetNwkHandle(),thisNib->sTbl.psNtActv[i].u16Lookup),    u16Length );
-						ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ], thisNib->sTbl.psNtActv[i].uAncAttrs.bfBitfields.u1PowerSource,     u16Length );
-						ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ], thisNib->sTbl.psNtActv[i].u8LinkQuality,     u16Length );
+                for( i = 0; i < thisNib->sTblSize.u16NtActv; i++)
+                {
+                    if (thisNib->sTbl.psNtActv[i].u16NwkAddr < 0xfffe )
+                    {
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ], i,     u16Length );
+                        ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [ u16Length ], thisNib->sTbl.psNtActv[i].u16NwkAddr,                                   u16Length );
+                        ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [ u16Length ], ZPS_u64NwkNibGetMappedIeeeAddr(ZPS_pvAplZdoGetNwkHandle(),thisNib->sTbl.psNtActv[i].u16Lookup),    u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ], thisNib->sTbl.psNtActv[i].uAncAttrs.bfBitfields.u1PowerSource,     u16Length );
+                        ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ], thisNib->sTbl.psNtActv[i].u8LinkQuality,     u16Length );
 
-					}
-				}
+                    }
+                }
 
-				vSL_WriteMessage ( E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE_LIST,
-												   u16Length,
-												   au8LinkTxBuffer,
-												   0);
+                vSL_WriteMessage ( E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE_LIST,
+                                                   u16Length,
+                                                   au8LinkTxBuffer,
+                                                   0);
 
-				return;
-			}
-			break;
+                return;
+            }
+            break;
 
             case (E_SL_MSG_SET_DEVICETYPE):
             {
@@ -583,21 +583,21 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             break;
 
             case (E_SL_MSG_SET_LED):
-			{
-            	bLedActivate     =   au8LinkRxBuffer [ 0 ];
-            	ZTIMER_eStop ( u8TmrToggleLED );
-            	ZTIMER_eStart( u8TmrToggleLED, ZTIMER_TIME_MSEC ( 1 ) );
+            {
+                bLedActivate     =   au8LinkRxBuffer [ 0 ];
+                ZTIMER_eStop ( u8TmrToggleLED );
+                ZTIMER_eStart( u8TmrToggleLED, ZTIMER_TIME_MSEC ( 1 ) );
 
 
-			}
-			break;
+            }
+            break;
 
             case (E_SL_MSG_SET_CE_FCC):
-			{
-				bPowerCEFCC     =   au8LinkRxBuffer [ 0 ];
-				vAppApiSetHighPowerMode(bPowerCEFCC, TRUE);
-			}
-			break;
+            {
+                bPowerCEFCC     =   au8LinkRxBuffer [ 0 ];
+                vAppApiSetHighPowerMode(bPowerCEFCC, TRUE);
+            }
+            break;
             case (E_SL_MSG_START_NETWORK):
             {
                 APP_vControlNodeStartNetwork();
@@ -635,19 +635,19 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             break;
 
             case (E_SL_MSG_OUTOFBAND_COMMISSIONING_DATA_REQ):
-			{
+            {
                 uint8                              i = 0;
-            	APP_tsEvent                        sAppEvent;
+                APP_tsEvent                        sAppEvent;
 
-                sAppEvent.eType                            		=  APP_E_EVENT_OOB_COMMISSIONING_DATA;
-                sAppEvent.uEvent.sOOBCommissionData.u64Address	=  ZNC_RTN_U64 (au8LinkRxBuffer, 0);
+                sAppEvent.eType                                    =  APP_E_EVENT_OOB_COMMISSIONING_DATA;
+                sAppEvent.uEvent.sOOBCommissionData.u64Address    =  ZNC_RTN_U64 (au8LinkRxBuffer, 0);
                 while(i < 16)
                 {
-                	sAppEvent.uEvent.sOOBCommissionData.au8InstallKey[i] = au8LinkRxBuffer[8+i];
+                    sAppEvent.uEvent.sOOBCommissionData.au8InstallKey[i] = au8LinkRxBuffer[8+i];
                     i++;
                 }
                 ZQ_bQueueSend (&APP_msgAppEvents, &sAppEvent);
-			}
+            }
             break;
 
             case (E_SL_MSG_UPDATE_AUTHENTICATE_DEVICE):
@@ -2258,42 +2258,42 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 vLog_Printf(TRACE_APP, LOG_DEBUG, "\nE_SL_MSG_SEND_WAIT_FOR_DATA_PARAMS");
 
                 uint8                              u8SrcEndPoint;
-	            uint8                              u8DstEndPoint;
-	            tsOTA_ImageBlockResponsePayload    sImageBlockResponsePayload;
-	
-	            u8SrcEndPoint                                                           =  au8LinkRxBuffer[3];
-	            u8DstEndPoint                                                           =  au8LinkRxBuffer[4];
-	            sImageBlockResponsePayload.u8Status                                     =  au8LinkRxBuffer[6];
-	
-	            sImageBlockResponsePayload.uMessage.sWaitForData.u32CurrentTime         =  ZNC_RTN_U32 ( au8LinkRxBuffer, 7  );
-	            sImageBlockResponsePayload.uMessage.sWaitForData.u32RequestTime         =  ZNC_RTN_U32 ( au8LinkRxBuffer, 11  );
-	            sImageBlockResponsePayload.uMessage.sWaitForData.u16BlockRequestDelayMs =  ZNC_RTN_U16 ( au8LinkRxBuffer, 15  );
-	
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nAddr Mode: %x", sAddress.eAddressMode);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nAddr: %x", sAddress.uAddress.u16DestinationAddress);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nSrcEndPoint: %x", u8SrcEndPoint);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nDstEndPoint: %x", u8DstEndPoint);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nStatus: %x", sImageBlockResponsePayload.u8Status);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nCurrentTime: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u32CurrentTime);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nRequestTime: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u32RequestTime);
-	            vLog_Printf(TRACE_APP, LOG_DEBUG, "\nBlockDelay: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u16BlockRequestDelayMs);
-	
-	            u8Status = eOTA_ServerImageBlockResponse( u8SrcEndPoint,                    /* u8SourceEndpoint */
-	                                                          u8DstEndPoint,                    /*  u8DestinationEndpoint */
-	                                                          &sAddress,                        /*  *psDestinationAddress */
-	                                                          &sImageBlockResponsePayload,      /* *psImageBlockResponsePayload */
-	                                                          0,                                /*  u8BlockSize           */
-	                                                          au8LinkRxBuffer[5]);              /*  u8TransactionSequenceNumb */
+                uint8                              u8DstEndPoint;
+                tsOTA_ImageBlockResponsePayload    sImageBlockResponsePayload;
+
+                u8SrcEndPoint                                                           =  au8LinkRxBuffer[3];
+                u8DstEndPoint                                                           =  au8LinkRxBuffer[4];
+                sImageBlockResponsePayload.u8Status                                     =  au8LinkRxBuffer[6];
+
+                sImageBlockResponsePayload.uMessage.sWaitForData.u32CurrentTime         =  ZNC_RTN_U32 ( au8LinkRxBuffer, 7  );
+                sImageBlockResponsePayload.uMessage.sWaitForData.u32RequestTime         =  ZNC_RTN_U32 ( au8LinkRxBuffer, 11  );
+                sImageBlockResponsePayload.uMessage.sWaitForData.u16BlockRequestDelayMs =  ZNC_RTN_U16 ( au8LinkRxBuffer, 15  );
+
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nAddr Mode: %x", sAddress.eAddressMode);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nAddr: %x", sAddress.uAddress.u16DestinationAddress);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nSrcEndPoint: %x", u8SrcEndPoint);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nDstEndPoint: %x", u8DstEndPoint);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nStatus: %x", sImageBlockResponsePayload.u8Status);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nCurrentTime: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u32CurrentTime);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nRequestTime: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u32RequestTime);
+                vLog_Printf(TRACE_APP, LOG_DEBUG, "\nBlockDelay: %x", sImageBlockResponsePayload.uMessage.sWaitForData.u16BlockRequestDelayMs);
+
+                u8Status = eOTA_ServerImageBlockResponse( u8SrcEndPoint,                    /* u8SourceEndpoint */
+                                                              u8DstEndPoint,                    /*  u8DestinationEndpoint */
+                                                              &sAddress,                        /*  *psDestinationAddress */
+                                                              &sImageBlockResponsePayload,      /* *psImageBlockResponsePayload */
+                                                              0,                                /*  u8BlockSize           */
+                                                              au8LinkRxBuffer[5]);              /*  u8TransactionSequenceNumb */
             }
             break;
 
 
 #endif
-	            default:
-	                u8Status = E_SL_MSG_STATUS_UNHANDLED_COMMAND;
-	            break;
-        	}
-		}
+                default:
+                    u8Status = E_SL_MSG_STATUS_UNHANDLED_COMMAND;
+                break;
+            }
+        }
         u8Length    =  0;
         ZNC_BUF_U8_UPD  ( &au8values [ 0 ], u8Status,      u8Length );
         ZNC_BUF_U8_UPD  ( &au8values [ 1 ], u8SeqNum,      u8Length );
@@ -3603,8 +3603,8 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
         u16Size        =  APP_u16GetAttributeActualSize ( pu8AttributeRequestList [ i + 2 ], 1 );
         if ( u16Size == 0 )
         {
-        	PDUM_eAPduFreeAPduInstance ( myPDUM_thAPduInstance );
-        	return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
+            PDUM_eAPduFreeAPduInstance ( myPDUM_thAPduInstance );
+            return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
         }
         u16offset     +=  APP_u16ZncWriteDataPattern ( &pu8Data [ u16offset ],
                                                        pu8AttributeRequestList [ i + 2 ],
@@ -3686,7 +3686,7 @@ PRIVATE ZPS_teStatus APP_eZdpComplexDescReq ( uint16    u16Addr,
 
         /* always send to node of interest rather than a cache */
         uDstAddr.u16Addr = u16Addr;
-	    sComplexDescReq.u16NwkAddrOfInterest =  u16NwkAddressInterst;
+        sComplexDescReq.u16NwkAddrOfInterest =  u16NwkAddressInterst;
 
         return ZPS_eAplZdpComplexDescRequest( hAPduInst,
                                               uDstAddr,
