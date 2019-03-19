@@ -67,6 +67,21 @@ extern "C" {
 #define PDM_ID_APP_END_P_TABLE      0x2
 #define PDM_ID_APP_GROUP_TABLE      0x3
 
+#define PDM_ID_APP_VERSION                  0x10
+
+#define PDM_ID_INTERNAL_AIB                 0xf000
+#define PDM_ID_INTERNAL_BINDS               0xf001
+#define PDM_ID_INTERNAL_GROUPS              0xf002
+#define PDM_ID_INTERNAL_APS_KEYS            0xf003
+#define PDM_ID_INTERNAL_TC_TABLE            0xf004
+#define PDM_ID_INTERNAL_TC_LOCATIONS        0xf005
+#define PDM_ID_INTERNAL_NIB_PERSIST         0xf100
+#define PDM_ID_INTERNAL_CHILD_TABLE         0xf101
+#define PDM_ID_INTERNAL_SHORT_ADDRESS_MAP   0xf102
+#define PDM_ID_INTERNAL_NWK_ADDRESS_MAP     0xf103
+#define PDM_ID_INTERNAL_ADDRESS_MAP_TABLE   0xf104
+#define PDM_ID_INTERNAL_SEC_MATERIAL_KEY    0xf105
+
 #ifdef  CLD_GREENPOWER
 #define PDM_ID_APP_CLD_GP_TRANS_TABLE       (0xA103)
 #define PDM_ID_APP_CLD_GP_SINK_PROXY_TABLE  (0xA104)
