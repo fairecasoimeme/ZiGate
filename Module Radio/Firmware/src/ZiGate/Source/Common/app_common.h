@@ -240,7 +240,7 @@ extern uint64                     u64CallbackMacAddress;
 extern ZPS_tsAfFlashInfoSet       sSet;
 extern uint8                      au8LinkRxBuffer[256];
 extern tsZLO_ControlBridgeDevice    sControlBridge;
-extern bool_t						  bRawMode;
+bool_t						  bRawMode;
 /****************************************************************************/
 /****************************************************************************/
 /****************************************************************************/

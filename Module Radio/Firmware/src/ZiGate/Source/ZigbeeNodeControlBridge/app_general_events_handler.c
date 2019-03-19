@@ -491,12 +491,18 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
     u8LinkQuality=psStackEvent->uEvent.sApsDataIndEvent.u8LinkQuality;
 
+
+
     vLog_Printf ( TRACE_APP,LOG_DEBUG, "Got stack event %d\n", psStackEvent->eType);
 
     switch (psStackEvent->eType)
     {
         case ZPS_EVENT_APS_DATA_INDICATION:
         {
+        	if (bRawMode){
+        	    	Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+        	    	return;
+        	    }
             uint8*    dataPtr =  ( uint8* ) PDUM_pvAPduInstanceGetPayload ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
             uint8     u8Size  =  PDUM_u16APduInstanceGetPayloadSize ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
 

@@ -376,8 +376,12 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     u16Length =  0;
 
     if (bRawMode){
-    	Znc_vSendDataIndicationToHost(&psEvent->pZPSevent, au8LinkTxBuffer);
-    	return;
+    	ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
+    	if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE && psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT )
+    	{
+    	    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+    	    return;
+    	}
     }
 
     switch (psEvent->eEventType)
