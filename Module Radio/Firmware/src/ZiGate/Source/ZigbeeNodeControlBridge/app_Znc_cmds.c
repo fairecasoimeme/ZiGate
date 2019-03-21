@@ -349,6 +349,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             case (E_SL_MSG_SET_RAWMODE):
             {
             	sZllState.bRawMode     =   au8LinkRxBuffer [ 0 ];
+              PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
             }
             break;
 
