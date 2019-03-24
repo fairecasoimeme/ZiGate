@@ -334,7 +334,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             #ifdef APP_AHI_CONTROL
             uint32 u32AHIresponse;
             u32AHIresponse = APP_vCMDHandleAHICommand(u16PacketType, u16PacketLength, au8LinkRxBuffer, &u8Status);
-            if (u16PacketType == E_SL_MSG_AHI_GET_TX_POWER)
+            if (u16PacketType == E_SL_MSG_AHI_GET_TX_POWER || u16PacketType == E_SL_MSG_AHI_SET_TX_POWER)
             {
                 ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8Status,      u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8SeqNum,      u8Length );
@@ -344,15 +344,32 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                    au8values,
                                    0 );
 
+                uint16 u16ResponseCode = E_SL_MSG_AHI_GET_TX_POWER_RSP;
+                // In case of Set TX power use Get TX power to get current TX level
+                if (u16PacketType == E_SL_MSG_AHI_SET_TX_POWER)
+                {
+                    u32AHIresponse = APP_vCMDHandleAHICommand(E_SL_MSG_AHI_GET_TX_POWER, 0, au8LinkRxBuffer, &u8Status);
+                    u16ResponseCode = E_SL_MSG_AHI_SET_TX_POWER_RSP;
+                }
                 // Only return value if command succeed.
                 // TX power value range is 0x00-0xbf so uint8 is big enough
                 if ( u8Status == E_AHI_SUCCESS)
                 {
-                    ZNC_BUF_U8_UPD  ( &au8values[ 0 ], (0x3f & u32AHIresponse) & 0xFF,      u8Length );
-                    vSL_WriteMessage ( E_SL_MSG_AHI_GET_TX_POWER_RSP,
-                                      sizeof ( uint8 ),
-                                      au8values,
-                                      0);
+                    // Convert raw level to mapped value(-dBM) JN516X only not
+                    uint8 u8TXlevelRaw = (0x3f & u32AHIresponse) & 0xFF;
+                    uint8 u8TXlevel;
+                    if (u8TXlevelRaw <= 31) { u8TXlevel = 0; }
+                    else if (u8TXlevelRaw <= 39) { u8TXlevel = 32; }
+                    else if (u8TXlevelRaw <= 51) { u8TXlevel = 20; }
+                    else if (u8TXlevelRaw <= 63) { u8TXlevel = 9; }
+
+                    u8Length = 0;
+                    ZNC_BUF_U8_UPD  ( &au8values[ 0 ], u8TXlevelRaw,   u8Length );
+                    ZNC_BUF_U8_UPD  ( &au8values[ 1 ], u8TXlevel,      u8Length );
+                    vSL_WriteMessage ( u16ResponseCode,
+                                       u8Length,
+                                       au8values,
+                                       0);
                 }
                 return;
             }
