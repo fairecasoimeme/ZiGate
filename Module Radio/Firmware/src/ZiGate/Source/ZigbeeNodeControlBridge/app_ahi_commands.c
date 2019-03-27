@@ -51,6 +51,7 @@ PRIVATE void vAPP_DIOSetDirection(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer
 PRIVATE void vAPP_DIOSetOutput(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer, eAHI_Status *peAHIStatus);
 PRIVATE void vAPP_DIOSetReadInput(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer, eAHI_Status *peAHIStatus);
 PRIVATE void vAPP_AHISetTxPower(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer, eAHI_Status *peAHIStatus);
+PRIVATE void vAPP_AHIGetTxPower(uint32 *u32TxPower, eAHI_Status *peAHIStatus);
 /****************************************************************************/
 /***        Exported Variables                                            ***/
 /****************************************************************************/
@@ -72,12 +73,13 @@ PRIVATE void vAPP_AHISetTxPower(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer, 
  *
  *
  ****************************************************************************/
-PUBLIC void APP_vCMDHandleAHICommand(uint16 u16PacketType,
+PUBLIC uint32 APP_vCMDHandleAHICommand(uint16 u16PacketType,
                                      uint16 u16PacketLength,
                                      uint8 *pu8LinkRxBuffer,
                                      uint8 *peAHIStatus)
 {
 	eAHI_Status eAHI_Status;
+	uint32 u32AHI_response = 0;
 
     switch (u16PacketType)
     {
@@ -101,12 +103,19 @@ PUBLIC void APP_vCMDHandleAHICommand(uint16 u16PacketType,
         	vAPP_AHISetTxPower(u16PacketLength, pu8LinkRxBuffer, &eAHI_Status);
 			break;
 
+        case E_SL_MSG_AHI_GET_TX_POWER:
+        {
+            vAPP_AHIGetTxPower(&u32AHI_response, &eAHI_Status);
+            break;
+        }
+
         default:
         	eAHI_Status = E_AHI_COMMAND_UNRECOGNISED;
             break;
     }
 
     *peAHIStatus = eAHI_Status;
+    return u32AHI_response;
 }
 
 /****************************************************************************/
@@ -230,20 +239,46 @@ PRIVATE void vAPP_DIOSetReadInput(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer
  ****************************************************************************/
 PRIVATE void vAPP_AHISetTxPower(uint16 u16PacketLength, uint8 *pu8LinkRxBuffer, eAHI_Status *peAHIStatus)
 {
-	uint8 u8TxPower;
-	uint32 u32BytesRead = 0;
-	*peAHIStatus = E_AHI_PARSE_ERROR;
+    uint8 u8TxPower;
+    uint32 u32BytesRead = 0;
+    *peAHIStatus = E_AHI_PARSE_ERROR;
 
-	DBG_vPrintf(TRUE, "AHI: %s", __FUNCTION__);
+    DBG_vPrintf(TRUE, "AHI: %s", __FUNCTION__);
 
-	if (1 == u16PacketLength)
-	{
-		u8TxPower = pu8LinkRxBuffer[ u32BytesRead ];
-		u32BytesRead += sizeof(u8TxPower);
+    if (1 == u16PacketLength)
+    {
+        u8TxPower = pu8LinkRxBuffer[ u32BytesRead ];
+        u32BytesRead += sizeof(u8TxPower);
 
-		eAppApiPlmeSet(PHY_PIB_ATTR_TX_POWER, u8TxPower);
-		*peAHIStatus = E_AHI_SUCCESS;
-	}
+        if (eAppApiPlmeSet(PHY_PIB_ATTR_TX_POWER, u8TxPower) == PHY_ENUM_SUCCESS)
+        {
+            *peAHIStatus = E_AHI_SUCCESS;
+        }
+    }
+}
+
+/****************************************************************************
+ *
+ * NAME: vAPP_AHIGetTxPower
+ *
+ * DESCRIPTION:
+ * Command to get the Tx Power
+ *
+ * Params:
+ * @pu32TxPower: pointer for returning TX power level.
+ *
+ *
+ ****************************************************************************/
+PRIVATE void vAPP_AHIGetTxPower(uint32 *pu32TxPower, eAHI_Status *peAHIStatus)
+{
+    *peAHIStatus = E_AHI_PARSE_ERROR;
+
+    DBG_vPrintf(TRUE, "AHI: %s", __FUNCTION__);
+
+    if (eAppApiPlmeGet(PHY_PIB_ATTR_TX_POWER, pu32TxPower) == PHY_ENUM_SUCCESS)
+    {
+        *peAHIStatus = E_AHI_SUCCESS;
+    }
 }
 /****************************************************************************/
 /***        END OF FILE                                                   ***/
