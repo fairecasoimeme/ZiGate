@@ -87,6 +87,7 @@ typedef enum
     E_SL_MSG_STATUS                                            =   0x8000,
     E_SL_MSG_LOG                                               =   0x8001,
 
+    E_SL_MSG_SET_RAWMODE                                       =   0x0002,
     E_SL_MSG_DATA_INDICATION                                   =   0x8002,
 
     E_SL_MSG_NODE_CLUSTER_LIST                                 =   0x8003,
@@ -122,15 +123,15 @@ typedef enum
     E_SL_MSG_ZLL_FACTORY_NEW                                   =   0x0013,
     E_SL_MSG_GET_PERMIT_JOIN                                   =   0x0014,
     E_SL_MSG_GET_PERMIT_JOIN_RESPONSE                          =   0x8014,
-    E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE					   =   0x0015,
+    E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE                       =   0x0015,
     E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE_LIST                =   0x8015,
-    E_SL_MSG_SET_TIMESERVER									   =   0x0016,
+    E_SL_MSG_SET_TIMESERVER                                       =   0x0016,
 
-    E_SL_MSG_GET_TIMESERVER									   =   0x0017,
-    E_SL_MSG_GET_TIMESERVER_LIST							   =   0x8017,
+    E_SL_MSG_GET_TIMESERVER                                       =   0x0017,
+    E_SL_MSG_GET_TIMESERVER_LIST                               =   0x8017,
 
-    E_SL_MSG_SET_LED										   =   0x0018,
-    E_SL_MSG_SET_CE_FCC										   =   0x0019,
+    E_SL_MSG_SET_LED                                           =   0x0018,
+    E_SL_MSG_SET_CE_FCC                                           =   0x0019,
 
     E_SL_MSG_BIND                                              =   0x0030,
     E_SL_MSG_BIND_RESPONSE                                     =   0x8030,
@@ -224,7 +225,7 @@ typedef enum
     E_SL_MSG_RECALL_SCENE                                      =   0x00A5,
     E_SL_MSG_SCENE_MEMBERSHIP_REQUEST                          =   0x00A6,
     E_SL_MSG_SCENE_MEMBERSHIP_RESPONSE                         =   0x80A6,
-    E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS					   =   0x80A7,
+    E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS                    =   0x80A7,
 
     /* Colour Cluster */
     E_SL_MSG_MOVE_TO_HUE                                       =   0x00B0,

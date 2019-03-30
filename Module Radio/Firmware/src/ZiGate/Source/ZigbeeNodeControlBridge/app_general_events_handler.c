@@ -178,11 +178,11 @@ PUBLIC void APP_vHandleAppEvents ( void )
     if ( ZQ_bQueueReceive ( &APP_msgAppEvents, &sAppEvent ) )
     {
 #ifdef CLD_GREENPOWER
-		if ( sAppEvent.eType == APP_EVENT_POR_RESET_GP_TABLES )
-		{
-			vAPP_GP_ResetData();
-		}
-#endif	
+        if ( sAppEvent.eType == APP_EVENT_POR_RESET_GP_TABLES )
+        {
+            vAPP_GP_ResetData();
+        }
+#endif
 
 #ifdef FULL_FUNC_DEVICE
         if ( sAppEvent.eType == APP_E_EVENT_START_ROUTER )
@@ -237,8 +237,8 @@ PUBLIC void APP_vHandleAppEvents ( void )
             ZNC_BUF_U64_UPD (&au8LinkTxBuffer[u16TxSize], u64PANID,         u16TxSize);
             ZNC_BUF_U8_UPD (&au8LinkTxBuffer[u16TxSize], (uint8)u32Channel, u16TxSize);
 
-			vSL_WriteMessage(E_SL_MSG_NETWORK_STATE_RSP, u16TxSize, au8LinkTxBuffer,0);
-		}
+            vSL_WriteMessage(E_SL_MSG_NETWORK_STATE_RSP, u16TxSize, au8LinkTxBuffer,0);
+        }
 
 
         if(sAppEvent.eType == APP_E_EVENT_OOB_COMMISSIONING_DATA)
@@ -462,12 +462,12 @@ PUBLIC void APP_vHandleAppEvents ( void )
         }
     }
 #ifdef CLD_GREENPOWER
-	else if (ZQ_bQueueReceive(&APP_msgGPZCLTimerEvents, &u8GPZCLTimerEvent) == TRUE)
-	{
-		tsZCL_CallBackEvent sZCL_CallBackEvent;
-		sZCL_CallBackEvent.eEventType =E_ZCL_CBET_TIMER_MS;
-		vZCL_EventHandler(&sZCL_CallBackEvent);
-	}
+    else if (ZQ_bQueueReceive(&APP_msgGPZCLTimerEvents, &u8GPZCLTimerEvent) == TRUE)
+    {
+        tsZCL_CallBackEvent sZCL_CallBackEvent;
+        sZCL_CallBackEvent.eEventType =E_ZCL_CBET_TIMER_MS;
+        vZCL_EventHandler(&sZCL_CallBackEvent);
+    }
 #endif
 }
 
@@ -487,9 +487,11 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
     tsBDB_ZCLEvent         sBdbEvent;
     tsZCL_CallBackEvent    sCallBackEvent;
     uint8                  au8LinkTxBuffer[256];
-    uint8 				   u8LinkQuality;
+    uint8                    u8LinkQuality;
 
     u8LinkQuality=psStackEvent->uEvent.sApsDataIndEvent.u8LinkQuality;
+
+
 
     vLog_Printf ( TRACE_APP,LOG_DEBUG, "Got stack event %d\n", psStackEvent->eType);
 
@@ -497,6 +499,10 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
     {
         case ZPS_EVENT_APS_DATA_INDICATION:
         {
+            if (sZllState.bRawMode){
+                    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+                    return;
+                }
             uint8*    dataPtr =  ( uint8* ) PDUM_pvAPduInstanceGetPayload ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
             uint8     u8Size  =  PDUM_u16APduInstanceGetPayloadSize ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
 
@@ -985,16 +991,16 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
             {
                 if ( psStackEvent->eType ==  ZPS_EVENT_NWK_NEW_NODE_HAS_JOINED )
                 {
-				    //RAJOUT FRED
-                	 u16Length =  0;
-					ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [0] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u16NwkAddr,  u16Length );
-					ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u64ExtAddr,    u16Length );
-					ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u8Capability,   u16Length );
+                    //RAJOUT FRED
+                     u16Length =  0;
+                    ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [0] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u16NwkAddr,  u16Length );
+                    ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u64ExtAddr,    u16Length );
+                    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u8Capability,   u16Length );
 
-					vSL_WriteMessage ( E_SL_MSG_DEVICE_ANNOUNCE,
-									   u16Length,
-									   au8LinkTxBuffer,
-									   u8LinkQuality);
+                    vSL_WriteMessage ( E_SL_MSG_DEVICE_ANNOUNCE,
+                                       u16Length,
+                                       au8LinkTxBuffer,
+                                       u8LinkQuality);
 
                     vLog_Printf ( TRACE_APP,LOG_DEBUG, "\nNode joined %04x",
                                                        psStackEvent->uEvent.sNwkJoinIndicationEvent.u16NwkAddr );

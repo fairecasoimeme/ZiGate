@@ -166,6 +166,7 @@ typedef struct {
     uint16 u16NwkAddrOfServer;
     uint8 u8OTAserverEP;
 #endif
+    bool_t bRawMode;
 }tsZllState;
 
 typedef struct {
@@ -187,6 +188,8 @@ PUBLIC uint16 APP_u16ZncWriteDataPattern( uint8 *pu8Data,
                                           uint8 *pu8Struct,
                                          uint32 u32Size);
 PUBLIC void APP_vSendDataIndicationToHost( ZPS_tsAfEvent *psStackEvent,
+                                           uint8* pau8StatusBuffer);
+PUBLIC void Znc_vSendDataIndicationToHost( ZPS_tsAfEvent *psStackEvent,
                                            uint8* pau8StatusBuffer);
 PUBLIC void APP_vSaveAllRecords(void);
 PUBLIC void APP_vSendJoinedFormEventToHost ( uint8    u8FormJoin,
