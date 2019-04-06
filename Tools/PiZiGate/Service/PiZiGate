@@ -1,0 +1,25 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          PiZigate
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Manage my cool stuff
+### END INIT INFO
+
+case "$1" in
+  start)
+        gpio mode 0 out
+        gpio mode 2 out
+        gpio write 2 1
+        gpio write 0 0
+        gpio write 0 1
+
+        exit 0
+  ;;
+  *)
+        echo "Usage: /etc/init.d/PiZigate start"
+        exit
+  ;;
+esac
