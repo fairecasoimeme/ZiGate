@@ -3,4 +3,4 @@ Initial version.
 
 Test if PiZiGate configuration is OK for works
 
-Usage : ./PiZiGate_test <serial port>
+Usage : ./PiZiGate_test [serial port]
