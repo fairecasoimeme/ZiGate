@@ -32,7 +32,9 @@ int set_interface_attribs(int fd, int speed)
     struct termios tty;
 
     if (tcgetattr(fd, &tty) < 0) {
-        printf("Error from tcgetattr: %s\n", strerror(errno));
+		color("31;1");
+        printf("- Error from tcgetattr: %s\n", strerror(errno));
+		color("0");
         return -1;
     }
 
@@ -79,7 +81,9 @@ void set_mincount(int fd, int mcount)
     tty.c_cc[VTIME] = 5;        /* half second timer */
 
     if (tcsetattr(fd, TCSANOW, &tty) < 0)
-        printf("Error tcsetattr: %s\n", strerror(errno));
+		color("31;1");
+        printf("- Error tcsetattr: %s\n", strerror(errno));
+		color("0"); 
 }
 
 int main(int argc, char ** argv) {
@@ -116,7 +120,7 @@ int main(int argc, char ** argv) {
 		exit(0);
 	}
 	color("32;1");
-	printf("+ Port : %s is free\n",  serialPort,serialPort);
+	printf("+ Port : %s is not used\n",  serialPort,serialPort);
 	color("0");
 	
 	printf("Verif GPIOs ...\n");
@@ -187,7 +191,7 @@ int main(int argc, char ** argv) {
 		color("31;1");
 		printf("- Error - Unable to open UART.  Ensure it is not in use by another application\n");
 		color("0");
-		exit;
+		exit(0);
 	}
 	color("32;1");
 	printf("+ %s opened --> OK\n",serialPort);
@@ -240,7 +244,7 @@ int main(int argc, char ** argv) {
 		printf("Release : %02x%02x\n",tmpBuff[0],tmpBuff[1]);
 		printf("Version : %02x%02x\n",tmpBuff[2],tmpBuff[3]);
 		color("0");
-		exit;
+		exit(0);
 	}else{
 		color("31;1");
 		printf("- No packet received - size sent : %d - error : %d\n", wlen, errno);
