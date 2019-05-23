@@ -213,6 +213,7 @@ PRIVATE void APP_MigratePDM( void );
 
 bool_t                    bLedActivate =  TRUE;
 uint8_t					  bPowerCEFCC  =  APP_API_MODULE_HPM05;
+bool_t					  bCtrlFlow    =  FALSE;
 PUBLIC tsLedState         s_sLedState  =  { LED1_DIO_PIN,  ZTIMER_TIME_MSEC(1),  FALSE };
 #ifdef FULL_FUNC_DEVICE
 tsZllEndpointInfoTable    sEndpointTable;
@@ -1544,6 +1545,8 @@ PRIVATE void APP_MigratePDM( void )
     version = VERSION;
     PDM_eSaveRecordData(PDM_ID_APP_VERSION, &version, sizeof ( version ));
 }
+
+
 
 /****************************************************************************/
 /***        END OF FILE                                                   ***/

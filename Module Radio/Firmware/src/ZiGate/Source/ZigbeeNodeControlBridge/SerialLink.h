@@ -133,6 +133,7 @@ typedef enum
     E_SL_MSG_SET_LED                                           =   0x0018,
     E_SL_MSG_SET_CE_FCC                                           =   0x0019,
 
+    E_SL_MSG_SET_FLOW_CONTROL								   =   0x002F,
     E_SL_MSG_BIND                                              =   0x0030,
     E_SL_MSG_BIND_RESPONSE                                     =   0x8030,
     E_SL_MSG_UNBIND                                            =   0x0031,

@@ -154,6 +154,12 @@ PUBLIC void UART_vInit(void)
 
 }
 
+PUBLIC void UART_vSetFlowControl(bool_t ctrl)
+{
+
+	 vAHI_UartSetRTSCTS(UART, ctrl);
+}
+
 /****************************************************************************
  *
  * NAME: vUART_SetBuadRate

@@ -278,7 +278,8 @@ PUBLIC uint32 u32Channel;
 /****************************************************************************/
 extern bool_t                         bSetTclkFlashFeature ;
 extern uint8_t                        bLedActivate;
-extern bool_t                          bPowerCEFCC;
+extern bool_t						  bPowerCEFCC;
+extern bool_t 						  bCtrlFlow;
 extern PUBLIC bool_t zps_bGetFlashCredential ( uint64            u64IeeeAddr ,
                                                AESSW_Block_u*    puKey,
                                                uint16            *pu16Index,
@@ -644,6 +645,12 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 vAppApiSetHighPowerMode(bPowerCEFCC, TRUE);
             }
             break;
+				case (E_SL_MSG_SET_FLOW_CONTROL):
+			{
+				bCtrlFlow     =   au8LinkRxBuffer [ 0 ];
+				UART_vSetControlFlow(bCtrlFlow);
+			}
+			break;
             case (E_SL_MSG_START_NETWORK):
             {
                 APP_vControlNodeStartNetwork();
