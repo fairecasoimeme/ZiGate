@@ -648,7 +648,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 				case (E_SL_MSG_SET_FLOW_CONTROL):
 			{
 				bCtrlFlow     =   au8LinkRxBuffer [ 0 ];
-				UART_vSetControlFlow(bCtrlFlow);
+				UART_vSetFlowControl(bCtrlFlow);
 			}
 			break;
             case (E_SL_MSG_START_NETWORK):

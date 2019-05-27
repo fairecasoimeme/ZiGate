@@ -132,9 +132,11 @@ uint8 rxbuf[127];
  ****************************************************************************/
 PUBLIC void UART_vInit(void)
 {
-    /* Enable UART 0 */
+
+	/* Enable UART 0 */
 	vAHI_UartEnable(UART);
 	//vAHI_UartSetLocation(UART,0);
+	vAHI_UartSetRTSCTS(UART, TRUE);
     bAHI_UartEnable(UART, //uint8 u8Uart,
                 txbuf, //uint8 *pu8TxBufAd,
                 (uint8)16, //uint16 u16TxBufLen,
@@ -148,7 +150,6 @@ PUBLIC void UART_vInit(void)
        directly as the normal routines (in ROM) do not support all baud rates */
     UART_vSetBaudRate(UART_BAUD_RATE);
 
-    vAHI_UartSetRTSCTS(UART, FALSE);
     vAHI_UartSetControl(UART, FALSE, FALSE, E_AHI_UART_WORD_LEN_8, TRUE, FALSE); /* [I SP001222_P1 279] */
     vAHI_UartSetInterrupt(UART, FALSE, FALSE, FALSE, TRUE, E_AHI_UART_FIFO_LEVEL_14);
 
@@ -158,6 +159,10 @@ PUBLIC void UART_vSetFlowControl(bool_t ctrl)
 {
 
 	 vAHI_UartSetRTSCTS(UART, ctrl);
+	 vAHI_UartReset(UART, TRUE, TRUE);
+	 vAHI_UartReset(UART, FALSE, FALSE);
+	 UART_vRtsStartFlow();
+
 }
 
 /****************************************************************************
