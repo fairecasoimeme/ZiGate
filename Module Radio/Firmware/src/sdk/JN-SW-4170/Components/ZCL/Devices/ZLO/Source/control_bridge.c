@@ -402,6 +402,22 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
         }
     #endif
 
+	#if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_SERVER)
+		   /* Create an instance of a Colour Control cluster as a server */
+		   if(eCLD_ColourControlCreateColourControl(
+								 &psDeviceInfo->sClusterInstance.sColourControlServer,
+								 FALSE,
+								 &sCLD_ColourControl,
+								 &psDeviceInfo->sColourControlServerCluster,
+								 &au8ColourControlAttributeControlBits[0],
+								 &psDeviceInfo->sColourControlServerCustomDataStructure) != E_ZCL_SUCCESS)
+		   {
+			  // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			  return E_ZCL_FAIL;
+		   }
+	   #endif
+
+
     #if (defined CLD_GROUPS) && (defined GROUPS_SERVER)
         /* Create an instance of a Groups cluster as a server */
         if ( eCLD_GroupsCreateGroups ( &psDeviceInfo->sClusterInstance.sGroupsServer,
@@ -471,6 +487,20 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
            return E_ZCL_FAIL;
         }
     #endif
+
+	#if (defined CLD_IASWD) && (defined IASWD_CLIENT)
+       /* Create an instance of a IAS Zone cluster as a client */
+       if( eCLD_IASWDCreateIASWD( &psDeviceInfo->sClusterInstance.sIASWDClient,
+                                   FALSE,
+                                   &sCLD_IASWD,
+                                   &psDeviceInfo->sIASWDClientCluster,
+                                   &au8IASWDAttributeControlBits[0],
+                                   &psDeviceInfo->sIASWDClientCustomDataStructure ) != E_ZCL_SUCCESS )
+       {
+          // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+          return E_ZCL_FAIL;
+       }
+   	   #endif
 
 	#if (defined CLD_IASZONE) && (defined IASZONE_SERVER)
         /* Create an instance of a IAS Zone cluster as a client */
@@ -632,9 +662,9 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
        /* Create an instance of a Basic cluster as a server */
        if ( eCLD_MultistateInputBasicCreateMultistateInputBasic( &psDeviceInfo->sClusterInstance.sMultistateClient,
                               TRUE,
-                              &sCLD_MultistateInputBasic,
+                              &sCLD_MultistateInputBasicClient,
                               &psDeviceInfo->sMultistateClientCluster,
-                              &au8MultistateInputBasicAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
+                              &au8MultistateInputBasicClientAttributeControlBits[ 0 ] ) != E_ZCL_SUCCESS )
        {
        // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
            return E_ZCL_FAIL;

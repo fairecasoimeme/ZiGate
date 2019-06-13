@@ -27,7 +27,7 @@
 #include "zcl_customcommand.h"
 #include "PrivatePhilips.h"
 #include "zcl_options.h"
-#include "log.h"
+//#include "log.h"
 
 #include "app_common.h"
 
@@ -137,7 +137,7 @@ PUBLIC  teZCL_Status ePrivatePhilipsCommandHandler(
 
 	while(u16payloadSize-u16inputOffset > 0)
 	{
-		vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n ePrivatePhilipsCommandHandler - u16payloadSize : %d / u16inputOffset : %d\n",u16payloadSize,u16inputOffset);
+		//vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n ePrivatePhilipsCommandHandler - u16payloadSize : %d / u16inputOffset : %d\n",u16payloadSize,u16inputOffset);
 		sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.eAttributeStatus = E_ZCL_CMDS_SUCCESS;
 
 		u16inputOffset +=u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT8,

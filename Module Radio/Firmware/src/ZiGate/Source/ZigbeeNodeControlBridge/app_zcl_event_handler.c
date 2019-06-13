@@ -862,13 +862,28 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
                     }
 
-                    ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->u8CommandId,    u16Length );
-                    vSL_WriteMessage ( E_SL_MSG_MOVE_TO_LEVEL_UPDATE,
-                                       u16Length,
-                                       au8LinkTxBuffer,
-                                       u8LinkQuality );
-                }
-                break;
+					ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->u8CommandId,    u16Length );
+					if (psCallBackMessage->u8CommandId == 0x04)
+					{
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveToLevelCommandPayload->u8Level,    u16Length );
+						ZNC_BUF_U16_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveToLevelCommandPayload->u16TransitionTime,    u16Length );
+
+					}else if (psCallBackMessage->u8CommandId == 0x02)
+					{
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u8StepMode,    u16Length );
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u8StepSize,    u16Length );
+						ZNC_BUF_U16_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u16TransitionTime,    u16Length );
+
+					}
+					vSL_WriteMessage ( E_SL_MSG_MOVE_TO_LEVEL_UPDATE,
+									   u16Length,
+									   au8LinkTxBuffer,
+									   u8LinkQuality );
+				}
+				break;
+                /*case GENERAL_CLUSTER_ID_COLOUR_CONTROL:
+				{
+					tsCLD_ColourControlCallBackMessage*    psCallBackMessage =  ( tsCLD_ColourControlCallBackMessage* ) psEvent->uMessage.sClusterCustomMessage.pvCustomData;
 
                 case GENERAL_CLUSTER_ID_IDENTIFY:
                     vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- for identify cluster\r\n" );

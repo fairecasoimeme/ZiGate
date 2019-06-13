@@ -1909,6 +1909,44 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                                        u16SizePayload );
             }
             break;
+            case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD):
+			{
+
+				uint16    u16WarningDuration;
+				u16WarningDuration      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 10 );
+				/*tsCLD_IASWD_StartWarningReqPayload payloadIASWD;
+				payloadIASWD.u8WarningModeStrobeAndSirenLevel=au8LinkRxBuffer [ 9];
+				payloadIASWD.u16WarningDuration=u16WarningDuration;
+				payloadIASWD.u8StrobeDutyCycle=au8LinkRxBuffer [ 12];
+				payloadIASWD.u8WarningModeStrobeAndSirenLevel=au8LinkRxBuffer [13];*/
+
+
+				tsZCL_TxPayloadItem asPayloadDefinition[] = {
+				        {1, E_ZCL_ENUM8,  (void *)&au8LinkRxBuffer [ 9] },
+				        {1, E_ZCL_UINT16,  (void *)&u16WarningDuration},
+				        {1, E_ZCL_UINT8,  (void *)&au8LinkRxBuffer [ 12]},
+				        {1, E_ZCL_ENUM8,   (void *)&au8LinkRxBuffer [13]}
+				                                                };
+
+				u8Status =  eZCL_CustomCommandSend(au8LinkRxBuffer [ 3 ],
+												  au8LinkRxBuffer [ 4 ],
+												  &sAddress,
+				                                  SECURITY_AND_SAFETY_CLUSTER_ID_IASWD,
+				                                  FALSE,
+				                                  E_CLD_IASWD_CMD_START_WARNING,
+				                                  &u8SeqNum,
+				                                  asPayloadDefinition,
+				                                  FALSE,
+				                                  0,
+				                                  sizeof(asPayloadDefinition) / sizeof(tsZCL_TxPayloadItem));
+
+				/*u8Status = eCLD_IASWDStartWarningReqSend(au8LinkRxBuffer [ 3 ],
+												  au8LinkRxBuffer [ 4 ],
+												  &sAddress,
+												  &u8SeqNum,
+												  &payloadIASWD)	;*/
+			}
+			break;
 
 
             case E_SL_MSG_CONFIG_REPORTING_REQUEST:

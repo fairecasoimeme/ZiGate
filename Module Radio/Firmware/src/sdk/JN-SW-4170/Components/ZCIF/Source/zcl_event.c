@@ -603,7 +603,7 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
         /* Verrue pour passer le message Xiaomi 0x115F */
 	    /* Avec cette verrue la ZiGate n'envoie pas de réponse à l'emetteur */
 
-	    if(  sZCL_HeaderParams.bManufacturerSpecific && ((sZCL_HeaderParams.u16ManufacturerCode == 0x115F) || (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) || (sZCL_HeaderParams.u16ManufacturerCode == 0x1234)  || (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
+	    if(  sZCL_HeaderParams.bManufacturerSpecific && ((sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||(sZCL_HeaderParams.u16ManufacturerCode == 0x115F) || (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) || (sZCL_HeaderParams.u16ManufacturerCode == 0x1234)  || (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
 	    {
 		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: Verrue pour passer le Attribute Report proprietaire Xiaomi 0x115F.\n", __FILE__, __LINE__, __func__);
 		   u8Error=0;

@@ -75,6 +75,9 @@ extern "C" {
 #ifdef CLD_IASZONE
 #include "IASZone.h"
 #endif
+#ifdef CLD_IASWD
+#include "IASWD.h"
+#endif
 #ifdef CLD_DOOR_LOCK
 #include "DoorLock.h"
 #endif
@@ -204,6 +207,10 @@ typedef struct
         tsZCL_ClusterInstance sColourControlClient;
     #endif
 
+   #if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_SERVER)
+       tsZCL_ClusterInstance sColourControlServer;
+   #endif
+
     /* Recommend Optional client clusters */
     #if (defined CLD_OTA) && (defined OTA_CLIENT)
         tsZCL_ClusterInstance sOTAClient;
@@ -241,6 +248,9 @@ typedef struct
     /* Extra client cluster */
     #if (defined CLD_IASZONE) && (defined IASZONE_CLIENT)
         tsZCL_ClusterInstance sIASZoneClient;
+    #endif
+	#if (defined CLD_IASWD) && (defined IASWD_CLIENT)
+        tsZCL_ClusterInstance sIASWDClient;
     #endif
 
 	#if (defined CLD_IASZONE) && (defined IASZONE_SERVER)
@@ -411,6 +421,12 @@ typedef struct
         tsCLD_ColourControlCustomDataStructure sColourControlClientCustomDataStructure;
     #endif
 
+    #if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_SERVER)
+       /* Colour Control Cluster - Client */
+       tsCLD_ColourControl sColourControlServerCluster;
+       tsCLD_ColourControlCustomDataStructure sColourControlServerCustomDataStructure;
+    #endif
+
         /* Recommended Optional client clusters */
         
     #if (defined CLD_OTA) && (defined OTA_CLIENT)
@@ -462,6 +478,13 @@ typedef struct
         tsCLD_IASZone sIASZoneClientCluster;    
         tsCLD_IASZone_CustomDataStructure sIASZoneClientCustomDataStructure;
     #endif
+
+
+	#if (defined CLD_IASWD) && (defined IASWD_CLIENT)
+		/* IAS WD - Client */
+		tsCLD_IASWD sIASWDClientCluster;
+		tsCLD_IASWD_CustomDataStructure sIASWDClientCustomDataStructure;
+	#endif
 
     #if (defined CLD_IASZONE) && (defined IASZONE_SERVER)
        /* IAS Zone - Server */
@@ -520,12 +543,12 @@ typedef struct
 
 	#if (defined CLD_MULTISTATE_INPUT_BASIC) && (defined MULTISTATE_INPUT_BASIC_CLIENT)
 		/* Multistate Cluster - Client */
-		tsCLD_MultistateInputBasic sMultistateClientCluster;
+		tsCLD_MultistateInputBasicClient sMultistateClientCluster;
 
 	#endif
 	#if (defined CLD_ANALOG_INPUT_BASIC) && (defined CLD_ANALOG_INPUT_BASIC_CLIENT)
 		/* Multistate Cluster - Client */
-		tsCLD_MultistateInputBasic sAnalogInputClientCluster;
+		tsCLD_MultistateInputBasicClient sAnalogInputClientCluster;
 
 	#endif
 
