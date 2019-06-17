@@ -127,7 +127,7 @@ extern uint8 u8GPZCLTimerEvent;
 #define MAX_PACKET_SIZE         256
 #define DEFAULT_CHANNEL         11
 #define APP_IDENTIFY_TIME       10  /* Application specific identify time specified in seconds */
-#define ZNC_MAX_TCLK_DEVICES    60
+#define ZNC_MAX_TCLK_DEVICES    70
 #ifdef CLD_GREENPOWER
 #define GP_ZCL_TICK_TIME        ZTIMER_TIME_MSEC(1)
 #endif
