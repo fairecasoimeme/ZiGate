@@ -603,14 +603,14 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
         /* Verrue pour passer le message Xiaomi 0x115F */
 	    /* Avec cette verrue la ZiGate n'envoie pas de réponse à l'emetteur */
 
-	    if(  sZCL_HeaderParams.bManufacturerSpecific && ((sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||(sZCL_HeaderParams.u16ManufacturerCode == 0x115F) || (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) || (sZCL_HeaderParams.u16ManufacturerCode == 0x1234)  || (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
+	    if(  sZCL_HeaderParams.bManufacturerSpecific && ((sZCL_HeaderParams.u16ManufacturerCode == 0x1228) || (sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||(sZCL_HeaderParams.u16ManufacturerCode == 0x115F) || (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) || (sZCL_HeaderParams.u16ManufacturerCode == 0x1234)  || (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
 	    {
 		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: Verrue pour passer le Attribute Report proprietaire Xiaomi 0x115F.\n", __FILE__, __LINE__, __func__);
 		   u8Error=0;
 	    }
 
-	    //FRED -- Specifique à orvibo
-	    if ((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x0a) && ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_IS_SPECIFIC_TO_A_CLUSTER ) )
+	    //FRED -- Specifique à orvibo + TERNCY
+	    if (((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x0a) || (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x6e))&& ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_IS_SPECIFIC_TO_A_CLUSTER ) )
 	    {
 	    	u8Error=0;
 	    }
@@ -908,7 +908,7 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                 }
                 else
                 {
-                	vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n vZCL_HandleEntireProfileCommand");
+                	//vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n vZCL_HandleEntireProfileCommand cmd : %d", sZCL_HeaderParams.u8CommandIdentifier);
 
                     // Moved to zcl_library_options.h as some commands are optional so
                     // the command handler is built at the same time as the app and unused

@@ -112,6 +112,9 @@ extern "C" {
 #ifdef CLD_PRIVATE_PHILIPS
 #include "PrivatePhilips.h"
 #endif
+#ifdef CLD_PRIVATE_TERNCY
+#include "PrivateTerncy.h"
+#endif
 
 
 #ifdef CLD_GREENPOWER
@@ -307,6 +310,9 @@ typedef struct
 
 	#if (defined CLD_PRIVATE_PHILIPS) && (defined PRIVATE_PHILIPS_SERVER)
        tsZCL_ClusterInstance sPrivatePhilips;
+    #endif
+	#if (defined CLD_PRIVATE_TERNCY)
+       tsZCL_ClusterInstance sPrivateTerncy;
     #endif
 
 
@@ -554,6 +560,9 @@ typedef struct
 
     #if (defined CLD_PRIVATE_PHILIPS) && (defined PRIVATE_PHILIPS_SERVER)
         tsCLD_PrivatePhilips sPrivatePhilipsCluster;
+    #endif
+    #if (defined CLD_PRIVATE_TERNCY)
+        tsCLD_PrivateTerncy sPrivateTerncyCluster;
     #endif
 
 } tsZLO_ControlBridgeDevice;

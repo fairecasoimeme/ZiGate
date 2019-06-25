@@ -779,7 +779,7 @@ PUBLIC teZCL_Status eZCL_SearchForEPIndex(
         return E_ZCL_FAIL;
 
 
-    if (u8endpointId==10) {u8endpointId=1;} //FRED -- ORVIBO COMPATIBILITE
+    if ((u8endpointId==10) || (u8endpointId==110)) {u8endpointId=1;} //FRED -- ORVIBO + TERNCY COMPATIBILITE
     for(i=0; i<psZCL_Common->u8NumberOfEndpoints; i++)
     {
     	//vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n i : %d - u8EndPointNumber: %d\n",i,psZCL_Common->psZCL_EndPointRecord[i].psEndPointDefinition->u8EndPointNumber);

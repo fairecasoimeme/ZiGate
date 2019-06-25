@@ -697,6 +697,18 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
             return E_ZCL_FAIL;
         }
     #endif
+	#if (defined CLD_PRIVATE_TERNCY)
+			/* Create an instance of a Temperature Measurement cluster as a client */
+			if ( eCLD_PrivateTerncyCreate ( &psDeviceInfo->sClusterInstance.sPrivateTerncy,
+																	  FALSE,
+																	  &sCLD_PrivateTerncy,
+																	  &psDeviceInfo->sPrivateTerncyCluster,
+																	  &au8PrivateTerncyAttributeControlBits[0]) != E_ZCL_SUCCESS )
+			{
+				// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+				return E_ZCL_FAIL;
+			}
+		#endif
 
      teZCL_Status status;
    status= eZCL_Register(&psDeviceInfo->sEndPoint);
