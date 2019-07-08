@@ -874,6 +874,10 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u8StepSize,    u16Length );
 						ZNC_BUF_U16_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psStepCommandPayload->u16TransitionTime,    u16Length );
 
+					}else if (psCallBackMessage->u8CommandId == 0x01)
+					{
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveCommandPayload->u8MoveMode,    u16Length );
+						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveCommandPayload->u8Rate,    u16Length );
 					}
 					vSL_WriteMessage ( E_SL_MSG_MOVE_TO_LEVEL_UPDATE,
 									   u16Length,
