@@ -284,6 +284,7 @@ typedef enum
     E_SL_MSG_WRITE_ATTRIBUTE_REQUEST                            =  0x0110,
     E_SL_MSG_WRITE_ATTRIBUTE_RESPONSE                           =  0x8110,
     E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD                     =  0x0111,
+    E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK              =  0x0112,
     E_SL_MSG_CONFIG_REPORTING_REQUEST                           =  0x0120,
     E_SL_MSG_CONFIG_REPORTING_RESPONSE                          =  0x8120,
     E_SL_MSG_REPORT_ATTRIBUTES                                  =  0x8121,
