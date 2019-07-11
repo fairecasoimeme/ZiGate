@@ -1948,6 +1948,27 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 			}
 			break;
 
+            case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK):
+            {
+
+                tsZCL_TxPayloadItem asPayloadDefinition[] = {
+                        {1, E_ZCL_ENUM8,  (void *)&au8LinkRxBuffer [ 9] },
+                };
+
+                u8Status =  eZCL_CustomCommandSend(au8LinkRxBuffer [ 3 ],
+                                                  au8LinkRxBuffer [ 4 ],
+                                                  &sAddress,
+                                                  SECURITY_AND_SAFETY_CLUSTER_ID_IASWD,
+                                                  FALSE,
+                                                  E_CLD_IASWD_CMD_SQUAWK,
+                                                  &u8SeqNum,
+                                                  asPayloadDefinition,
+                                                  FALSE,
+                                                  0,
+                                                  sizeof(asPayloadDefinition) / sizeof(tsZCL_TxPayloadItem));
+            }
+            break;
+
 
             case E_SL_MSG_CONFIG_REPORTING_REQUEST:
             {
