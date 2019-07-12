@@ -501,6 +501,8 @@ PRIVATE void vZCL_ZigbeeEventHandler(ZPS_tsAfEvent *pZPSevent)
 
         break;
 
+
+
            // shouldn't get these, pass them up
     case(ZPS_EVENT_NONE):
     case(ZPS_EVENT_NWK_JOINED_AS_ROUTER):
@@ -610,7 +612,7 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
 	    }
 
 	    //FRED -- Specifique à orvibo + TERNCY
-	    if (((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x0a) || (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x6e))&& ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_IS_SPECIFIC_TO_A_CLUSTER ) )
+	    if (((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x0a) || (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x6e)|| (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x15))&& ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_IS_SPECIFIC_TO_A_CLUSTER ) )
 	    {
 	    	u8Error=0;
 	    }

@@ -78,6 +78,9 @@
 #include "ApplianceStatistics.h"
 #include "bdb_DeviceCommissioning.h"
 
+//FRED IASWD
+#include "IASWD.h"
+
 #ifdef APP_AHI_CONTROL
 #include "app_ahi_commands.h"
 #endif
@@ -94,7 +97,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x00030310
+#define VERSION    0x0003031a
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/

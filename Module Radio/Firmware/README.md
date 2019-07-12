@@ -8,10 +8,12 @@
 * Add SrcAddr to 0x8040 command (MANAGEMENT_LQI_REQUEST) https://github.com/fairecasoimeme/ZiGate/issues/198
 * Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
 * Add TERNCY devices (talk to 0x6E endpoint and use private cluster 0xFCCC)
+* Add KONKE devices (talk to 0x15 endpoint)
 * Add complete INNR RC110 support (add LEVEL_CONTROL_SERVER) https://github.com/fairecasoimeme/ZiGate/issues/160 + https://github.com/fairecasoimeme/ZiGate/issues/194
 * Add 0x40 command on Cluster (0x0006) (for INNR RC110)
 * Add 0x04 an 0x02 command on Cluster (0x0008) (for INNR RC110)
 * Add cmd 0x0111 E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD to send command to IAS_WD device
+* Add cmd 0x0112 E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK to send command to IAS_WD device
 * Add cmd 0x0807 Get Tx Power https://github.com/fairecasoimeme/ZiGate/issues/145
 * Add cmd 0x8806 Set Tx Power
 * Add BMAP16 attribute type https://github.com/fairecasoimeme/ZiGate/issues/167
