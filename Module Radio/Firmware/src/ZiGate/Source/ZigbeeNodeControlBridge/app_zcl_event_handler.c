@@ -1286,9 +1286,15 @@ void vAPP_ZCL_DeviceSpecific_Init ( void )
 teZCL_Status eApp_ZLO_RegisterEndpoint ( tfpZCL_ZCLCallBackFunction    fptr )
 {
 
-    eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
-                                                    fptr,
-                                                    &sControlBridge );
+	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
+	                                                fptr,
+	                                                &sControlBridge );
+	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT,
+		                                                fptr,
+		                                                &sControlBridge );
+	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT,
+			                                                fptr,
+			                                                &sControlBridge );
     return eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT,
                                                 fptr,
                                                 &sControlBridge );

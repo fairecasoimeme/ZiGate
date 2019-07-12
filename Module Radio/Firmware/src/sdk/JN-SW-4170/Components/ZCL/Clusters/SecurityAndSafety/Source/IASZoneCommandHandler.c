@@ -587,7 +587,11 @@ PRIVATE teZCL_Status eCLD_IASZoneHandleZoneEnrollRequest(
 
     /* Message data for callback */
     psCommon->sCallBackMessage.uMessage.sZoneEnrollRequestCallbackPayload.psZoneEnrollRequestPayload = &sPayload;
-    //psCommon->sCallBackMessage.uMessage.sZoneEnrollRequestCallbackPayload.sZoneEnrollResponsePayload.e8EnrollResponseCode = E_CLD_IASZONE_ENROLL_RESP_NOT_SUPPORTED;
+
+    if (psCommon->sCallBackMessage.uMessage.sZoneEnrollRequestCallbackPayload.psZoneEnrollRequestPayload->u16ManufacturerCode == 0x1002) //KONKE
+    {
+    	psCommon->sCallBackMessage.uMessage.sZoneEnrollRequestCallbackPayload.sZoneEnrollResponsePayload.e8EnrollResponseCode = E_CLD_IASZONE_ENROLL_RESP_SUCCESS;
+    }
     //psCommon->sCallBackMessage.uMessage.sZoneEnrollRequestCallbackPayload.sZoneEnrollResponsePayload.u8ZoneID = 0;
     /* call callback */
     psEndPointDefinition->pCallBackFunctions(&psCommon->sCustomCallBackEvent);  

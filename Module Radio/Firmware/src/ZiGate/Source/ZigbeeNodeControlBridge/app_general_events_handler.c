@@ -745,6 +745,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                                 ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length] , u8Bytes,    u16Length );
                             }
                         }
+                        ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
                         vSL_WriteMessage ( E_SL_MSG_MANAGEMENT_LQI_RESPONSE,
                                            u16Length,
                                            au8LinkTxBuffer,
@@ -802,6 +803,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                                 i++;
                             }
                         }
+                        ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
                         vSL_WriteMessage ( E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE,
                                            u16Length,
                                            au8LinkTxBuffer,
@@ -854,26 +856,28 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                     break;
 
                     case ZPS_ZDP_BIND_RSP_CLUSTER_ID:
-                        ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sUnbindRsp.u8Status,    u16Length );
-                        ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint, u16Length );
-                        ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode, u16Length );
-                        ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
-                        vSL_WriteMessage ( E_SL_MSG_BIND_RESPONSE,
-                                            u16Length,
-                                            au8LinkTxBuffer,
-                                            u8LinkQuality );
-                    break;
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sBindRsp.u8Status,    u16Length );
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint, u16Length );
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode, u16Length );
+						ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+						ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId,    u16Length );
+						vSL_WriteMessage ( E_SL_MSG_BIND_RESPONSE,
+											u16Length,
+											au8LinkTxBuffer,
+											u8LinkQuality );
+					break;
 
-                    case ZPS_ZDP_UNBIND_RSP_CLUSTER_ID:
-                        ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sUnbindRsp.u8Status,    u16Length );
-                        ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint, u16Length );
-                        ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode, u16Length );
-                        ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
-                        vSL_WriteMessage ( E_SL_MSG_UNBIND_RESPONSE,
-                                           u16Length,
-                                           au8LinkTxBuffer,
-                                           u8LinkQuality );
-                    break;
+					case ZPS_ZDP_UNBIND_RSP_CLUSTER_ID:
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sUnbindRsp.u8Status,    u16Length );
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint, u16Length );
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode, u16Length );
+						ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+						ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId,    u16Length );
+						vSL_WriteMessage ( E_SL_MSG_UNBIND_RESPONSE,
+										   u16Length,
+										   au8LinkTxBuffer,
+										   u8LinkQuality );
+					break;
 
                     case ZPS_ZDP_MGMT_PERMIT_JOINING_RSP_CLUSTER_ID:
                         ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], sApsZdpEvent.uZdpData.sPermitJoiningRsp.u8Status,    u16Length );
