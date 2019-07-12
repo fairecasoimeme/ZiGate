@@ -165,7 +165,7 @@ typedef struct
 
 #if (defined CLD_MULTISTATE_INPUT_BASIC) && (defined MULTISTATE_INPUT_BASIC_CLIENT)
     /* Multistate Cluster - Client */
-    tsCLD_MultistateInputBasic sMultistateClientCluster;
+    tsCLD_MultistateInputBasicClient sMultistateClientCluster;
 
 #endif
 

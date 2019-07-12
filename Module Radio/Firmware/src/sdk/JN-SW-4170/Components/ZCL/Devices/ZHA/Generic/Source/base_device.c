@@ -188,7 +188,7 @@ PUBLIC teZCL_Status eZHA_RegisterBaseDeviceEndPoint(uint8 u8EndPointIdentifier,
     /* Create an instance of an Identify cluster as a client */
     if(eCLD_MultistateInputBasicCreateMultistateInputBasic(&psDeviceInfo->sClusterInstance.sMultistateClient,
                           FALSE,
-                          &sCLD_MultistateInputBasic,
+                          &sCLD_MultistateInputBasicClient,
                           &psDeviceInfo->sMultistateClientCluster,
                           &au8IdentifyAttributeControlBits[0]) != E_ZCL_SUCCESS)
     {

@@ -1,3 +1,32 @@
+# Version 3.1a
+
+* Add Raw Mode, command 0x0002 (zigpy ) https://github.com/fairecasoimeme/ZiGate/issues/129 + https://github.com/fairecasoimeme/ZiGate/issues/153
+* Add PDM migration for version changing
+* Add support of cluster IAS_WD (0x0502). To manage alarm siren
+* Add Flow control (RTS/CTS) option control
+* Add SrcAddr to 0x804A command (MANAGEMENT_NETWORK_UPDATE_RESPONSE) https://github.com/fairecasoimeme/ZiGate/issues/203
+* Add SrcAddr to 0x8040 command (MANAGEMENT_LQI_REQUEST) https://github.com/fairecasoimeme/ZiGate/issues/198
+* Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
+* Add TERNCY devices (talk to 0x6E endpoint and use private cluster 0xFCCC)
+* Add KONKE devices (talk to 0x15 endpoint)
+* Add complete INNR RC110 support (add LEVEL_CONTROL_SERVER) https://github.com/fairecasoimeme/ZiGate/issues/160 + https://github.com/fairecasoimeme/ZiGate/issues/194
+* Add 0x40 command on Cluster (0x0006) (for INNR RC110)
+* Add 0x04 an 0x02 command on Cluster (0x0008) (for INNR RC110)
+* Add cmd 0x0111 E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD to send command to IAS_WD device
+* Add cmd 0x0112 E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK to send command to IAS_WD device
+* Add cmd 0x0807 Get Tx Power https://github.com/fairecasoimeme/ZiGate/issues/145
+* Add cmd 0x8806 Set Tx Power
+* Add BMAP16 attribute type https://github.com/fairecasoimeme/ZiGate/issues/167
+* Fix Rearranged teNODE_STATES to logical in all cases https://github.com/fairecasoimeme/ZiGate/issues/101
+* Fix Changed 8702 to respect address mode https://github.com/fairecasoimeme/ZiGate/issues/161 + https://github.com/fairecasoimeme/ZiGate/issues/47
+* Fix Command 0x8024 returns addr, ieee and channel with status 4 https://github.com/fairecasoimeme/ZiGate/issues/74
+* Fix issue to manage Address Mode with APS_DATA_CONFIRM
+* Fix issues with MultiStateInputBasicClient
+* Remove Identify server
+* Remove Multistate_Input_Basic server
+* Remove Analog Input basic server
+* Remove double case and tidying code ZPS_ZDP_MGMT_LEAVE_RSP_CLUSTER_ID was checked twice.
+
 # Version 3.0f
 
 Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.

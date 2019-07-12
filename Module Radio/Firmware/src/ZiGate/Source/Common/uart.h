@@ -69,6 +69,7 @@ extern "C" {
 /****************************************************************************/
 
 PUBLIC void UART_vInit(void);
+PUBLIC void UART_vSetFlowControl(bool_t ctrl);
 PUBLIC void UART_vTxChar(uint8 u8TxChar);
 PUBLIC bool_t UART_bTxReady(void);
 PUBLIC void UART_vRtsStartFlow(void);

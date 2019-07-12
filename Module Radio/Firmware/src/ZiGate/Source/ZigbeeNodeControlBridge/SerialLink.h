@@ -87,6 +87,7 @@ typedef enum
     E_SL_MSG_STATUS                                            =   0x8000,
     E_SL_MSG_LOG                                               =   0x8001,
 
+    E_SL_MSG_SET_RAWMODE                                       =   0x0002,
     E_SL_MSG_DATA_INDICATION                                   =   0x8002,
 
     E_SL_MSG_NODE_CLUSTER_LIST                                 =   0x8003,
@@ -122,16 +123,17 @@ typedef enum
     E_SL_MSG_ZLL_FACTORY_NEW                                   =   0x0013,
     E_SL_MSG_GET_PERMIT_JOIN                                   =   0x0014,
     E_SL_MSG_GET_PERMIT_JOIN_RESPONSE                          =   0x8014,
-    E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE					   =   0x0015,
+    E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE                       =   0x0015,
     E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE_LIST                =   0x8015,
-    E_SL_MSG_SET_TIMESERVER									   =   0x0016,
+    E_SL_MSG_SET_TIMESERVER                                       =   0x0016,
 
-    E_SL_MSG_GET_TIMESERVER									   =   0x0017,
-    E_SL_MSG_GET_TIMESERVER_LIST							   =   0x8017,
+    E_SL_MSG_GET_TIMESERVER                                       =   0x0017,
+    E_SL_MSG_GET_TIMESERVER_LIST                               =   0x8017,
 
-    E_SL_MSG_SET_LED										   =   0x0018,
-    E_SL_MSG_SET_CE_FCC										   =   0x0019,
+    E_SL_MSG_SET_LED                                           =   0x0018,
+    E_SL_MSG_SET_CE_FCC                                           =   0x0019,
 
+    E_SL_MSG_SET_FLOW_CONTROL								   =   0x002F,
     E_SL_MSG_BIND                                              =   0x0030,
     E_SL_MSG_BIND_RESPONSE                                     =   0x8030,
     E_SL_MSG_UNBIND                                            =   0x0031,
@@ -140,6 +142,10 @@ typedef enum
     E_SL_MSG_BIND_GROUP_RESPONSE                               =   0x8032,
     E_SL_MSG_UNBIND_GROUP                                      =   0x0033,
     E_SL_MSG_UNBIND_GROUP_RESPONSE                             =   0x8033,
+
+#ifdef PDM_DEBUG
+    E_SL_MSG_DEBUG_PDM                                         =   0x0034,
+#endif
 
     E_SL_MSG_MANY_TO_ONE_ROUTE_REQUEST                         =   0x004F,
     E_SL_MSG_COMPLEX_DESCRIPTOR_REQUEST                        =   0x0531,
@@ -220,7 +226,7 @@ typedef enum
     E_SL_MSG_RECALL_SCENE                                      =   0x00A5,
     E_SL_MSG_SCENE_MEMBERSHIP_REQUEST                          =   0x00A6,
     E_SL_MSG_SCENE_MEMBERSHIP_RESPONSE                         =   0x80A6,
-    E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS					   =   0x80A7,
+    E_SL_MSG_SCENE_IKEA_REMOTE_BUTTON_PRESS                    =   0x80A7,
 
     /* Colour Cluster */
     E_SL_MSG_MOVE_TO_HUE                                       =   0x00B0,
@@ -277,6 +283,8 @@ typedef enum
     E_SL_MSG_REPORT_IND_ATTR_RESPONSE                           =  0x8102,
     E_SL_MSG_WRITE_ATTRIBUTE_REQUEST                            =  0x0110,
     E_SL_MSG_WRITE_ATTRIBUTE_RESPONSE                           =  0x8110,
+    E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD                     =  0x0111,
+    E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK              =  0x0112,
     E_SL_MSG_CONFIG_REPORTING_REQUEST                           =  0x0120,
     E_SL_MSG_CONFIG_REPORTING_RESPONSE                          =  0x8120,
     E_SL_MSG_REPORT_ATTRIBUTES                                  =  0x8121,
@@ -330,6 +338,9 @@ typedef enum
     E_SL_MSG_AHI_DIO_READ_INPUT                                 =  0x0803,
     E_SL_MSG_AHI_DIO_READ_INPUT_RSP                             =  0x8803,
     E_SL_MSG_AHI_SET_TX_POWER                                   =  0x0806,
+    E_SL_MSG_AHI_SET_TX_POWER_RSP                               =  0x8806,
+    E_SL_MSG_AHI_GET_TX_POWER                                   =  0x0807,
+    E_SL_MSG_AHI_GET_TX_POWER_RSP                               =  0x8807,
 } teSL_MsgType;
 typedef enum
 {

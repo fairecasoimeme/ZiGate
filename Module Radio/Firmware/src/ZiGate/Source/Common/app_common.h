@@ -127,7 +127,7 @@ extern uint8 u8GPZCLTimerEvent;
 #define MAX_PACKET_SIZE         256
 #define DEFAULT_CHANNEL         11
 #define APP_IDENTIFY_TIME       10  /* Application specific identify time specified in seconds */
-#define ZNC_MAX_TCLK_DEVICES    60
+#define ZNC_MAX_TCLK_DEVICES    70
 #ifdef CLD_GREENPOWER
 #define GP_ZCL_TICK_TIME        ZTIMER_TIME_MSEC(1)
 #endif
@@ -139,10 +139,10 @@ extern uint8 u8GPZCLTimerEvent;
 typedef enum
 {
     E_STARTUP,
+    E_RUNNING,
 #ifdef FULL_FUNC_DEVICE
     E_NFN_START,
 #endif
-    E_RUNNING,
 } teNODE_STATES;
 
 typedef struct {
@@ -166,6 +166,7 @@ typedef struct {
     uint16 u16NwkAddrOfServer;
     uint8 u8OTAserverEP;
 #endif
+    bool_t bRawMode;
 }tsZllState;
 
 typedef struct {
@@ -187,6 +188,8 @@ PUBLIC uint16 APP_u16ZncWriteDataPattern( uint8 *pu8Data,
                                           uint8 *pu8Struct,
                                          uint32 u32Size);
 PUBLIC void APP_vSendDataIndicationToHost( ZPS_tsAfEvent *psStackEvent,
+                                           uint8* pau8StatusBuffer);
+PUBLIC void Znc_vSendDataIndicationToHost( ZPS_tsAfEvent *psStackEvent,
                                            uint8* pau8StatusBuffer);
 PUBLIC void APP_vSaveAllRecords(void);
 PUBLIC void APP_vSendJoinedFormEventToHost ( uint8    u8FormJoin,
