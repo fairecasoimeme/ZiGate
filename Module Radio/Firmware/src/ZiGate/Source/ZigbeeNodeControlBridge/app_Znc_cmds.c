@@ -97,7 +97,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003031a
+#define VERSION    0x0003031b
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -394,7 +394,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             case (E_SL_MSG_SET_RAWMODE):
             {
             	sZllState.bRawMode     =   au8LinkRxBuffer [ 0 ];
-              PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
+                PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
             }
             break;
 
@@ -1917,13 +1917,6 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
 				uint16    u16WarningDuration;
 				u16WarningDuration      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 10 );
-				/*tsCLD_IASWD_StartWarningReqPayload payloadIASWD;
-				payloadIASWD.u8WarningModeStrobeAndSirenLevel=au8LinkRxBuffer [ 9];
-				payloadIASWD.u16WarningDuration=u16WarningDuration;
-				payloadIASWD.u8StrobeDutyCycle=au8LinkRxBuffer [ 12];
-				payloadIASWD.u8WarningModeStrobeAndSirenLevel=au8LinkRxBuffer [13];*/
-
-
 				tsZCL_TxPayloadItem asPayloadDefinition[] = {
 				        {1, E_ZCL_ENUM8,  (void *)&au8LinkRxBuffer [ 9] },
 				        {1, E_ZCL_UINT16,  (void *)&u16WarningDuration},
@@ -1942,15 +1935,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 				                                  FALSE,
 				                                  0,
 				                                  sizeof(asPayloadDefinition) / sizeof(tsZCL_TxPayloadItem));
-
-				/*u8Status = eCLD_IASWDStartWarningReqSend(au8LinkRxBuffer [ 3 ],
-												  au8LinkRxBuffer [ 4 ],
-												  &sAddress,
-												  &u8SeqNum,
-												  &payloadIASWD)	;*/
 			}
 			break;
-
             case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK):
             {
 
@@ -1971,8 +1957,6 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                   sizeof(asPayloadDefinition) / sizeof(tsZCL_TxPayloadItem));
             }
             break;
-
-
             case E_SL_MSG_CONFIG_REPORTING_REQUEST:
             {
                 uint16                                         u16ClusterId;
@@ -2443,7 +2427,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
         u8Length    =  0;
         ZNC_BUF_U8_UPD  ( &au8values [ 0 ], u8Status,      u8Length );
         ZNC_BUF_U8_UPD  ( &au8values [ 1 ], u8SeqNum,      u8Length );
-        ZNC_BUF_U16_UPD ( &au8values [ 2 ], u16PacketType, u8Length );
+        ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
         vSL_WriteMessage ( E_SL_MSG_STATUS,
                            u8Length,
                            au8values,

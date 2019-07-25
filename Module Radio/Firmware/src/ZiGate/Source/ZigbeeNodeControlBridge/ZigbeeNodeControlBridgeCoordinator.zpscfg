@@ -452,7 +452,7 @@
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
     <Endpoints Id="21" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="KONKE">
-       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Identify" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
@@ -502,6 +502,10 @@
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+    </Endpoints>
+    <Endpoints Id="8" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="LIVOLO">
+    	 <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+    	<OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
     <PDUConfiguration NumNPDUs="19" PDUMMutexName="mutexPDUM">
       <APDUs Id="ZigbeeNodeControlBridge->apduZDP" Name="apduZDP" Size="100" Instances="9"/>

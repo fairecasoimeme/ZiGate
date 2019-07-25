@@ -188,7 +188,7 @@ PUBLIC   void vZCL_HandleAttributesReadResponse(
 		//vSL_WriteMessage ( 0x6644, u16Length,au8LinkTxBuffer,0);
 		u16Length =  0;
 		ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [0],u16inputOffset,         u16Length );
-		//vSL_WriteMessage ( 0x6644, u16Length,u16inputOffset,0);
+
         // read the attribute record from the message
         // read attribute Id
         u16inputOffset += u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_ATTRIBUTE_ID,
