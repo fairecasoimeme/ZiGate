@@ -611,6 +611,11 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
 		   u8Error=0;
 	    }
 
+	    if ((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x08) && ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_ACTS_ACCROSS_ENTIRE_PROFILE ))
+	    {
+	    	u8Error=0;
+	    }
+
 	    //FRED -- Specifique à orvibo + TERNCY
 	    if (((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x0a) || (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x6e)|| (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x15))&& ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_IS_SPECIFIC_TO_A_CLUSTER ) )
 	    {
