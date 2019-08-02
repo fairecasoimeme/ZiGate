@@ -3754,14 +3754,14 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     }
 
     // transmit the request
-    if( ZPS_eAplAfUnicastDataReq ( myPDUM_thAPduInstance,
-                                   u16ClusterId,
-                                   u8SourceEndPointId,
-                                   u8DestinationEndPointId,
-                                   psDestinationAddress->uAddress.u16DestinationAddress,
-                                   ZPS_E_APL_AF_SECURE_NWK,
-                                   0,
-                                   NULL ) != E_ZCL_SUCCESS )
+    if( ZPS_eAplAfUnicastAckDataReq ( myPDUM_thAPduInstance,
+                                      u16ClusterId,
+                                      u8SourceEndPointId,
+                                      u8DestinationEndPointId,
+                                      psDestinationAddress->uAddress.u16DestinationAddress,
+                                      ZPS_E_APL_AF_SECURE_NWK,
+                                      0,
+                                      NULL ) != E_ZCL_SUCCESS )
     {
         return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
     }
