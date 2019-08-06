@@ -3669,6 +3669,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     uint8                  u8CommandId   =  0x02;
     uint8                  *pu8Data      =  NULL ;
     uint16                 u16Size;
+    ZPS_teStatus           eReturnCode;
 
     /*  handle sequence number pass present value back to user */
     *pu8TransactionSequenceNumber =  u8GetTransactionSequenceNumber();
@@ -3754,19 +3755,15 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     }
 
     // transmit the request
-    if( ZPS_eAplAfUnicastAckDataReq ( myPDUM_thAPduInstance,
-                                      u16ClusterId,
-                                      u8SourceEndPointId,
-                                      u8DestinationEndPointId,
-                                      psDestinationAddress->uAddress.u16DestinationAddress,
-                                      ZPS_E_APL_AF_SECURE_NWK,
-                                      0,
-                                      NULL ) != E_ZCL_SUCCESS )
-    {
-        return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
-    }
-
-    return(E_ZCL_SUCCESS);
+    eReturnCode = ZPS_eAplAfUnicastAckDataReq ( myPDUM_thAPduInstance,
+                                                u16ClusterId,
+                                                u8SourceEndPointId,
+                                                u8DestinationEndPointId,
+                                                psDestinationAddress->uAddress.u16DestinationAddress,
+                                                ZPS_E_APL_AF_SECURE_NWK,
+                                                0,
+                                               NULL );
+    return(eReturnCode);
 }
 
 
