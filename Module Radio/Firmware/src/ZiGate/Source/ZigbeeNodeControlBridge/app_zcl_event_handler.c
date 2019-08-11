@@ -1712,8 +1712,9 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
             uint8 u8Size = *++szFormat;
             unsigned int i;
 
+            ( uint8* )pvData++;
             for (i = 0; i < u8Size; i++) {
-                *(pu8Struct + u32Offset) = *( uint8* )pvData++;
+                *(pu8Struct + u32Offset) = *( uint8* )pvData;
                 u32Offset++;
             }
         } else if (*szFormat == 'p') {
