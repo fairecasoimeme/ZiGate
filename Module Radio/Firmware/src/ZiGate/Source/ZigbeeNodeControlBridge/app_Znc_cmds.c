@@ -420,9 +420,19 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
             case (E_SL_MSG_SET_EXT_PANID):
             {
-                uint64    u64Value ;
-                u64Value    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 0 );
-                u8Status    =  ZPS_eAplAibSetApsUseExtendedPanId ( u64Value );
+                // If device type is 0(Coordinator) and network is already formed prevent changing EXT PANID
+                // JN-UG-3113 v1.5 Chapter 5.1.1
+                if (sBDB.sAttrib.bbdbNodeIsOnANetwork && sZllState.u8DeviceType == 0)
+                {
+                    u8Status = E_SL_MSG_STATUS_STACK_ALREADY_STARTED;
+                }
+                // In any other case execute command
+                else
+                {
+                    uint64    u64Value ;
+                    u64Value    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 0 );
+                    u8Status    =  ZPS_eAplAibSetApsUseExtendedPanId ( u64Value );
+                }
             }
             break;
 
