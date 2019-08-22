@@ -909,6 +909,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0], psStackEvent->uEvent.sNwkRouteDiscoveryConfirmEvent.u8Status,               u16Length );
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sNwkRouteDiscoveryConfirmEvent.u8NwkStatus,    u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sNwkRouteDiscoveryConfirmEvent.u16DstAddress,  u16Length );
             vSL_WriteMessage ( E_SL_MSG_ROUTE_DISCOVERY_CONFIRM,
                                    u16Length,
                                    au8LinkTxBuffer,
