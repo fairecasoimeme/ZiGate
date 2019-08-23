@@ -510,12 +510,18 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_FLOAT_DOUBLE ) ||
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT32 )||
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_INT24 )||
-                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT24 )||
-                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT48 ))
-
+                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT24 ))
                     {
                     	uint32    u32value =  *( ( uint32* ) psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData );
                     	ZNC_BUF_U32_UPD  ( &au8LinkTxBuffer [u16Length],   u32value,    u16Length );
+
+
+                    }else if ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT48  )
+                    {
+
+                    	App_u16BufferReadNBO ( &au8LinkTxBuffer [u16Length],  "z",  psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData);
+                    	u16Length += 6;
+
 
                     }
                     else if ( u16SizeOfAttribute / u16Elements == sizeof(uint8) )
@@ -1357,7 +1363,11 @@ PUBLIC uint16 APP_u16GetAttributeActualSize ( uint32    u32Type,
         break;
 
         case E_ZCL_UINT40:
+        	u16Size = 5;
+        	break;
         case E_ZCL_UINT48:
+        	u16Size = 6;
+        	break;
         case E_ZCL_UINT56:
         case E_ZCL_UINT64:
         case E_ZCL_IEEE_ADDR:
@@ -1685,17 +1695,39 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
 
             memcpy(pu8Struct + u32Offset, &u32Val, sizeof(uint32));
 
-            u32Offset += sizeof(uint32);
-        } else if (*szFormat == 'l') {
-        	uint64 u64Val;
-            u64Val =  (uint64) *( uint8* )pvData++ << 56;
-            u64Val |= (uint64) *( uint8* )pvData++ << 48;
-            u64Val |= (uint64) *( uint8* )pvData++ << 40;
-            u64Val |= (uint64) *( uint8* )pvData++ << 32;
-            u64Val |= (uint64) *( uint8* )pvData++ << 24;
-            u64Val |= (uint64) *( uint8* )pvData++ << 16;
-            u64Val |= (uint64) *( uint8* )pvData++ << 8;
-            u64Val |= (uint64) *( uint8* )pvData++ ;
+			u32Offset += sizeof(uint32);
+		} else if (*szFormat == 'z') {
+			uint64 u64Val;
+			(uint64) *( uint8* )pvData++;
+			(uint64) *( uint8* )pvData++;
+			u64Val = (uint64) *( uint8* )pvData++ << 56;
+			u64Val |= (uint64) *( uint8* )pvData++ << 48;
+			u64Val |= (uint64) *( uint8* )pvData++ << 40;
+			u64Val |= (uint64) *( uint8* )pvData++ << 32;
+			u64Val |= (uint64) *( uint8* )pvData++ << 24;
+			u64Val |= (uint64) *( uint8* )pvData++ << 16;
+
+			/*
+			 *  align to long long word (64 bit) boundary
+			 *  but relative to structure start
+			 */
+			u32Offset = ALIGN(sizeof(uint64), u32Offset);
+
+			memcpy(pu8Struct + u32Offset, &u64Val, sizeof(uint64));
+
+			u32Offset += sizeof(uint64);
+
+		}else if (*szFormat == 'l') {
+			uint64 u64Val;
+
+			u64Val =  (uint64) *( uint8* )pvData++ << 56;
+			u64Val |= (uint64) *( uint8* )pvData++ << 48;
+			u64Val |= (uint64) *( uint8* )pvData++ << 40;
+			u64Val |= (uint64) *( uint8* )pvData++ << 32;
+			u64Val |= (uint64) *( uint8* )pvData++ << 24;
+			u64Val |= (uint64) *( uint8* )pvData++ << 16;
+			u64Val |= (uint64) *( uint8* )pvData++ << 8;
+			u64Val |= (uint64) *( uint8* )pvData++ ;
 
 
             /*
