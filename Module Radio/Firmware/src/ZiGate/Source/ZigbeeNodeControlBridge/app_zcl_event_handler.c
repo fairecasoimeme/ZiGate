@@ -1666,7 +1666,7 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
             pu8Struct[u32Offset++] = *(uint8*)pvData++;
         } else if (*szFormat == 'h') {
             uint16 u16Val = *( uint8* )pvData++ << 8;
-            u16Val |= *( uint8* )pvData;
+            u16Val |= *( uint8* )pvData++;
 
             /* align to half-word boundary */
             u32Offset = ALIGN( sizeof(uint16), u32Offset );
@@ -1675,10 +1675,10 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
 
             u32Offset += sizeof(uint16);
         } else if (*szFormat == 'w') {
-            uint32 u32Val = *( uint8* )pvData << 24;
-            u32Val |= *( uint8* )pvData << 16;
-            u32Val |= *( uint8* )pvData << 8;
-            u32Val |= *( uint8* )pvData;
+            uint32 u32Val = *( uint8* )pvData++ << 24;
+            u32Val |= *( uint8* )pvData++ << 16;
+            u32Val |= *( uint8* )pvData++ << 8;
+            u32Val |= *( uint8* )pvData++;
 
             /* align to word (32 bit) boundary */
             u32Offset = ALIGN(sizeof(uint32), u32Offset);
@@ -1688,14 +1688,14 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
             u32Offset += sizeof(uint32);
         } else if (*szFormat == 'l') {
         	uint64 u64Val;
-            u64Val =  (uint64) *( uint8* )pvData << 56;
-            u64Val |= (uint64) *( uint8* )pvData << 48;
-            u64Val |= (uint64) *( uint8* )pvData << 40;
-            u64Val |= (uint64) *( uint8* )pvData << 32;
-            u64Val |= (uint64) *( uint8* )pvData << 24;
-            u64Val |= (uint64) *( uint8* )pvData << 16;
-            u64Val |= (uint64) *( uint8* )pvData << 8;
-            u64Val |= (uint64) *( uint8* )pvData ;
+            u64Val =  (uint64) *( uint8* )pvData++ << 56;
+            u64Val |= (uint64) *( uint8* )pvData++ << 48;
+            u64Val |= (uint64) *( uint8* )pvData++ << 40;
+            u64Val |= (uint64) *( uint8* )pvData++ << 32;
+            u64Val |= (uint64) *( uint8* )pvData++ << 24;
+            u64Val |= (uint64) *( uint8* )pvData++ << 16;
+            u64Val |= (uint64) *( uint8* )pvData++ << 8;
+            u64Val |= (uint64) *( uint8* )pvData++ ;
 
 
             /*
@@ -1712,6 +1712,7 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
             uint8 u8Size = *++szFormat;
             unsigned int i;
 
+            ( uint8* )pvData++;
             for (i = 0; i < u8Size; i++) {
                 *(pu8Struct + u32Offset) = *( uint8* )pvData;
                 u32Offset++;
