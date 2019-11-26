@@ -885,10 +885,6 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 									   u8LinkQuality );
 				}
 				break;
-                /*case GENERAL_CLUSTER_ID_COLOUR_CONTROL:
-				{
-					tsCLD_ColourControlCallBackMessage*    psCallBackMessage =  ( tsCLD_ColourControlCallBackMessage* ) psEvent->uMessage.sClusterCustomMessage.pvCustomData;
-
                 case GENERAL_CLUSTER_ID_IDENTIFY:
                     vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- for identify cluster\r\n" );
                 break;
