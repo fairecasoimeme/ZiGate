@@ -331,6 +331,8 @@ typedef enum
     E_SL_MSG_NWK_RECOVERY_RESTORE_RSP                           =  0x8601,
 
     E_SL_MSG_ROUTE_DISCOVERY_CONFIRM                            =  0x8701,
+    E_SL_MSG_APS_DATA_ACK										=  0x8011,
+    E_SL_MSG_APS_DATA_CONFIRM                                   =  0x8012,
     E_SL_MSG_APS_DATA_CONFIRM_FAILED                            =  0x8702,
 
     E_SL_MSG_AHI_DIO_SET_DIRECTION                              =  0x0801,

@@ -281,6 +281,16 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
                     psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,
                     psStackEvent->uEvent.sApsDataAckEvent.u16ProfileId,
                     psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId);
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0], psStackEvent->uEvent.sApsDataAckEvent.u8Status,       u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16DstAddr,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,       u16Length );
+			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId,       u16Length );
+
+
+            vSL_WriteMessage ( E_SL_MSG_APS_DATA_ACK,
+												   u16Length,
+												   au8LinkTxBuffer,
+												   u8LinkQuality);
             break;
         default:
             break;

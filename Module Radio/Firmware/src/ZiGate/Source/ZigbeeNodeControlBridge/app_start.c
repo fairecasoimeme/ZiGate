@@ -113,7 +113,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x00030310
+#define VERSION    0x0003031b
 #endif
 
 #ifndef TRACE_EXC
