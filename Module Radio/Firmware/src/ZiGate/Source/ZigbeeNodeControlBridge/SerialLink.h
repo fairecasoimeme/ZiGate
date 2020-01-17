@@ -146,6 +146,7 @@ typedef enum
 #ifdef PDM_DEBUG
     E_SL_MSG_DEBUG_PDM                                         =   0x0034,
 #endif
+    E_SL_MSG_EVENT_PDM                                         =   0x8035,
 
     E_SL_MSG_MANY_TO_ONE_ROUTE_REQUEST                         =   0x004F,
     E_SL_MSG_COMPLEX_DESCRIPTOR_REQUEST                        =   0x0531,

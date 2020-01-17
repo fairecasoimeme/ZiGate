@@ -1354,6 +1354,7 @@ PUBLIC uint16 APP_u16GetAttributeActualSize ( uint32    u32Type,
         case (E_ZCL_UINT16):
         case (E_ZCL_ENUM16):
         case (E_ZCL_BMAP16): //RAJOUT FRED : https://github.com/fairecasoimeme/ZiGate/issues/167
+        case(E_ZCL_GINT16): //RAJOUT FRED : https://github.com/fairecasoimeme/ZiGate/issues/244
         case (E_ZCL_CLUSTER_ID):
         case (E_ZCL_ATTRIBUTE_ID):
            u16Size = sizeof(uint16);
