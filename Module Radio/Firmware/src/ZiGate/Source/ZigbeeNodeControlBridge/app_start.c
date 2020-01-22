@@ -114,7 +114,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003031b
+#define VERSION    0x0003031c
 #endif
 
 #ifndef TRACE_EXC
@@ -200,8 +200,6 @@ PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode );
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
-PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
-                                        PDM_eSystemEventCode    eSystemEventCode );
 #endif
 #endif
 PRIVATE void APP_cbTimerZclTick (void*    pvParam);
@@ -368,6 +366,7 @@ PUBLIC void vAppMain(void)
         vLog_Printf ( TRACE_EXC, LOG_CRIT, "\n\n\n%s WATCHDOG RESET @ %08x ", "WDR", ( ( uint32* ) &_heap_location) [ 0 ] );
         vSL_LogFlush ( );
     }
+    //bAHI_FlashInit(141, NULL);
     vInitialiseApp ();
     //app_vFormatAndSendUpdateLists ( );
 
@@ -510,7 +509,6 @@ PRIVATE void vInitialiseApp ( void )
     uint16            u16DataBytesRead;
     BDB_tsInitArgs    sArgs;
     uint8             u8DeviceType;
-
 
     PDM_eInitialise ( 63 );
     APP_MigratePDM();
