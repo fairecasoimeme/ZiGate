@@ -92,6 +92,7 @@
 #include "app_green_power.h"
 #endif
 
+#include "pdm_flash.h"
 
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
@@ -113,7 +114,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x00030310
+#define VERSION    0x0003031b
 #endif
 
 #ifndef TRACE_EXC
@@ -195,6 +196,8 @@ void vReportException ( char*    sExStr );
 
 void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus );
 PRIVATE void vInitialiseApp ( void );
+PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
+                                        PDM_eSystemEventCode    eSystemEventCode );
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
@@ -513,6 +516,7 @@ PRIVATE void vInitialiseApp ( void )
     APP_MigratePDM();
     PDUM_vInit ( );
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
+    PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
     PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
@@ -1002,6 +1006,22 @@ void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
     vLog_Printf ( TRACE_EXC,LOG_DEBUG, "ERROR: Extended status %x\n", eExtendedStatus );
 }
 
+PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
+                                        PDM_eSystemEventCode    eSystemEventCode )
+{
+	 //RAJOUT FRED v3.1b
+	uint16_t u16Length =  0;
+	uint8    au8LinkTxBuffer[50];
+	ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length] ,  eSystemEventCode,   u16Length );
+	ZNC_BUF_U32_UPD  ( &au8LinkTxBuffer [u16Length] ,  u32EventNumber,   u16Length );
+	vSL_WriteMessage ( E_SL_MSG_EVENT_PDM,
+			   u16Length,
+			   au8LinkTxBuffer,
+			   0);
+
+
+}
+
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
 /****************************************************************************
@@ -1015,16 +1035,16 @@ void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
  * void
  *
  ****************************************************************************/
-PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
+/*PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode )
 {
-	DBG_vPrintf(TRACE_APPSTART, "Erreur Memoire\n");
+	DBG_vPrintf(TRACE_APPSTART, "Erreur Memoire : %d\n", eSystemEventCode);
 
     switch ( eSystemEventCode )
     {
-        /*
-         * The next three events will require the application to take some action
-         */
+        //
+        // The next three events will require the application to take some action
+        //
         case E_PDM_SYSTEM_EVENT_WEAR_COUNT_TRIGGER_VALUE_REACHED:
                 vLog_Printf ( TRACE_EXC,LOG_DEBUG, "PDM: Segment %d reached trigger wear level\n", u32EventNumber);
             break;
@@ -1034,14 +1054,19 @@ PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                 vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
             break;
         case E_PDM_SYSTEM_EVENT_PDM_NOT_ENOUGH_SPACE:
-                vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Record %d not enough space\n", u32EventNumber);
-                vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
-                vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
+        		DBG_vPrintf(TRACE_APPSTART,  "PDM: Record %d not enough space\n", u32EventNumber);
+        		DBG_vPrintf(TRACE_APPSTART, "PDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
+        		DBG_vPrintf(TRACE_APPSTART,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
             break;
+        case E_PDM_SYSTEM_EVENT_LARGEST_RECORD_FULL_SAVE_NO_LONGER_POSSIBLE:
+				DBG_vPrintf(TRACE_APPSTART,  "PDM: Record %d not enough space\n", u32EventNumber);
+				DBG_vPrintf(TRACE_APPSTART, "PDM: Capacity %d\n", u8PDM_CalculateFileSystemCapacity() );
+				DBG_vPrintf(TRACE_APPSTART,  "PDM: Occupancy %d\n", u8PDM_GetFileSystemOccupancy() );
+			break;
 
-        /*
-         *  The following events are really for information only
-         */
+        //
+        // The following events are really for information only
+        //
         case E_PDM_SYSTEM_EVENT_EEPROM_SEGMENT_HEADER_REPAIRED:
                 vLog_Printf ( TRACE_EXC,LOG_DEBUG, "PDM: Segment %d header repaired\n", u32EventNumber);
             break;
@@ -1055,7 +1080,7 @@ PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                 vLog_Printf ( TRACE_EXC,LOG_DEBUG,  "PDM: Unexpected call back Code %d Number %d\n", eSystemEventCode, u32EventNumber);
             break;
     }
-}
+}*/
 #endif
 #endif
 
@@ -1412,7 +1437,7 @@ PRIVATE void APP_MigratePDM( void )
     // Fill structure if needed
     if (struct_sizes[version_i].u8ChildTableSize < struct_sizes[0].u8ChildTableSize)
     {
-        vLog_Printf (1,LOG_DEBUG, "\n");
+        //vLog_Printf (1,LOG_DEBUG, "\n");
         for(i = struct_sizes[version_i].u8ActiveNeighbourTableSize; i < size; i++)
         {
             tmpNwkActvNtTable[i* sizeof(ZPS_tsNwkActvNtEntry)] = 0;

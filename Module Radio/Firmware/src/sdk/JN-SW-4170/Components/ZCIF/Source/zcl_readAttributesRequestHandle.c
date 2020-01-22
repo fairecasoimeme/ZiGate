@@ -52,6 +52,7 @@
 #include "zcl_customcommand.h"
 #include "zcl_common.h"
 #include "zcl_internal.h"
+#include "app_common.h"
 
 #include "pdum_apl.h"
 #include "zps_apl.h"
@@ -133,6 +134,10 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
 
     uint16 u16attributeIndex;
 
+    uint16                 u16LengthOuput =  0;
+    uint8                  au8LinkTxBuffer[256];
+
+
     // parameter checks - clusters and EP's have been sanity checked at the event level
     // We don't null check the cluster id because we may want to generate a read att response for a null
     // cluster (mars 60).  When we call eZCL_SearchForAttributeEntry with a null cluster, it will return
@@ -142,10 +147,13 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
     myPDUM_thAPduInstance = hZCL_AllocateAPduInstance();
     // no buffers - return. we can make this descision a bit more exotic using the incoming buffer to store the
     // outgoing command but for the moment we are implementing the KISS principle.
+
     if(myPDUM_thAPduInstance == PDUM_INVALID_HANDLE)
     {
         return;
     }
+
+
 
     // build command packet for response
     // read incoming request
@@ -165,13 +173,29 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
     // payload investigation
     u16payloadSize = PDUM_u16APduInstanceGetPayloadSize(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst);
     // size sanity check
-    if((u16payloadSize < u16inputOffset) || ((u16payloadSize - u16inputOffset)%2))
+
+    if ((sZCL_HeaderParams.u16ManufacturerCode==0x15D2) && (sZCL_HeaderParams.bManufacturerSpecific==1) && (sZCL_HeaderParams.u8TransactionSequenceNumber==216))
     {
-        // send response if possible/required
-        eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_MALFORMED_COMMAND);
-        // free buffer and return
-        PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
-        return;
+    	//LIVOLO
+    	u16payloadSize=u16payloadSize+1;
+
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0], pZPSevent->uEvent.sApsDataIndEvent.u8DstAddrMode,            u16LengthOuput );
+		ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16LengthOuput], pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,            u16LengthOuput );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16LengthOuput], pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,            u16LengthOuput );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16LengthOuput], pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint,            u16LengthOuput );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16LengthOuput], sZCL_HeaderParams.bDirection,            u16LengthOuput );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16LengthOuput], sZCL_HeaderParams.bManufacturerSpecific,            u16LengthOuput );
+		ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16LengthOuput], sZCL_HeaderParams.u16ManufacturerCode,            u16LengthOuput );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16LengthOuput], ((u16payloadSize - u16inputOffset)/2),            u16LengthOuput );
+    }else{
+		if((u16payloadSize < u16inputOffset) || ((u16payloadSize - u16inputOffset)%2))
+		{
+			// send response if possible/required
+			eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_MALFORMED_COMMAND);
+			// free buffer and return
+			PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
+			return;
+		}
     }
 
     // number of attributes in request
@@ -189,112 +213,129 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
     sZCL_CallBackEvent.psClusterInstance = psClusterInstance;
     sZCL_CallBackEvent.eZCL_Status = E_ZCL_SUCCESS;
 
+
+
+
     // call user unless null cluster instance (as no atts will be read in that case and the user may attempt to access the cluster without checking and get an exception)
     if (psClusterInstance != NULL)
     {
         psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
     }
 
-
     // parse the incoming message, read each attribute from the device and write into the outgoing buffer
     i = 0;
+
     // loop round the attributes in the list
     while((i<u8NumberAttributesInRequest) && (sZCL_CallBackEvent.eZCL_Status == E_ZCL_SUCCESS))
     {
-        // read input attribute Id
-        u16inputOffset += u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_ATTRIBUTE_ID, &u16AttributeId);
-        // initial size of cluster record - Id + status
-        u16clusterRecordSize = 3;
+			// read input attribute Id
+			u16inputOffset += u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_ATTRIBUTE_ID, &u16AttributeId);
 
-        // check if attribute is present
-        if(eZCL_SearchForAttributeEntry(
-                psZCL_EndPointDefinition->u8EndPointNumber,
-                u16AttributeId,
-                sZCL_HeaderParams.bManufacturerSpecific,
-                sZCL_HeaderParams.bDirection,
-                psClusterInstance,
-                &psAttributeDefinition,
-                &u16attributeIndex) != E_ZCL_SUCCESS)
-        {
-            // write 'unsupported' into buffer
-            u8errorCode = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
-        }
-        else // check if the attribute type is supported by the ZCL
-        {
-            if(eZCL_GetAttributeTypeSizeFromStructure(psAttributeDefinition, pvZCL_GetAttributePointer(psAttributeDefinition,psClusterInstance, u16AttributeId), &u16typeSize)!=E_ZCL_SUCCESS)
-            {
-                // write 'invalid' into buffer
-                u8errorCode = E_ZCL_CMDS_INVALID_FIELD;
-            }
-            else if((psAttributeDefinition->u8AttributeFlags & (E_ZCL_AF_RD|E_ZCL_AF_WR)) == E_ZCL_AF_WR)
-            {
-               u8errorCode = E_ZCL_CMDS_WRITE_ONLY;
-            }
-            else if(bZCL_CheckAttributeDirectionFlagMatch(psAttributeDefinition,psClusterInstance->bIsServer) == FALSE) // check attribute access status
-            {
-               u8errorCode = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
-            }
-            /* PR - lpsw2919 - for an attribute that is supported but not yet available,
-             * mirror should send ATTRIBUTE_UNSUPPORTED response */
-            else if((psClusterInstance->psClusterDefinition->u8ClusterControlFlags & CLUSTER_MIRROR_BIT)&&
-                    (ZCL_IS_BIT_CLEAR(uint8,psClusterInstance->pu8AttributeControlBits[u16attributeIndex],E_ZCL_ACF_MR)))
-            {
-                u8errorCode = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
-            }
-            else
-            {
-                /* CCB 2092: ZCL Read Attributes Response too big for single frame if fragmentation is not supported*/
-                if((u16outputOffset + u16typeSize + u16clusterRecordSize + 1) > u16responseBufferSize)
-                {
-                    u8errorCode = E_ZCL_CMDS_INSUFFICIENT_SPACE;
-                }
-                else
-                {
-                    // Add data type
-                    u16clusterRecordSize++;
-                    // add data
-                    u8errorCode = E_ZCL_CMDS_SUCCESS;
-                    u16clusterRecordSize += u16typeSize;
-                }
-            }
-        }
+			ZNC_BUF_U8_UPD( &au8LinkTxBuffer [u16LengthOuput],         u16AttributeId,            u16LengthOuput );
 
-        // check the full record can fit into the buffer
-        if((u16outputOffset + u16clusterRecordSize) > u16responseBufferSize)
-        {
-           sZCL_CallBackEvent.eZCL_Status = E_ZCL_ERR_MALFORMED_MESSAGE;
-        }
-        else // if((u16outputOffset + u16clusterRecordSize) <= u16responseBufferSize)
-        {
-            // write Attribute Id into outgoing buffer - no matter what
-            u16outputOffset += u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance, u16outputOffset, E_ZCL_ATTRIBUTE_ID, &u16AttributeId);
-            // write status
-            u16outputOffset += u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance, u16outputOffset, E_ZCL_UINT8, &u8errorCode);
-            if(u8errorCode == E_ZCL_CMDS_SUCCESS)
-            {
-                // write type
-                u16outputOffset += u16ZCL_APduInstanceWriteNBO(
-                                    myPDUM_thAPduInstance,
-                                    u16outputOffset,
-                                    E_ZCL_UINT8,
-                                   &psAttributeDefinition->eAttributeDataType);
-                // value - structure base address in cluster struct, offset in attribute structure
-                u16outputOffset += u16ZCL_WriteAttributeValueIntoBuffer(
-                                    psZCL_EndPointDefinition->u8EndPointNumber,
-                                     u16AttributeId,
-                                    psClusterInstance,
-                                    psAttributeDefinition,
-                                    u16outputOffset,
-                                    myPDUM_thAPduInstance);
-             }
-        }
+			// initial size of cluster record - Id + status
+			u16clusterRecordSize = 3;
 
-        // increment attribute count
-        i++;
+			// check if attribute is present
+			if(eZCL_SearchForAttributeEntry(
+					psZCL_EndPointDefinition->u8EndPointNumber,
+					u16AttributeId,
+					sZCL_HeaderParams.bManufacturerSpecific,
+					sZCL_HeaderParams.bDirection,
+					psClusterInstance,
+					&psAttributeDefinition,
+					&u16attributeIndex) != E_ZCL_SUCCESS)
+			{
+				// write 'unsupported' into buffer
+				u8errorCode = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
+			}
+			else // check if the attribute type is supported by the ZCL
+			{
+				if(eZCL_GetAttributeTypeSizeFromStructure(psAttributeDefinition, pvZCL_GetAttributePointer(psAttributeDefinition,psClusterInstance, u16AttributeId), &u16typeSize)!=E_ZCL_SUCCESS)
+				{
+					// write 'invalid' into buffer
+					u8errorCode = E_ZCL_CMDS_INVALID_FIELD;
+				}
+				else if((psAttributeDefinition->u8AttributeFlags & (E_ZCL_AF_RD|E_ZCL_AF_WR)) == E_ZCL_AF_WR)
+				{
+				   u8errorCode = E_ZCL_CMDS_WRITE_ONLY;
+				}
+				else if(bZCL_CheckAttributeDirectionFlagMatch(psAttributeDefinition,psClusterInstance->bIsServer) == FALSE) // check attribute access status
+				{
+				   u8errorCode = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
+				}
+				/* PR - lpsw2919 - for an attribute that is supported but not yet available,
+				 * mirror should send ATTRIBUTE_UNSUPPORTED response */
+				else if((psClusterInstance->psClusterDefinition->u8ClusterControlFlags & CLUSTER_MIRROR_BIT)&&
+						(ZCL_IS_BIT_CLEAR(uint8,psClusterInstance->pu8AttributeControlBits[u16attributeIndex],E_ZCL_ACF_MR)))
+				{
+					u8errorCode = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
+				}
+				else
+				{
+					/* CCB 2092: ZCL Read Attributes Response too big for single frame if fragmentation is not supported*/
+					if((u16outputOffset + u16typeSize + u16clusterRecordSize + 1) > u16responseBufferSize)
+					{
+						u8errorCode = E_ZCL_CMDS_INSUFFICIENT_SPACE;
+					}
+					else
+					{
+						// Add data type
+						u16clusterRecordSize++;
+						// add data
+						u8errorCode = E_ZCL_CMDS_SUCCESS;
+						u16clusterRecordSize += u16typeSize;
+					}
+				}
+			}
+
+			// check the full record can fit into the buffer
+			if((u16outputOffset + u16clusterRecordSize) > u16responseBufferSize)
+			{
+			   sZCL_CallBackEvent.eZCL_Status = E_ZCL_ERR_MALFORMED_MESSAGE;
+			}
+			else // if((u16outputOffset + u16clusterRecordSize) <= u16responseBufferSize)
+			{
+				// write Attribute Id into outgoing buffer - no matter what
+				u16outputOffset += u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance, u16outputOffset, E_ZCL_ATTRIBUTE_ID, &u16AttributeId);
+				// write status
+				u16outputOffset += u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance, u16outputOffset, E_ZCL_UINT8, &u8errorCode);
+				if(u8errorCode == E_ZCL_CMDS_SUCCESS)
+				{
+					// write type
+					u16outputOffset += u16ZCL_APduInstanceWriteNBO(
+										myPDUM_thAPduInstance,
+										u16outputOffset,
+										E_ZCL_UINT8,
+									   &psAttributeDefinition->eAttributeDataType);
+					// value - structure base address in cluster struct, offset in attribute structure
+					u16outputOffset += u16ZCL_WriteAttributeValueIntoBuffer(
+										psZCL_EndPointDefinition->u8EndPointNumber,
+										 u16AttributeId,
+										psClusterInstance,
+										psAttributeDefinition,
+										u16outputOffset,
+										myPDUM_thAPduInstance);
+				 }
+			}
+			// increment attribute count
+			i++;
+
     }
 
     // transmit
     // NTS testing Nov 09. Don't send a good default response here as we have a unicast response that is valid.
+
+    //LIVOLO
+    if ((sZCL_HeaderParams.u16ManufacturerCode==0x15D2) && (sZCL_HeaderParams.bManufacturerSpecific==1) && (sZCL_HeaderParams.u8TransactionSequenceNumber==216))
+    {
+
+
+	   vSL_WriteMessage ( 0x0100,
+			   	   	   	   	   	   	   	   	   u16LengthOuput,
+												 au8LinkTxBuffer,
+												 pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality);
+    }
 
     // build address structure
     eZCL_BuildTransmitAddressStructure(pZPSevent, &sZCL_Address);

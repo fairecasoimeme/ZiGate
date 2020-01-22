@@ -66,8 +66,8 @@
 #define GROUPS_REQUIRED                                     ( 16 )
 #define CLD_GROUPS_MAX_NUMBER_OF_GROUPS                     ( 5  )
 /* Sets the number of endpoints that will be created by the ZCL library */
-#define ZCL_NUMBER_OF_ENDPOINTS                             ( 20 )
-#define ZCL_NUMBER_DEVICES                                  ( 3 )
+#define ZCL_NUMBER_OF_ENDPOINTS                             ( 5 )
+#define ZCL_NUMBER_DEVICES                                  ( 1 )
 
 #define ZCL_MANUFACTURER_CODE                               ( 0x1037 )
 
@@ -121,7 +121,7 @@
 #define ONOFF_CLIENT
 #define ONOFF_SERVER
 
-//#define ONOFF_SERVER
+
 #define CLD_ONOFF_SUPPORT_ZLL_ENHANCED_COMMANDS
 
 #define CLD_LEVEL_CONTROL
@@ -134,6 +134,7 @@
 
 #define CLD_COLOUR_CONTROL
 #define COLOUR_CONTROL_CLIENT
+
 
 #define CLD_IASZONE
 #define IASZONE_CLIENT
@@ -365,9 +366,10 @@
 #define CLD_WINDOWCOVERING
 #define WINDOWCOVERING_CLIENT
 
-
 #define CLD_PRIVATE_PHILIPS
 #define PRIVATE_PHILIPS_SERVER
+
+#define CLD_PRIVATE_TERNCY
 
 //#define CLD_APPLIANCE_STATISTICS
 //#define APPLIANCE_STATISTICS_SERVER

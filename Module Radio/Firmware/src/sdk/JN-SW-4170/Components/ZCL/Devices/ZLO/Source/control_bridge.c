@@ -529,18 +529,18 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
         }
     #endif
 
-    #if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
-        /* Create an instance of a Window Covering cluster as a client */
-        if( eCLD_WindowCoveringCreateWindowCovering ( &psDeviceInfo->sClusterInstance.sWindowCoveringClient,
-                                                      FALSE,
-                                                      &sCLD_WindowCovering,
-                                                      &psDeviceInfo->sWindowCoveringClientCluster,
-                                                      &au8WindowCoveringAttributeControlBits[0] ) != E_ZCL_SUCCESS )
-        {
-           // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-           return E_ZCL_FAIL;
-        }
-    #endif
+	#if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
+		   /* Create an instance of a Window Covering cluster as a client */
+		   if( eCLD_WindowCoveringCreateWindowCovering ( &psDeviceInfo->sClusterInstance.sWindowCoveringClient,
+														 FALSE,
+														 &sCLD_WindowCovering,
+														 &psDeviceInfo->sWindowCoveringClientCluster,
+														 &au8WindowCoveringAttributeControlBits[0] ) != E_ZCL_SUCCESS )
+		   {
+			  // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			  return E_ZCL_FAIL;
+		   }
+	#endif
 
     #if (defined CLD_SIMPLE_METERING) && (defined SM_CLIENT)
         /* Create an instance of a Simple Metering cluster as a client */
@@ -711,8 +711,57 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 		#endif
 
      teZCL_Status status;
-   status= eZCL_Register(&psDeviceInfo->sEndPoint);
+    status= eZCL_Register(&psDeviceInfo->sEndPoint);
     vLog_Printf(1,LOG_DEBUG,"\n Status : %d\n",status);
+
+    return status;
+
+}
+
+PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPointLivolo ( uint8                         u8EndPointIdentifier,
+                                                         tfpZCL_ZCLCallBackFunction    cbCallBack,
+                                                         tsZLO_ControlBridgeDevice     *psDeviceInfo )
+{
+    /* Fill in end point details */
+    psDeviceInfo->sEndPoint.u8EndPointNumber               =  u8EndPointIdentifier;
+    psDeviceInfo->sEndPoint.u16ManufacturerCode            =  ZCL_MANUFACTURER_CODE;
+    psDeviceInfo->sEndPoint.u16ProfileEnum                 =  HA_PROFILE_ID;
+    psDeviceInfo->sEndPoint.bIsManufacturerSpecificProfile =  FALSE;
+    psDeviceInfo->sEndPoint.u16NumberOfClusters            =  sizeof( tsZLO_ControlBridgeDeviceClusterInstances ) / sizeof ( tsZCL_ClusterInstance );
+    psDeviceInfo->sEndPoint.psClusterInstance              =  (tsZCL_ClusterInstance*)&psDeviceInfo->sClusterInstance;
+    psDeviceInfo->sEndPoint.bDisableDefaultResponse        =  ZCL_DISABLE_DEFAULT_RESPONSES;
+    psDeviceInfo->sEndPoint.pCallBackFunctions             =  cbCallBack;
+
+
+    #if (defined CLD_BASIC) && (defined BASIC_SERVER)
+        /* Create an instance of a Basic cluster as a server */
+        if ( eCLD_BasicCreateBasic( &psDeviceInfo->sClusterInstance.sBasicServer,
+                               TRUE,
+                               &sCLD_Basic,
+                               &psDeviceInfo->sBasicServerCluster,
+                               &au8BasicClusterAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
+        {
+        // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+            return E_ZCL_FAIL;
+        }
+
+    #endif
+	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
+			/* Create an instance of a Power Configuration cluster as a server */
+			if(eCLD_PowerConfigurationCreatePowerConfiguration(&psDeviceInfo->sClusterInstance.sPowerConfigurationServer,
+								  TRUE,
+								  &sCLD_PowerConfiguration,
+								  &psDeviceInfo->sPowerConfigServerCluster,
+								  &au8PowerConfigurationAttributeControlBits[0]) != E_ZCL_SUCCESS)
+			{
+				// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+				return E_ZCL_FAIL;
+			}
+		#endif
+
+     teZCL_Status status;
+    status= eZCL_Register(&psDeviceInfo->sEndPoint);
+
     return status;
 
 }

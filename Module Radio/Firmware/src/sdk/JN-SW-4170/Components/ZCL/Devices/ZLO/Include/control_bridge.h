@@ -264,10 +264,10 @@ typedef struct
         tsZCL_ClusterInstance sDoorLockClient;
     #endif
 
-    #if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
+	#if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
         tsZCL_ClusterInstance sWindowCoveringClient;
     #endif
-    
+
     #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_CLIENT)
         tsZCL_ClusterInstance sThermostatClient;
     #endif
@@ -502,12 +502,12 @@ typedef struct
         /* door lock Cluster - Client */
         tsCLD_DoorLock sDoorLockClientCluster;
     #endif
-
-    #if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
+    
+	#if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
         /* Window Covering Cluster - Client */
         tsCLD_WindowCovering sWindowCoveringClientCluster;
     #endif
-    
+
     #if (defined CLD_SIMPLE_METERING) && (defined SM_CLIENT)
         /* Simple Metering Cluster - Client */
         tsSM_CustomStruct sMeteringClientCustomDataStructure;
@@ -573,6 +573,10 @@ typedef struct
 /****************************************************************************/
 
 PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint( uint8                         u8EndPointIdentifier,
+                                                        tfpZCL_ZCLCallBackFunction    cbCallBack,
+                                                        tsZLO_ControlBridgeDevice*    psDeviceInfo );
+
+PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPointLivolo( uint8                         u8EndPointIdentifier,
                                                         tfpZCL_ZCLCallBackFunction    cbCallBack,
                                                         tsZLO_ControlBridgeDevice*    psDeviceInfo );
 

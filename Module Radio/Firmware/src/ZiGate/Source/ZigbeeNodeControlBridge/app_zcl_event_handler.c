@@ -261,12 +261,12 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
                 ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8DstEndpoint,       u16Length );
                 ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode,       u16Length );
                 if (psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode == 0x03)
-                {
-                    ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u64Addr, u16Length );
-                }else
-                {
-                    ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u16Addr, u16Length );
-                }
+				{
+					ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u64Addr, u16Length );
+				}else
+				{
+					ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u16Addr, u16Length );
+				}
                 ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8SequenceNum,       u16Length );
                 vSL_WriteMessage ( E_SL_MSG_APS_DATA_CONFIRM_FAILED,
                                    u16Length,
@@ -281,6 +281,16 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
                     psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,
                     psStackEvent->uEvent.sApsDataAckEvent.u16ProfileId,
                     psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId);
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0], psStackEvent->uEvent.sApsDataAckEvent.u8Status,       u16Length );
+            ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16DstAddr,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,       u16Length );
+			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId,       u16Length );
+
+
+            vSL_WriteMessage ( E_SL_MSG_APS_DATA_ACK,
+												   u16Length,
+												   au8LinkTxBuffer,
+												   u8LinkQuality);
             break;
         default:
             break;
@@ -371,7 +381,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 {
     uint16                 u16Length =  0;
     uint8                  au8LinkTxBuffer[256];
-    uint8                     u8LinkQuality;
+    uint8     				u8LinkQuality;
     u8LinkQuality=psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality;
 
     
@@ -389,7 +399,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             return;
         }
     }
-
+    
     switch (psEvent->eEventType)
     {
         case E_ZCL_CBET_LOCK_MUTEX:
@@ -491,7 +501,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  u16SizeOfAttribute,                                                 u16Length );
             if ( u16SizeOfAttribute !=  0 )
             {
-                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElï¿½ment : %d\n",i);
+                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
                 while ( i <  u16Elements )
                 {
                     if( ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_OSTRING ) ||
@@ -510,12 +520,18 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_FLOAT_DOUBLE ) ||
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT32 )||
                             ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_INT24 )||
-                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT24 )||
-                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT48 ))
-
+                            ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT24 ))
                     {
-                        uint32    u32value =  *( ( uint32* ) psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData );
-                        ZNC_BUF_U32_UPD  ( &au8LinkTxBuffer [u16Length],   u32value,    u16Length );
+                    	uint32    u32value =  *( ( uint32* ) psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData );
+                    	ZNC_BUF_U32_UPD  ( &au8LinkTxBuffer [u16Length],   u32value,    u16Length );
+
+
+                    }else if ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_UINT48  )
+                    {
+
+                    	App_u16BufferReadNBO ( &au8LinkTxBuffer [u16Length],  "z",  psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData);
+                    	u16Length += 6;
+
 
                     }
                     else if ( u16SizeOfAttribute / u16Elements == sizeof(uint8) )
@@ -846,21 +862,21 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                 }
                 break;
                 case GENERAL_CLUSTER_ID_LEVEL_CONTROL:
-                {
-                    tsCLD_LevelControlCallBackMessage*    psCallBackMessage =  ( tsCLD_LevelControlCallBackMessage* ) psEvent->uMessage.sClusterCustomMessage.pvCustomData;
+				{
+					tsCLD_LevelControlCallBackMessage*    psCallBackMessage =  ( tsCLD_LevelControlCallBackMessage* ) psEvent->uMessage.sClusterCustomMessage.pvCustomData;
 
-                    vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- for levelcontrol cluster\r\n" );
-                    vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "\r\nCMD: 0x%02x\r\n", psCallBackMessage->u8CommandId );
+					vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- for levelcontrol cluster\r\n" );
+					vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "\r\nCMD: 0x%02x\r\n", psCallBackMessage->u8CommandId );
 
-                    ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode,    u16Length );
-                    if ( psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode ==  0x03 )
-                    {
-                        ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u64Addr,    u16Length );
-                    }
-                    else
-                    {
-                        ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
-                    }
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode,    u16Length );
+					if ( psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode ==  0x03 )
+					{
+						ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u64Addr,    u16Length );
+					}
+					else
+					{
+						ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+					}
 
 					ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [u16Length], psCallBackMessage->u8CommandId,    u16Length );
 					if (psCallBackMessage->u8CommandId == 0x04)
@@ -879,6 +895,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveCommandPayload->u8MoveMode,    u16Length );
 						ZNC_BUF_U8_UPD(&au8LinkTxBuffer [u16Length], psCallBackMessage->uMessage.psMoveCommandPayload->u8Rate,    u16Length );
 					}
+
 					vSL_WriteMessage ( E_SL_MSG_MOVE_TO_LEVEL_UPDATE,
 									   u16Length,
 									   au8LinkTxBuffer,
@@ -891,9 +908,9 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
                 //FCSM
                 case GENERAL_CLUSTER_ID_MULTISTATE_INPUT_BASIC:
-                    vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- GENERAL_CLUSTER_ID_MULTISTATE_INPUT_BASIC\r\n" );
+					vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "- GENERAL_CLUSTER_ID_MULTISTATE_INPUT_BASIC\r\n" );
 
-                break;
+				break;
 
                 case GENERAL_CLUSTER_ID_GROUPS:
                 {
@@ -926,7 +943,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                             uint8    i          =  0;
                             if (groupCount>CLD_GROUPS_MAX_NUMBER_OF_GROUPS)
                             {
-                                groupCount=CLD_GROUPS_MAX_NUMBER_OF_GROUPS;
+                            	groupCount=CLD_GROUPS_MAX_NUMBER_OF_GROUPS;
                             }
 
                             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],          pCustom->uMessage.psGetGroupMembershipResponsePayload->u8Capacity,    u16Length );
@@ -1169,12 +1186,12 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             }
             break;
 #ifdef CLD_GREENPOWER
-            case GREENPOWER_CLUSTER_ID:
-            {
-                tsGP_GreenPowerCallBackMessage *psCallBackMessage = (tsGP_GreenPowerCallBackMessage *)psEvent->uMessage.sClusterCustomMessage.pvCustomData;
-                vHandleGreenPowerEvent(psCallBackMessage);
-            }
-            break;
+			case GREENPOWER_CLUSTER_ID:
+			{
+				tsGP_GreenPowerCallBackMessage *psCallBackMessage = (tsGP_GreenPowerCallBackMessage *)psEvent->uMessage.sClusterCustomMessage.pvCustomData;
+				vHandleGreenPowerEvent(psCallBackMessage);
+			}
+			break;
 #endif
 
             default:
@@ -1285,6 +1302,9 @@ teZCL_Status eApp_ZLO_RegisterEndpoint ( tfpZCL_ZCLCallBackFunction    fptr )
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
 	                                                fptr,
 	                                                &sControlBridge );
+	eZLO_RegisterControlBridgeEndPointLivolo ( ZIGBEENODECONTROLBRIDGE_LIVOLO_ENDPOINT,
+				                                                fptr,
+				                                                &sControlBridge );
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT,
 		                                                fptr,
 		                                                &sControlBridge );
@@ -1333,7 +1353,8 @@ PUBLIC uint16 APP_u16GetAttributeActualSize ( uint32    u32Type,
         case (E_ZCL_INT16):
         case (E_ZCL_UINT16):
         case (E_ZCL_ENUM16):
-		case (E_ZCL_BMAP16): //RAJOUT FRED : https://github.com/fairecasoimeme/ZiGate/issues/167
+        case (E_ZCL_BMAP16): //RAJOUT FRED : https://github.com/fairecasoimeme/ZiGate/issues/167
+        case(E_ZCL_GINT16): //RAJOUT FRED : https://github.com/fairecasoimeme/ZiGate/issues/244
         case (E_ZCL_CLUSTER_ID):
         case (E_ZCL_ATTRIBUTE_ID):
            u16Size = sizeof(uint16);
@@ -1353,7 +1374,11 @@ PUBLIC uint16 APP_u16GetAttributeActualSize ( uint32    u32Type,
         break;
 
         case E_ZCL_UINT40:
+        	u16Size = 5;
+        	break;
         case E_ZCL_UINT48:
+        	u16Size = 6;
+        	break;
         case E_ZCL_UINT56:
         case E_ZCL_UINT64:
         case E_ZCL_IEEE_ADDR:
@@ -1662,7 +1687,7 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
             pu8Struct[u32Offset++] = *(uint8*)pvData++;
         } else if (*szFormat == 'h') {
             uint16 u16Val = *( uint8* )pvData++ << 8;
-            u16Val |= *( uint8* )pvData;
+            u16Val |= *( uint8* )pvData++;
 
             /* align to half-word boundary */
             u32Offset = ALIGN( sizeof(uint16), u32Offset );
@@ -1671,27 +1696,49 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
 
             u32Offset += sizeof(uint16);
         } else if (*szFormat == 'w') {
-            uint32 u32Val = *( uint8* )pvData << 24;
-            u32Val |= *( uint8* )pvData << 16;
-            u32Val |= *( uint8* )pvData << 8;
-            u32Val |= *( uint8* )pvData;
+            uint32 u32Val = *( uint8* )pvData++ << 24;
+            u32Val |= *( uint8* )pvData++ << 16;
+            u32Val |= *( uint8* )pvData++ << 8;
+            u32Val |= *( uint8* )pvData++;
 
             /* align to word (32 bit) boundary */
             u32Offset = ALIGN(sizeof(uint32), u32Offset);
 
             memcpy(pu8Struct + u32Offset, &u32Val, sizeof(uint32));
 
-            u32Offset += sizeof(uint32);
-        } else if (*szFormat == 'l') {
-            uint64 u64Val;
-            u64Val =  (uint64) *( uint8* )pvData << 56;
-            u64Val |= (uint64) *( uint8* )pvData << 48;
-            u64Val |= (uint64) *( uint8* )pvData << 40;
-            u64Val |= (uint64) *( uint8* )pvData << 32;
-            u64Val |= (uint64) *( uint8* )pvData << 24;
-            u64Val |= (uint64) *( uint8* )pvData << 16;
-            u64Val |= (uint64) *( uint8* )pvData << 8;
-            u64Val |= (uint64) *( uint8* )pvData ;
+			u32Offset += sizeof(uint32);
+		} else if (*szFormat == 'z') {
+			uint64 u64Val;
+			(uint64) *( uint8* )pvData++;
+			(uint64) *( uint8* )pvData++;
+			u64Val = (uint64) *( uint8* )pvData++ << 56;
+			u64Val |= (uint64) *( uint8* )pvData++ << 48;
+			u64Val |= (uint64) *( uint8* )pvData++ << 40;
+			u64Val |= (uint64) *( uint8* )pvData++ << 32;
+			u64Val |= (uint64) *( uint8* )pvData++ << 24;
+			u64Val |= (uint64) *( uint8* )pvData++ << 16;
+
+			/*
+			 *  align to long long word (64 bit) boundary
+			 *  but relative to structure start
+			 */
+			u32Offset = ALIGN(sizeof(uint64), u32Offset);
+
+			memcpy(pu8Struct + u32Offset, &u64Val, sizeof(uint64));
+
+			u32Offset += sizeof(uint64);
+
+		}else if (*szFormat == 'l') {
+			uint64 u64Val;
+
+			u64Val =  (uint64) *( uint8* )pvData++ << 56;
+			u64Val |= (uint64) *( uint8* )pvData++ << 48;
+			u64Val |= (uint64) *( uint8* )pvData++ << 40;
+			u64Val |= (uint64) *( uint8* )pvData++ << 32;
+			u64Val |= (uint64) *( uint8* )pvData++ << 24;
+			u64Val |= (uint64) *( uint8* )pvData++ << 16;
+			u64Val |= (uint64) *( uint8* )pvData++ << 8;
+			u64Val |= (uint64) *( uint8* )pvData++ ;
 
 
             /*
@@ -1708,6 +1755,7 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
             uint8 u8Size = *++szFormat;
             unsigned int i;
 
+            ( uint8* )pvData++;
             for (i = 0; i < u8Size; i++) {
                 *(pu8Struct + u32Offset) = *( uint8* )pvData;
                 u32Offset++;

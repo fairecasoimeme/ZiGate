@@ -152,6 +152,7 @@ PUBLIC void vZCL_HandleEntireProfileCommand(uint8                       u8Comman
 #ifdef ZCL_ATTRIBUTE_READ_SERVER_SUPPORTED
         case(E_ZCL_READ_ATTRIBUTES):
         {
+
             vZCL_HandleAttributesReadRequest(pZPSevent, psZCL_EndPointDefinition, psClusterInstance);
             break;
         }
@@ -160,6 +161,7 @@ PUBLIC void vZCL_HandleEntireProfileCommand(uint8                       u8Comman
 #ifdef ZCL_ATTRIBUTE_READ_CLIENT_SUPPORTED
         case(E_ZCL_READ_ATTRIBUTES_RESPONSE):
         {
+
             vZCL_HandleAttributesReadResponse(pZPSevent, psZCL_EndPointDefinition, psClusterInstance);
             break;
         }
@@ -176,6 +178,7 @@ PUBLIC void vZCL_HandleEntireProfileCommand(uint8                       u8Comman
 #ifdef ZCL_ATTRIBUTE_WRITE_SERVER_SUPPORTED
         case(E_ZCL_WRITE_ATTRIBUTES):
         {
+
             vZCL_HandleAttributesWriteRequest(pZPSevent, psZCL_EndPointDefinition, psClusterInstance, FALSE, FALSE);
             break;
         }

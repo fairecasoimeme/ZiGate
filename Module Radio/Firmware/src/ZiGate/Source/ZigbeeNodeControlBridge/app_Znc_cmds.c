@@ -97,7 +97,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003031a
+#define VERSION    0x0003031b
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -394,7 +394,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             case (E_SL_MSG_SET_RAWMODE):
             {
             	sZllState.bRawMode     =   au8LinkRxBuffer [ 0 ];
-              PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
+                PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
             }
             break;
 
@@ -420,9 +420,19 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
             case (E_SL_MSG_SET_EXT_PANID):
             {
-                uint64    u64Value ;
-                u64Value    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 0 );
-                u8Status    =  ZPS_eAplAibSetApsUseExtendedPanId ( u64Value );
+                // If device type is 0(Coordinator) and network is already formed prevent changing EXT PANID
+                // JN-UG-3113 v1.5 Chapter 5.1.1
+                if (sBDB.sAttrib.bbdbNodeIsOnANetwork && sZllState.u8DeviceType == 0)
+                {
+                    u8Status = E_SL_MSG_STATUS_STACK_ALREADY_STARTED;
+                }
+                // In any other case execute command
+                else
+                {
+                    uint64    u64Value ;
+                    u64Value    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 0 );
+                    u8Status    =  ZPS_eAplAibSetApsUseExtendedPanId ( u64Value );
+                }
             }
             break;
 
@@ -524,6 +534,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
                 uint16                 u16Length =  0;
                 uint8                  au8LinkTxBuffer[1024];
+
+
 
                 for( i = 0; i < thisNib->sTblSize.u16NtActv; i++)
                 {
@@ -1893,12 +1905,17 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 uint16    u16ManId;
                 uint16    u16SizePayload;
 
+
+
+
                 u16ClusterId      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
                 u16ManId          =  ZNC_RTN_U16 ( au8LinkRxBuffer, 9 );
+
 
                 /* payload - sum of add mode , short addr, cluster id, manf id, manf specific flag */
                 /* src ep,  dest ep, num attrib , direction*/
                 u16SizePayload    =  u16PacketLength - ( 12 ) ;
+                vLog_Printf(1,1,"DEBUG : SizePyaload : %d\n", u16SizePayload);
                 u8Status          =  APP_eSendWriteAttributesRequest ( au8LinkRxBuffer [ 3 ],
                                                                        au8LinkRxBuffer [ 4 ],
                                                                        u16ClusterId,
@@ -1910,6 +1927,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                                        &au8LinkRxBuffer [ 12 ],
                                                                        au8LinkRxBuffer [ 11 ],
                                                                        u16SizePayload );
+                vLog_Printf(1,1,"DEBUG : Status : %d", u8Status);
             }
             break;
             case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD):
@@ -1917,13 +1935,6 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
 				uint16    u16WarningDuration;
 				u16WarningDuration      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 10 );
-				/*tsCLD_IASWD_StartWarningReqPayload payloadIASWD;
-				payloadIASWD.u8WarningModeStrobeAndSirenLevel=au8LinkRxBuffer [ 9];
-				payloadIASWD.u16WarningDuration=u16WarningDuration;
-				payloadIASWD.u8StrobeDutyCycle=au8LinkRxBuffer [ 12];
-				payloadIASWD.u8WarningModeStrobeAndSirenLevel=au8LinkRxBuffer [13];*/
-
-
 				tsZCL_TxPayloadItem asPayloadDefinition[] = {
 				        {1, E_ZCL_ENUM8,  (void *)&au8LinkRxBuffer [ 9] },
 				        {1, E_ZCL_UINT16,  (void *)&u16WarningDuration},
@@ -1942,15 +1953,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 				                                  FALSE,
 				                                  0,
 				                                  sizeof(asPayloadDefinition) / sizeof(tsZCL_TxPayloadItem));
-
-				/*u8Status = eCLD_IASWDStartWarningReqSend(au8LinkRxBuffer [ 3 ],
-												  au8LinkRxBuffer [ 4 ],
-												  &sAddress,
-												  &u8SeqNum,
-												  &payloadIASWD)	;*/
 			}
 			break;
-
             case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD_SQUAWK):
             {
 
@@ -1971,8 +1975,6 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                   sizeof(asPayloadDefinition) / sizeof(tsZCL_TxPayloadItem));
             }
             break;
-
-
             case E_SL_MSG_CONFIG_REPORTING_REQUEST:
             {
                 uint16                                         u16ClusterId;
@@ -2443,7 +2445,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
         u8Length    =  0;
         ZNC_BUF_U8_UPD  ( &au8values [ 0 ], u8Status,      u8Length );
         ZNC_BUF_U8_UPD  ( &au8values [ 1 ], u8SeqNum,      u8Length );
-        ZNC_BUF_U16_UPD ( &au8values [ 2 ], u16PacketType, u8Length );
+        ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
         vSL_WriteMessage ( E_SL_MSG_STATUS,
                            u8Length,
                            au8values,
@@ -3685,6 +3687,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     uint8                  u8CommandId   =  0x02;
     uint8                  *pu8Data      =  NULL ;
     uint16                 u16Size;
+    ZPS_teStatus           eReturnCode;
 
     /*  handle sequence number pass present value back to user */
     *pu8TransactionSequenceNumber =  u8GetTransactionSequenceNumber();
@@ -3744,9 +3747,13 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     i       =  0;
     pu8Data =  ( uint8* ) PDUM_pvAPduInstanceGetPayload ( myPDUM_thAPduInstance );
 
+
+
     while( i < u16SizePayload )
     {
+
         u16AttribId    =  ZNC_RTN_U16 ( pu8AttributeRequestList, i );
+
         u16offset     +=  PDUM_u16APduInstanceWriteNBO ( myPDUM_thAPduInstance,
                                                          u16offset,
                                                          "h",
@@ -3757,32 +3764,54 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
                                                          pu8AttributeRequestList [ i + 2 ] );
 
         u16Size        =  APP_u16GetAttributeActualSize ( pu8AttributeRequestList [ i + 2 ], 1 );
-        if ( u16Size == 0 )
+
+        if (pu8AttributeRequestList [ i + 2 ] == 0x42)
         {
-            PDUM_eAPduFreeAPduInstance ( myPDUM_thAPduInstance );
-            return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
+        	uint16 u16StringSize;
+        	uint16 j;
+        	u16StringSize= pu8AttributeRequestList [ i + 3 ];
+			u16offset     +=  APP_u16ZncWriteDataPattern ( &pu8Data [ u16offset ],
+			        														E_ZCL_UINT8,
+			        														&pu8AttributeRequestList [ i + 3 ],
+																		   1 );
+        	for (j=0;j<u16StringSize;j++)
+        	{
+
+        		u16offset     +=  APP_u16ZncWriteDataPattern ( &pu8Data [ u16offset ],
+        														E_ZCL_UINT8,
+															   &pu8AttributeRequestList [ i + j + 4 ],
+															   1 );
+        	}
+        	i              =  i + u16Size + 3 + u16StringSize;
+
+        }else{
+
+			if ( u16Size == 0 )
+			{
+				PDUM_eAPduFreeAPduInstance ( myPDUM_thAPduInstance );
+				return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
+			}
+
+
+			u16offset     +=  APP_u16ZncWriteDataPattern ( &pu8Data [ u16offset ],
+														   pu8AttributeRequestList [ i + 2 ],
+														   &pu8AttributeRequestList [ i + 3 ],
+														   u16Size );
+			 i              =  i + u16Size + 3;
         }
-        u16offset     +=  APP_u16ZncWriteDataPattern ( &pu8Data [ u16offset ],
-                                                       pu8AttributeRequestList [ i + 2 ],
-                                                       &pu8AttributeRequestList [ i + 3 ],
-                                                       u16Size );
-        i              =  i + u16Size + 3;
+
     }
 
     // transmit the request
-    if( ZPS_eAplAfUnicastDataReq ( myPDUM_thAPduInstance,
+    eReturnCode = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
                                    u16ClusterId,
                                    u8SourceEndPointId,
                                    u8DestinationEndPointId,
                                    psDestinationAddress->uAddress.u16DestinationAddress,
                                    ZPS_E_APL_AF_SECURE_NWK,
                                    0,
-                                   NULL ) != E_ZCL_SUCCESS )
-    {
-        return ( E_ZCL_ERR_ZTRANSMIT_FAIL );
-    }
-
-    return(E_ZCL_SUCCESS);
+                                   NULL );
+    return(eReturnCode);
 }
 
 

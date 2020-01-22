@@ -1,3 +1,17 @@
+# Version 3.1b
+
+* Add E_SL_MSG_APS_DATA_ACK (0x8011 command) to catch ack and nack when there are lost messages or not  https://github.com/fairecasoimeme/ZiGate/issues/239
+* Add ZPS_eAplAfUnicastAckDataReq to the 0x0110 command instead of ZPS_eAplAfUnicastDataReq https://github.com/fairecasoimeme/ZiGate/issues/106
+* Add rejoin information in "Device Announce" packet https://github.com/fairecasoimeme/ZiGate/issues/247
+* Add EVENT_PDM command (0x8035) return event code from PDM.
+* Update 0x8030 and 0x8031 structure command.
+* Fix issue to manage Livolo status https://github.com/fairecasoimeme/ZiGate/issues/148
+* Fix issue on uint48 datas https://github.com/fairecasoimeme/ZiGate/issues/223
+* Fix ExtPANID modification https://github.com/fairecasoimeme/ZiGate/issues/230
+* Fix issue to use string data type for write attribute command (0x110) https://github.com/fairecasoimeme/ZiGate/issues/268
+* Fix dupplicate "Device announce"
+* Remove #define ZED_TIMEOUT_INDEX_DEFAULT  to  ZED_TIMEOUT_256_MIN value.
+
 # Version 3.1a
 
 * Add Raw Mode, command 0x0002 (zigpy ) https://github.com/fairecasoimeme/ZiGate/issues/129 + https://github.com/fairecasoimeme/ZiGate/issues/153
