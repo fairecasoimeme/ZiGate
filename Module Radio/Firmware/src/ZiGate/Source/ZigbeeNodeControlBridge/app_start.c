@@ -196,8 +196,12 @@ void vReportException ( char*    sExStr );
 
 void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus );
 PRIVATE void vInitialiseApp ( void );
+
+#if (defined PDM_EEPROM)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode );
+#endif
+
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
 #endif
@@ -514,11 +518,8 @@ PRIVATE void vInitialiseApp ( void )
     APP_MigratePDM();
     PDUM_vInit ( );
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
-    PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
 #if (defined PDM_EEPROM)
-#if TRACE_APPSTART
     PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
-#endif
 #endif
 #ifdef CLD_GREENPOWER
     vAPP_GP_LoadPDMData();
@@ -1004,6 +1005,7 @@ void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
     vLog_Printf ( TRACE_EXC,LOG_DEBUG, "ERROR: Extended status %x\n", eExtendedStatus );
 }
 
+#if (defined PDM_EEPROM)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode )
 {
@@ -1019,6 +1021,7 @@ PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
 
 
 }
+#endif
 
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
@@ -1305,7 +1308,7 @@ PRIVATE void APP_MigratePDM( void )
     *  - Size should always be same            *
     *******************************************/
     ZPS_tsAplAib tmpZPS_tsAplAib;
-    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_AIB, &tmpZPS_tsAplAib, 20, &u16DataBytesRead );
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_AIB, &tmpZPS_tsAplAib, sizeof ( tmpZPS_tsAplAib ), &u16DataBytesRead );
 
     /*******************************************
     * Address: 0xF001 - Bind table             *
@@ -1550,7 +1553,7 @@ PRIVATE void APP_MigratePDM( void )
     vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Restoring data to EEPROM\n" );
 
     PDM_eSaveRecordData(PDM_ID_APP_ZLL_CMSSION,             &tmptsZllState,                     sizeof( tsZllState ));
-    PDM_eSaveRecordData(PDM_ID_INTERNAL_AIB,                &tmpZPS_tsAplAib,                   20);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_AIB,                &tmpZPS_tsAplAib,                   sizeof ( tmpZPS_tsAplAib ));
     PDM_eSaveRecordData(PDM_ID_INTERNAL_BINDS,              &tmpBindingTable,                   8 * struct_sizes[0].u8BindingTableSize);
     PDM_eSaveRecordData(PDM_ID_INTERNAL_GROUPS,             &tmpZPS_tsAPdmGroupTableEntry,      sizeof( ZPS_tsAPdmGroupTableEntry ) * struct_sizes[0].u8GroupTableSize);
     PDM_eSaveRecordData(PDM_ID_INTERNAL_APS_KEYS,           &tmpZPS_tsAplApsKeyDescriptorEntry, sizeof( tmpZPS_tsAplApsKeyDescriptorEntry ));

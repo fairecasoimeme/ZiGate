@@ -425,6 +425,59 @@
 			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.config.gnu.cygwin.exe.release.134755034.2111203493.456005051.329562131.1350813581.668052689.673457386">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cygwin.exe.release.134755034.2111203493.456005051.329562131.1350813581.668052689.673457386" moduleId="org.eclipse.cdt.core.settings" name="ZigbeeNodeControlBridge_Coordinator_11520_Host_EEPROM (JN5168)( ZigbeeNodeControlBridge as Coordinator and data persisted to external host Baud Rate of 115200 )">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="exe" artifactName="HAControlDongle" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cygwin.exe.release.134755034.2111203493.456005051.329562131.1350813581.668052689.673457386" name="ZigbeeNodeControlBridge_Coordinator_11520_Host_EEPROM (JN5168)( ZigbeeNodeControlBridge as Coordinator and data persisted to external host Baud Rate of 115200 )" parent="cdt.managedbuild.config.gnu.cygwin.exe.release">
+					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.exe.release.134755034.2111203493.456005051.329562131.1350813581.668052689.673457386." name="/" resourcePath="">
+						<toolChain id="com.beyondsemi.toolchain.gnu.ba.elf.base.1966029540" name="BA ELF GNU toolchain" superClass="com.beyondsemi.toolchain.gnu.ba.elf.base">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.beyondsemi.target.gnu.platform.ba.elf.1036466765" superClass="com.beyondsemi.target.gnu.platform.ba.elf"/>
+							<builder arguments="PDM_BUILD_TYPE=_NONE NODE=COORDINATOR BAUD=115200 JENNIC_CHIP=JN5168 JENNIC_CHIP_FAMILY=JN516x" autoBuildTarget="all" buildPath="${ProjDirPath}/../Build/ZigbeeNodeControlBridge" cleanBuildTarget="clean" command="make" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="com.beyondsemi.builder.cdt.gnu.1883829425" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="false" superClass="com.beyondsemi.builder.cdt.gnu"/>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.compiler.c.base.1395485052" name="BA ELF GNU C compiler" superClass="com.beyondsemi.tool.gnu.ba.elf.compiler.c.base">
+								<option defaultValue="gnu.c.optimization.level.size" id="com.beyondsemi.tool.gnu.ba.elf.compiler.c.optimization.563417572" name="Optimization Level" superClass="com.beyondsemi.tool.gnu.ba.elf.compiler.c.optimization" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.debugging.level.820022496" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<inputType id="com.beyondsemi.base.ba.elf.c.compiler.input.327500479" superClass="com.beyondsemi.base.ba.elf.c.compiler.input"/>
+								<inputType id="com.beyondsemi.assembler.macro.input.2040741940" superClass="com.beyondsemi.assembler.macro.input"/>
+							</tool>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.compiler.cpp.base.597692122" name="BA ELF GNU C++ compiler" superClass="com.beyondsemi.tool.gnu.ba.elf.compiler.cpp.base">
+								<option defaultValue="gnu.cpp.compiler.optimization.level.size" id="com.beyondsemi.tool.gnu.ba.elf.compiler.cpp.optimization.1862620169" name="Optimization Level" superClass="com.beyondsemi.tool.gnu.ba.elf.compiler.cpp.optimization" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.debugging.level.1844205884" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+							</tool>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.linker.c.base.1966678954" name="BA ELF GNU C linker" superClass="com.beyondsemi.tool.gnu.ba.elf.linker.c.base">
+								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.2108381853" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.linker.cpp.base.2021247253" name="BA ELF GNU C++ linker" superClass="com.beyondsemi.tool.gnu.ba.elf.linker.cpp.base"/>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.assembler.base.1077885089" name="BA ELF GNU assembler" superClass="com.beyondsemi.tool.gnu.ba.elf.assembler.base">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.225499819" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="com.beyondsemi.assembler.input.1384071848" superClass="com.beyondsemi.assembler.input"/>
+							</tool>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.archiver.base.489558251" name="BA ELF GNU archiver" superClass="com.beyondsemi.tool.gnu.ba.elf.archiver.base"/>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.size.base.1323234867" name="BA ELF GNU size" superClass="com.beyondsemi.tool.gnu.ba.elf.size.base"/>
+							<tool id="com.beyondsemi.tool.gnu.ba.elf.objcopy.base.1570078890" name="BA ELF GNU objcopy" superClass="com.beyondsemi.tool.gnu.ba.elf.objcopy.base"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Source"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="JN-AN-1216-Zigbee-3-0-IoT-ControlBridge.cdt.managedbuild.target.gnu.mingw.exe.169263960" name="Executable" projectType="cdt.managedbuild.target.gnu.mingw.exe"/>
@@ -432,10 +485,10 @@
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_115200 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000"/>
+		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
 		</configuration>
-		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000 (JN5168)"/>
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
@@ -443,13 +496,14 @@
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_1000000"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_115200"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_1000000 (JN5169)"/>
-		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200 (JN5168)"/>
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
 		</configuration>
+		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200 (JN5168)"/>
 		<configuration configurationName="Full Function Device"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200"/>
+		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_11520_HOST_EEPROM (JN5168)( ZigbeeNodeControlBridge as Coordinator and data persisted to external host Baud Rate of 115200 )"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_115200 (JN5168)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_1000000 (JN5168)"/>
