@@ -317,6 +317,10 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
 
 		}
 
+		// Restart watchdog on each iteration to prevent reset on loading large
+		// record sets.
+		//
+		vAHI_WatchdogRestart();
    	}
    	while(!bNoMoreData);
 
@@ -504,6 +508,7 @@ PUBLIC PDM_teStatus PDM_eSaveRecordData(
 			}
 		}
 
+		vAHI_WatchdogRestart();
 	}
 	while(u16BlocksWritten != u16NumberOfWrites);
 
@@ -601,6 +606,7 @@ PUBLIC PDM_teStatus PDM_eCreateBitmap(uint16 u16IdValue, uint32 u32InitialValue)
 			}
 		}
 	}
+	vAHI_WatchdogRestart();
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -743,6 +749,7 @@ PUBLIC PDM_teStatus PDM_eIncrementBitmap(uint16 u16IdValue)
 			}
 		}
 	}
+	vAHI_WatchdogRestart();
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -876,6 +883,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
 			}
 		}
    	}
+	vAHI_WatchdogRestart();
 
 
 #ifndef PDM_NO_RTOS
@@ -985,6 +993,7 @@ PUBLIC bool_t PDM_bDoesDataExist(
 			}
 		}
    	}
+	vAHI_WatchdogRestart();
 
 
 #ifndef PDM_NO_RTOS
@@ -1119,8 +1128,8 @@ PUBLIC void PDM_vWaitHost(void)
    	    		}
    	    	}
 		}
-		vAHI_WatchdogRestart();
 	}
+	vAHI_WatchdogRestart();
 	UART_vOverrideInterrupt(TRUE);
 }
 

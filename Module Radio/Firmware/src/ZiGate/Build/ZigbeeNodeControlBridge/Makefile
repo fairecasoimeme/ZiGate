@@ -82,7 +82,7 @@ CRC_NEW                ?= CRC_XOR
 #CRC_NEW                ?= CCITT_CRC 
 
 ifneq ($(GP_SUPPORT), 1)
-GENERATED_FILE_NAME    ?= $(TARGET)_$(JENNIC_CHIP)_$(NODE)_$(BAUD)
+GENERATED_FILE_NAME    ?= $(TARGET)_$(JENNIC_CHIP)_$(NODE)_$(BAUD)_PDM$(PDM_BUILD_TYPE)
 else
 GENERATED_FILE_NAME    ?= $(TARGET)_$(JENNIC_CHIP)_GP_Proxy_$(NODE)_$(BAUD)
 endif
