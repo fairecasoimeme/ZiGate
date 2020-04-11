@@ -336,7 +336,8 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
 												 au8LinkTxBuffer,
 												 pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality);
     }
-
+    if (sZCL_CallBackEvent.eZCL_Status == E_ZCL_SUCCESS )
+    {
     // build address structure
     eZCL_BuildTransmitAddressStructure(pZPSevent, &sZCL_Address);
     // transmit request
@@ -346,6 +347,9 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
                                 pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
                                 pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId,
                                 &sZCL_Address);
+    } else {
+		PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
+    }
 }
 
 /****************************************************************************/
