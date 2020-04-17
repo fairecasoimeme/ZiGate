@@ -402,10 +402,17 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     
     switch (psEvent->eEventType)
     {
+        case E_ZCL_CBET_READ_REQUEST:
+    	{
+            vLog_Printf(TRACE_ZCL, LOG_DEBUG, "EP EVT:E_ZCL_CBET_READ_REQUEST\r\n");
+            ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
+            Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+            psEvent->eZCL_Status = E_ZCL_FAIL; // we want zcl to stop processing the request
+    	}
+        break;
         case E_ZCL_CBET_LOCK_MUTEX:
         case E_ZCL_CBET_UNLOCK_MUTEX:
         case E_ZCL_CBET_READ_ATTRIBUTES_RESPONSE:
-        case E_ZCL_CBET_READ_REQUEST:
         case E_ZCL_CBET_TIMER:
         case E_ZCL_CBET_ZIGBEE_EVENT:
             //vLog_Printf(TRACE_ZCL, "EP EVT:No action\r\n");
