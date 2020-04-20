@@ -113,6 +113,9 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
                                      void          *pvData );
 PRIVATE void APP_ZCL_cbGeneralCallback ( tsZCL_CallBackEvent*    psEvent );
 PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent );
+PRIVATE  teZCL_Status APP_ZCL_eCLD_ThermostatCommandHandler(ZPS_tsAfEvent               *pZPSevent,
+                    tsZCL_EndPointDefinition    *psEndPointDefinition,
+                    tsZCL_ClusterInstance       *psClusterInstance);
 #ifdef FULL_FUNC_DEVICE
 PRIVATE void APP_ZCL_cbZllUtilityCallback ( tsZCL_CallBackEvent*    psEvent );
 #endif
@@ -181,6 +184,7 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT,"eApp_ZLO_RegisterEndpoint %x\n", eZCL_Status );
         vSL_LogFlush ( );
     }
+    sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
 
     sDeviceTable.asDeviceRecords[0].u64IEEEAddr = ZPS_u64NwkNibGetExtAddr( ZPS_pvAplZdoGetNwkHandle() );
 
@@ -365,6 +369,20 @@ PRIVATE void APP_ZCL_cbGeneralCallback ( tsZCL_CallBackEvent*    psEvent )
 #endif
 }
 
+PRIVATE  teZCL_Status APP_ZCL_eCLD_ThermostatCommandHandler(
+                    ZPS_tsAfEvent               *pZPSevent,
+                    tsZCL_EndPointDefinition    *psEndPointDefinition,
+                    tsZCL_ClusterInstance       *psClusterInstance)
+{
+    uint8                  au8LinkTxBuffer[256];
+
+    vLog_Printf ( TRUE,LOG_CRIT, "APP_ZCL_eCLD_ThermostatCommandHandler\r\n");
+    ZPS_tsAfEvent* psStackEvent = pZPSevent;
+    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+
+    return(E_ZCL_SUCCESS);
+}
+
 
 /****************************************************************************
  *
@@ -407,9 +425,11 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             vLog_Printf(TRACE_ZCL, LOG_DEBUG, "EP EVT:E_ZCL_CBET_READ_REQUEST\r\n");
             ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
             Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
-            psEvent->eZCL_Status = E_ZCL_FAIL; // we want zcl to stop processing the request
+            //psEvent->eZCL_Status = E_ZCL_FAIL; // we want zcl to stop processing the request
+            //psEvent->eZCL_Status = E_ZCL_SUCCESS;
     	}
         break;
+
         case E_ZCL_CBET_LOCK_MUTEX:
         case E_ZCL_CBET_UNLOCK_MUTEX:
         case E_ZCL_CBET_READ_ATTRIBUTES_RESPONSE:
@@ -1318,6 +1338,11 @@ teZCL_Status eApp_ZLO_RegisterEndpoint ( tfpZCL_ZCLCallBackFunction    fptr )
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT,
 			                                                fptr,
 			                                                &sControlBridge );
+
+	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT,
+				                                                fptr,
+				                                                &sControlBridge );
+
     return eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT,
                                                 fptr,
                                                 &sControlBridge );
