@@ -950,7 +950,6 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                 else
 #endif
                 {
-                    // fix pipiche
                     sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
                     sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
                     vZCL_PassEventToUser(&sZCL_CallBackEvent);
