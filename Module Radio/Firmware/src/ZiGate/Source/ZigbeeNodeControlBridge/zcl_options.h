@@ -66,7 +66,7 @@
 #define GROUPS_REQUIRED                                     ( 16 )
 #define CLD_GROUPS_MAX_NUMBER_OF_GROUPS                     ( 5  )
 /* Sets the number of endpoints that will be created by the ZCL library */
-#define ZCL_NUMBER_OF_ENDPOINTS                             ( 5 )
+#define ZCL_NUMBER_OF_ENDPOINTS                             ( 6 )
 #define ZCL_NUMBER_DEVICES                                  ( 1 )
 
 #define ZCL_MANUFACTURER_CODE                               ( 0x1037 )
