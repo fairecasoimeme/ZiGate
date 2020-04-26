@@ -561,7 +561,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                 {
                     case ZPS_ZDP_DEVICE_ANNCE_REQ_CLUSTER_ID:
                     {
-                        /*u16Length =  0;
+                        u16Length =  0;
                         ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [0] , sApsZdpEvent.uZdpData.sDeviceAnnce.u16NwkAddr,             u16Length );
                         ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length] , sApsZdpEvent.uZdpData.sDeviceAnnce.u64IeeeAddr,    u16Length );
                         ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length] , sApsZdpEvent.uZdpData.sDeviceAnnce.u8Capability,   u16Length );
@@ -569,7 +569,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                         vSL_WriteMessage ( E_SL_MSG_DEVICE_ANNOUNCE,
                                            u16Length,
                                            au8LinkTxBuffer,
-                                           u8LinkQuality);*/
+                                           u8LinkQuality);
                     }
                         break;
 
