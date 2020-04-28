@@ -1,3 +1,19 @@
+#Version 3.1d
+
+* Add 0x8002 command (raw command) when cluster or attribute is unknown.
+* Add PDMonHost commands for future implementation
+* Add new message when PDM is loaded (usefull for PDMonHost implementation)
+* Add Write Attribute Request with no response
+* Fix Finally desactive 0x8035 command by default
+* Fix OTA bug for Legrand OTA
+* Fix UART FIFO capacity 
+* Fix some other bugs
+
+
+# Version 3.1c
+
+* Fix "Device announce" issue when device goes from off to on.
+
 # Version 3.1b
 
 * Add E_SL_MSG_APS_DATA_ACK (0x8011 command) to catch ack and nack when there are lost messages or not  https://github.com/fairecasoimeme/ZiGate/issues/239

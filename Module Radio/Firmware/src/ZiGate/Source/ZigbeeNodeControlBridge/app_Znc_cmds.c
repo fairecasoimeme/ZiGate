@@ -97,7 +97,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003031b
+#define VERSION    0x0003031d
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -307,7 +307,8 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8            u8Sourc
                                                         uint16           u16ManufacturerCode,
                                                         uint8            *pu8AttributeRequestList,
                                                         uint8            u8NumberOfAttrib,
-                                                        uint16           u16SizePayload );
+                                                        uint16           u16SizePayload,
+                                                        uint8            u8CommandId);
 
 /****************************************************************************/
 /***    Implementation                          */
@@ -1926,10 +1927,43 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                                        u16ManId,
                                                                        &au8LinkRxBuffer [ 12 ],
                                                                        au8LinkRxBuffer [ 11 ],
-                                                                       u16SizePayload );
+                                                                       u16SizePayload,
+                                                                       0x02);
                 vLog_Printf(1,1,"DEBUG : Status : %d", u8Status);
             }
             break;
+            case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_NO_RESPONSE):
+			{
+				uint16    u16ClusterId;
+				uint16    u16ManId;
+				uint16    u16SizePayload;
+
+
+
+
+				u16ClusterId      =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+				u16ManId          =  ZNC_RTN_U16 ( au8LinkRxBuffer, 9 );
+
+
+				/* payload - sum of add mode , short addr, cluster id, manf id, manf specific flag */
+				/* src ep,  dest ep, num attrib , direction*/
+				u16SizePayload    =  u16PacketLength - ( 12 ) ;
+				vLog_Printf(1,1,"DEBUG : SizePyaload : %d\n", u16SizePayload);
+				u8Status          =  APP_eSendWriteAttributesRequest ( au8LinkRxBuffer [ 3 ],
+																	   au8LinkRxBuffer [ 4 ],
+																	   u16ClusterId,
+																	   au8LinkRxBuffer [ 7 ],
+																	   &sAddress,
+																	   &u8SeqNum,
+																	   au8LinkRxBuffer [ 8 ],
+																	   u16ManId,
+																	   &au8LinkRxBuffer [ 12 ],
+																	   au8LinkRxBuffer [ 11 ],
+																	   u16SizePayload,
+																	   0x05);
+				vLog_Printf(1,1,"DEBUG : Status : %d", u8Status);
+			}
+			break;
             case (E_SL_MSG_WRITE_ATTRIBUTE_REQUEST_IAS_WD):
 			{
 
@@ -2442,14 +2476,20 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 break;
             }
         }
-        u8Length    =  0;
-        ZNC_BUF_U8_UPD  ( &au8values [ 0 ], u8Status,      u8Length );
-        ZNC_BUF_U8_UPD  ( &au8values [ 1 ], u8SeqNum,      u8Length );
-        ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
-        vSL_WriteMessage ( E_SL_MSG_STATUS,
-                           u8Length,
-                           au8values,
-                           0 );
+        //PDM Messages
+        if (u16PacketType < 0x8200 || u16PacketType > 0x8300)
+        {
+            vLog_Printf(TRACE_APP,LOG_DEBUG, "\nPacket Type %x \n",u16PacketType );
+
+			u8Length    =  0;
+			ZNC_BUF_U8_UPD  ( &au8values [ 0 ], u8Status,      u8Length );
+			ZNC_BUF_U8_UPD  ( &au8values [ 1 ], u8SeqNum,      u8Length );
+			ZNC_BUF_U16_UPD ( &au8values[ 2 ], u16PacketType, u8Length );
+			vSL_WriteMessage ( E_SL_MSG_STATUS,
+							   u8Length,
+							   au8values,
+							   0 );
+        }
 
     }
 
@@ -3675,7 +3715,8 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
                                                         uint16              u16ManufacturerCode,
                                                         uint8               *pu8AttributeRequestList,
                                                         uint8               u8NumberOfAttrib,
-                                                        uint16              u16SizePayload )
+                                                        uint16              u16SizePayload,
+                                                        uint8				u8CommandId)
 {
 
     uint32                 i;
@@ -3684,7 +3725,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     uint16                 u16AttribId;
     PDUM_thAPduInstance    myPDUM_thAPduInstance;
     uint8                  u8FramControl =  0;
-    uint8                  u8CommandId   =  0x02;
+    //uint8                  u8CommandId   =  0x02;
     uint8                  *pu8Data      =  NULL ;
     uint16                 u16Size;
     ZPS_teStatus           eReturnCode;
@@ -3803,14 +3844,26 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     }
 
     // transmit the request
-    eReturnCode = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
-                                   u16ClusterId,
-                                   u8SourceEndPointId,
-                                   u8DestinationEndPointId,
-                                   psDestinationAddress->uAddress.u16DestinationAddress,
-                                   ZPS_E_APL_AF_SECURE_NWK,
-                                   0,
-                                   NULL );
+     if (u8CommandId==0x05)
+     {
+    	 eReturnCode = ZPS_eAplAfBroadcastDataReq(myPDUM_thAPduInstance,
+                                       u16ClusterId,
+                                       u8SourceEndPointId,
+                                       u8DestinationEndPointId,
+                                       ZPS_E_APL_AF_BROADCAST_ALL,
+                                       ZPS_E_APL_AF_SECURE_NWK,
+                                       0,
+                                       NULL );
+     }else{
+    	 eReturnCode = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
+    	                                    u16ClusterId,
+    	                                    u8SourceEndPointId,
+    	                                    u8DestinationEndPointId,
+    	                                    psDestinationAddress->uAddress.u16DestinationAddress,
+    	                                    ZPS_E_APL_AF_SECURE_NWK,
+    	                                    0,
+    	                                    NULL );
+     }
     return(eReturnCode);
 }
 

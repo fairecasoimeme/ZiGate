@@ -176,7 +176,7 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZCL,LOG_CRIT, "Error: eZCL_Initialise returned %d\r\n", eZCL_Status );
         vSL_LogFlush ( );
     }
-
+    sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
     /* Register Commission EndPoint */
     eZCL_Status =  eApp_ZLO_RegisterEndpoint ( &APP_ZCL_cbEndpointCallback );
     if ( eZCL_Status !=  E_ZCL_SUCCESS )
@@ -184,9 +184,9 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT,"eApp_ZLO_RegisterEndpoint %x\n", eZCL_Status );
         vSL_LogFlush ( );
     }
-    sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
 
     sDeviceTable.asDeviceRecords[0].u64IEEEAddr = ZPS_u64NwkNibGetExtAddr( ZPS_pvAplZdoGetNwkHandle() );
+
 
     vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG, "\ntsCLD_Groups %d", sizeof ( tsCLD_Groups ) );
     vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG, "\ntsCLD_GroupTableEntry %d", sizeof ( tsCLD_GroupTableEntry ) );
@@ -786,6 +786,15 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         }
                         break;
 
+                        case E_CLD_OTA_COMMAND_PAGE_REQUEST:
+                        {
+                        	vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "E_CLD_OTA_COMMAND_PAGE_REQUEST\r\n" );
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "SrcAddress: %04x\r\n", psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr );
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "bPageReqRespSpacing: %02x\r\n", psCallBackMessage->sPageReqServerParams.bPageReqRespSpacing);
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "sReceiveEventAddress: %08x\r\n", psCallBackMessage->sPageReqServerParams.sReceiveEventAddress );
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "u16DataSent: %08x\r\n", psCallBackMessage->sPageReqServerParams.u16DataSent );
+
+                        }
                         case E_CLD_OTA_COMMAND_BLOCK_REQUEST:
                         {
 

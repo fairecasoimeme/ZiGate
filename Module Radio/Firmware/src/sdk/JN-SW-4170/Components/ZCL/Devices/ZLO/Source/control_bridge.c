@@ -614,6 +614,32 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
             return E_ZCL_FAIL;
         }
     #endif
+	#if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_SERVER)
+		/* Create an instance of a Thermostat cluster as a server */
+		if(eCLD_ThermostatCreateThermostat(&psDeviceInfo->sClusterInstance.sThermostatServer,
+							  TRUE,
+							  &sCLD_Thermostat,
+							  &psDeviceInfo->sThermostatServerCluster,
+							  &au8ThermostatAttributeControlBits[0],
+							  &psDeviceInfo->sThermostatServerCustomDataStructure) != E_ZCL_SUCCESS)
+		{
+			return E_ZCL_FAIL;
+		}
+	#endif
+
+    #if (defined CLD_THERMOSTAT_UI_CONFIG) && (defined THERMOSTAT_UI_CONFIG_CLIENT)
+        /* Create an instance of a Thermostat cluster as a client */
+        if ( eCLD_ThermostatUIConfigCreateThermostatUIConfig(&psDeviceInfo->sClusterInstance.sThermostatUiConfigClient,
+                                          FALSE,
+                                          &sCLD_ThermostatUIConfig,
+                                          &psDeviceInfo->sThermostatUiConfigClientCluster,
+                                          &au8ThermostatAttributeControlBits[0],
+                                          &psDeviceInfo->sThermostatUiConfigClientCustomDataStructure) != E_ZCL_SUCCESS )
+        {
+            // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+            return E_ZCL_FAIL;
+        }
+    #endif
     
     #if (defined CLD_APPLIANCE_STATISTICS) && (defined APPLIANCE_STATISTICS_CLIENT)
         /* Create an instance of a appliance statistics cluster as a server */

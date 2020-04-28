@@ -120,7 +120,7 @@ extern "C" {
 
 #ifdef OTA_PAGE_REQUEST_SUPPORT
 #ifndef OTA_PAGE_REQ_PAGE_SIZE
-#define OTA_PAGE_REQ_PAGE_SIZE                    512 //by default 1k page size
+#define OTA_PAGE_REQ_PAGE_SIZE                    256 //by default 1k page size
 #endif
 #ifndef OTA_PAGE_REQ_RESPONSE_SPACING
 #define OTA_PAGE_REQ_RESPONSE_SPACING             300 //in miliseconds

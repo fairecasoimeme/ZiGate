@@ -231,6 +231,14 @@ ifeq ($(GP_SUPPORT), 1)
 APPSRC += app_green_power.c
 endif
 
+ifeq ($(PDM_BUILD_TYPE), _NONE)
+APPSRC += pdm_host.c
+endif
+
+ifeq ($(PDM_BUILD_TYPE), _EXT_FLASH)
+APPSRC += pdm_external_memory.c
+endif
+
 LIBNAME = $(TARGET)_PDM$(PDM_BUILD_TYPE)_BAUD_$(BAUD)_DEBUG_$(DEBUG)
 
 

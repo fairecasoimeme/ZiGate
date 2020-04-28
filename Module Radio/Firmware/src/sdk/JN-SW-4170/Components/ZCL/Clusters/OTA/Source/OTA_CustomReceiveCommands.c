@@ -708,7 +708,7 @@ PUBLIC  teZCL_Status eOtaReceivedQuerySpecificFileRequest(
                                   &u8TransactionSequenceNumber,
                                   asPayloadDefinition,
                                   sizeof(asPayloadDefinition) / sizeof(tsZCL_RxPayloadItem),
-                                  E_ZCL_ACCEPT_EXACT|E_ZCL_DISABLE_DEFAULT_RESPONSE);
+                                  E_ZCL_ACCEPT_LESS|E_ZCL_DISABLE_DEFAULT_RESPONSE);
 
 
     if(eStatus != E_ZCL_SUCCESS)
@@ -798,7 +798,7 @@ PUBLIC  teZCL_Status eOtaReceivedQueryNextImage(
                               &u8TransactionSequenceNumber,
                               asPayloadDefinition,
                               u8ItemsInPayload,
-                              E_ZCL_ACCEPT_EXACT|E_ZCL_DISABLE_DEFAULT_RESPONSE);
+                              E_ZCL_ACCEPT_LESS|E_ZCL_DISABLE_DEFAULT_RESPONSE);
                                   
     if(eStatus != E_ZCL_SUCCESS)
     {
@@ -895,7 +895,7 @@ PUBLIC  teZCL_Status eOtaReceivedPageRequest(
                               &u8TransactionSequenceNumber,
                               asPayloadDefinition,
                               u8ItemsInPayload,
-                              E_ZCL_ACCEPT_EXACT|E_ZCL_DISABLE_DEFAULT_RESPONSE);    
+                              E_ZCL_ACCEPT_LESS|E_ZCL_DISABLE_DEFAULT_RESPONSE);
     if(eStatus != E_ZCL_SUCCESS)
     {
 
@@ -1047,7 +1047,7 @@ PUBLIC  teZCL_Status eOtaReceivedBlockRequest(
           &u8TransactionSequenceNumber,
           asPayloadDefinition,
           u8ItemsInPayload,
-          E_ZCL_ACCEPT_EXACT|E_ZCL_DISABLE_DEFAULT_RESPONSE);
+          E_ZCL_ACCEPT_LESS|E_ZCL_DISABLE_DEFAULT_RESPONSE);
                   
     if(eStatus != E_ZCL_SUCCESS)
     {
@@ -1117,7 +1117,7 @@ PUBLIC  teZCL_Status eOtaReceivedUpgradeEndRequest(
                               &u8TransactionSequenceNumber,
                               asPayloadDefinition,
                               sizeof(asPayloadDefinition) / sizeof(tsZCL_RxPayloadItem),
-                              E_ZCL_ACCEPT_EXACT|E_ZCL_DISABLE_DEFAULT_RESPONSE);
+                              E_ZCL_ACCEPT_LESS|E_ZCL_DISABLE_DEFAULT_RESPONSE);
 
     if(eStatus != E_ZCL_SUCCESS)
     {

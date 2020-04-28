@@ -476,7 +476,12 @@ PUBLIC  void vOtaUpgManServerCommandHandler(
                                 bProceed = TRUE;
                             }
 #else
-                            bProceed = TRUE;
+                            if (psImageRequest->u32CurrentFileVersion < sOTAHeader.u32FileVersion) //RAJOUT FRED 03/2020
+                            {
+                            	bProceed = TRUE;
+                            }else{
+                            	bProceed = FALSE;
+                            }
 #endif
                         }
                     }

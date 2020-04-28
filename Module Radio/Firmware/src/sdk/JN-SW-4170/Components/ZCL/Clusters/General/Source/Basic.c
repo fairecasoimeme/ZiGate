@@ -425,7 +425,9 @@ PUBLIC  teZCL_Status eCLD_BasicCreateBasic(
         #endif
 
 		#ifdef CLD_BAS_ATTR_APPLICATION_LEGRAND
-			((tsCLD_Basic*)pvEndPointSharedStructPtr)->u32PrivateLegrand = RND_u32GetRand ( 1, 0x0000ff ) ;
+			//((tsCLD_Basic*)pvEndPointSharedStructPtr)->u32PrivateLegrand = RND_u32GetRand ( 1, 0x0000ff ) ;
+            ((tsCLD_Basic*)pvEndPointSharedStructPtr)->u32PrivateLegrand = 0;
+
 
 		#endif
 
