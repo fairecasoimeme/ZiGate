@@ -446,7 +446,13 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
         case E_ZCL_CBET_UNHANDLED_EVENT:
         {
+
             vLog_Printf ( TRACE_ZCL, LOG_DEBUG, " (E_ZCL_CBET_UNHANDLED_EVENT)" );
+            ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
+            if (psStackEvent->eType == ZPS_EVENT_APS_DATA_INDICATION)
+            {
+            	Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+            }
         }
         break;
 
