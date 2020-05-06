@@ -708,9 +708,22 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 				// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
 				return E_ZCL_FAIL;
 			}
-		#endif
+	#endif
 
-     teZCL_Status status;
+	#if (defined CLD_DEVELCO_VOC_MEASUREMENT) && (defined DEVELCO_VOC_MEASUREMENT_CLIENT)
+		/* Create an instance of a Develco VOC Measurement cluster as a client */
+		if ( eCLD_DevelcoVOCMeasurementCreateDevelcoVOCMeasurement ( &psDeviceInfo->sClusterInstance.sDevelcoVOCMeasurementClient,
+                                                              	  FALSE,
+                                                              	  &sCLD_DevelcoVOCMeasurement,
+                                                              	  &psDeviceInfo->sDevelcoVOCMeasurementClientCluster,
+                                                              	  &au8DevelcoVOCMeasurementAttributeControlBits[0]) != E_ZCL_SUCCESS )
+    	{
+        	// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+        	return E_ZCL_FAIL;
+    	}
+	#endif
+
+    teZCL_Status status;
     status= eZCL_Register(&psDeviceInfo->sEndPoint);
     vLog_Printf(1,LOG_DEBUG,"\n Status : %d\n",status);
 

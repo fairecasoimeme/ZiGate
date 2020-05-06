@@ -866,7 +866,7 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
     uint16    u16ClusterListHA [ ]  =  { 0x0000, 0x0001, 0x0003, 0x0004, 0x0005, 0x0006,
                                          0x0008, 0x0019, 0x0101, 0x1000, 0x0300, 0x0201, 0x0204 };
     uint16    u16ClusterListHA2 [ ] =  { 0x0405, 0x0500, 0x0400, 0x0402, 0x0403, 0x0405, 0x0406,
-                                         0x0702, 0x0b03, 0x0b04 , 0x1000 };
+                                         0x0702, 0x0b03, 0x0b04 , 0x1000, 0xfc03 };
 
     /*list of attributes per cluster */
 
@@ -891,6 +891,7 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
     uint16    u16AttribIllumM [ ] =  { 0x000, 0x0001, 0x0002, 0x0003, 0x0004 };
     uint16    u16AttribIllumT [ ] =  { 0x000, 0x0001, 0x0002 };
     uint16    u16AttribSM [ ] =  { 0x0000, 0x0300, 0x0301, 0x0302, 0x0306, 0x0400 };
+    uint16    u16AttribDevelcoVOC [ ] =  { 0x0000, 0x0001, 0x0002, 0x0003 };
     /*list of commands per cluster */
     uint8     u8CommandBasic [ ] =  { 0 };
     uint8     u8CommandIdentify [ ] =  { 0, 1, 0x40 };
@@ -908,8 +909,9 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
     uint8     u8CommandIllumM [ ] =  { 0 };
     uint8     u8CommandIllumT [ ] =  { 0 };
     uint8     u8CommandSM [ ] =  { 0 };
+    uint8     u8CommandDevelcoVOC [ ] =  { 0 };
 
-    tsAttribCommand    asAttribCommand[13] =  {  { 0x0000, u16AttribBasic, ( sizeof( u16AttribBasic ) / sizeof ( u16AttribBasic [ 0 ] ) ),
+    tsAttribCommand    asAttribCommand[14] =  {  { 0x0000, u16AttribBasic, ( sizeof( u16AttribBasic ) / sizeof ( u16AttribBasic [ 0 ] ) ),
                                                   u8CommandBasic, ( sizeof ( u8CommandBasic ) / sizeof ( u8CommandBasic [ 0 ] )  )},
                                                  { 0x0003, u16AttribIdentify, ( sizeof ( u16AttribIdentify ) / sizeof ( u16AttribIdentify [ 0 ]  ) ),
                                                    u8CommandIdentify, ( sizeof ( u8CommandIdentify ) / sizeof ( u8CommandIdentify [ 0 ]  ) ) },
@@ -933,6 +935,8 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
                                                    u8CommandIllumM, ( sizeof ( u8CommandIllumM ) /sizeof( u8CommandIllumM [ 0 ]  ) ) },
                                                  { 0x0402, u16AttribIllumT, ( sizeof ( u16AttribIllumT ) /sizeof( u16AttribIllumT [ 0 ]  ) ),
                                                    u8CommandIllumT, ( sizeof ( u8CommandIllumT ) /sizeof( u8CommandIllumT [ 0 ]  ) ) },
+                                                 { 0xfc03, u16AttribDevelcoVOC, ( sizeof ( u16AttribDevelcoVOC ) /sizeof( u16AttribDevelcoVOC [ 0 ]  ) ),
+                                                   u8CommandDevelcoVOC, ( sizeof ( u8CommandDevelcoVOC ) /sizeof( u8CommandDevelcoVOC [ 0 ]  ) ) },
                                                  { 0x0702, u16AttribSM, ( sizeof ( u16AttribSM ) / sizeof ( u16AttribSM [ 0 ]  ) ),
                                                    u8CommandSM, ( sizeof ( u8CommandSM ) / sizeof ( u8CommandSM [ 0 ]  ) )} };
 
@@ -967,7 +971,7 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
                        0);
 
         /* Attribute list basic cluster HA EP*/
-    for ( u8Count =  0; u8Count < 13; u8Count++ )
+    for ( u8Count =  0; u8Count < 14; u8Count++ )
     {
         u16Length =  0;
         u8BufferLoop =  0;
@@ -1125,6 +1129,12 @@ bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
 	{
 		// Ikea
 		case(0x117C):
+		{
+			return TRUE;
+			break;
+		}
+		// Develco
+		case(0x1015):
 		{
 			return TRUE;
 			break;

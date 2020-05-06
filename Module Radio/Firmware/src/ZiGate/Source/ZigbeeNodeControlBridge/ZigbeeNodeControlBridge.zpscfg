@@ -109,6 +109,7 @@
     <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" Id="0x0405"/>
     <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" Id="0x0402"/>
     <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" Id="0x0403"/>
+    <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_DEVELCO_VOC_MEASUREMENT" Id="0xfc03"/>
     <Clusters Name="ASC" Id="0x0B03"/>
     <Clusters Name="Electrical_Measurements" Id="0x0B04"/>
     <Clusters Name="Diagnostics" Id="0x0B05"/>
@@ -311,6 +312,7 @@
       <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_DEVELCO_VOC_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Thermostat_UI" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
@@ -340,6 +342,7 @@
       <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_DEVELCO_VOC_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Thermostat_UI" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
@@ -364,6 +367,7 @@
       <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_DEVELCO_VOC_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Thermostat_UI" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
@@ -392,6 +396,7 @@
       <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_DEVELCO_VOC_MEASUREMENT" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Thermostat_UI" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>

@@ -115,6 +115,9 @@ extern "C" {
 #ifdef CLD_PRIVATE_TERNCY
 #include "PrivateTerncy.h"
 #endif
+#ifdef CLD_DEVELCO_VOC_MEASUREMENT
+#include "DevelcoVOCMeasurement.h"
+#endif
 
 
 #ifdef CLD_GREENPOWER
@@ -314,6 +317,9 @@ typedef struct
 	#if (defined CLD_PRIVATE_TERNCY)
        tsZCL_ClusterInstance sPrivateTerncy;
     #endif
+	#if (defined CLD_DEVELCO_VOC_MEASUREMENT) && (defined DEVELCO_VOC_MEASUREMENT_CLIENT)
+       tsZCL_ClusterInstance sDevelcoVOCMeasurementClient;
+	#endif
 
 
 } tsZLO_ControlBridgeDeviceClusterInstances __attribute__ ((aligned(4)));
@@ -564,6 +570,10 @@ typedef struct
     #if (defined CLD_PRIVATE_TERNCY)
         tsCLD_PrivateTerncy sPrivateTerncyCluster;
     #endif
+
+	#if (defined CLD_DEVELCO_VOC_MEASUREMENT) && (defined DEVELCO_VOC_MEASUREMENT_CLIENT)
+        tsCLD_DevelcoVOCMeasurement sDevelcoVOCMeasurementClientCluster;
+	#endif
 
 } tsZLO_ControlBridgeDevice;
 
