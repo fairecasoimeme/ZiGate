@@ -1543,7 +1543,8 @@ PUBLIC uint16 APP_u16ZncWriteDataPattern ( uint8*                    pu8Data,
                     u32Val |= (0xff << 24);
                 }
             }
-            memcpy(pu8Data, &u32Val, sizeof(uint32));
+            u32Val = u32Val << 8;
+            memcpy(pu8Data, &u32Val , sizeof(uint32)-1);
             // increment ptr to keep size calculation correct
             pu8Struct++;
             break;
