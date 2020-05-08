@@ -176,7 +176,6 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZCL,LOG_CRIT, "Error: eZCL_Initialise returned %d\r\n", eZCL_Status );
         vSL_LogFlush ( );
     }
-    sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
     /* Register Commission EndPoint */
     eZCL_Status =  eApp_ZLO_RegisterEndpoint ( &APP_ZCL_cbEndpointCallback );
     if ( eZCL_Status !=  E_ZCL_SUCCESS )
@@ -184,6 +183,7 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT,"eApp_ZLO_RegisterEndpoint %x\n", eZCL_Status );
         vSL_LogFlush ( );
     }
+    sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
 
     sDeviceTable.asDeviceRecords[0].u64IEEEAddr = ZPS_u64NwkNibGetExtAddr( ZPS_pvAplZdoGetNwkHandle() );
 
