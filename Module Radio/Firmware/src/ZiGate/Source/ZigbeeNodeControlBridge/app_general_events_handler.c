@@ -497,6 +497,27 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
     switch (psStackEvent->eType)
     {
+		case ZPS_EVENT_APS_DATA_ACK:
+		{
+			vLog_Printf(TRACE_APP,LOG_DEBUG, "\nACK: SEP=%d DEP=%d Profile=%04x Cluster=%04x\n",
+					psStackEvent->uEvent.sApsDataAckEvent.u8SrcEndpoint,
+					psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,
+					psStackEvent->uEvent.sApsDataAckEvent.u16ProfileId,
+					psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId);
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0], psStackEvent->uEvent.sApsDataAckEvent.u8Status,       u16Length );
+			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16DstAddr,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,       u16Length );
+			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8SequenceNum,       u16Length );
+
+
+			vSL_WriteMessage ( E_SL_MSG_APS_DATA_ACK,
+												   u16Length,
+												   au8LinkTxBuffer,
+												   u8LinkQuality);
+		}
+		break;
+
         case ZPS_EVENT_APS_DATA_INDICATION:
         {
             if (sZllState.bRawMode){
