@@ -58,6 +58,7 @@
 #include "zps_apl.h"
 #include "zps_apl_af.h"
 #include "dbg.h"
+#include "Log.h"
 
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
