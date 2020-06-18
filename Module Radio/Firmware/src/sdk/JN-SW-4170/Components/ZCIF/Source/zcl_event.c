@@ -602,12 +602,18 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
             u8Error=0;
 
         }
-        /* Verrue pour passer le message Xiaomi 0x115F */
-	    /* Avec cette verrue la ZiGate n'envoie pas de réponse à l'emetteur */
+        //workaround to avoid sending back default response with an error code for different devices like Xiaomi 0x115F , schneider 0x105E
 
-	    if(  sZCL_HeaderParams.bManufacturerSpecific && ((sZCL_HeaderParams.u16ManufacturerCode == 0x1228) || (sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||(sZCL_HeaderParams.u16ManufacturerCode == 0x115F) || (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) || (sZCL_HeaderParams.u16ManufacturerCode == 0x1234)  || (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
+	    if(  sZCL_HeaderParams.bManufacturerSpecific &&
+                ((sZCL_HeaderParams.u16ManufacturerCode == 0x1228) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x115F) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x1234) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x105E) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
 	    {
-		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: Verrue pour passer le Attribute Report proprietaire Xiaomi 0x115F.\n", __FILE__, __LINE__, __func__);
+		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: workaround to avoid sending back default response with an error code for different devices: sZCL_HeaderParams.bManufacturerSpecific: 0x%04x\n", __FILE__, __LINE__, __func__,sZCL_HeaderParams.bManufacturerSpecific);
 		   u8Error=0;
 	    }
 
