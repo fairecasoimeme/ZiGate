@@ -3970,14 +3970,26 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
                                        0,
                                        pu8SeqApsNum );
      }else{
-    	 eReturnCode = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
-    	                                    u16ClusterId,
-    	                                    u8SourceEndPointId,
-    	                                    u8DestinationEndPointId,
-    	                                    psDestinationAddress->uAddress.u16DestinationAddress,
-    	                                    ZPS_E_APL_AF_SECURE_NWK,
-    	                                    0,
-    	                                    pu8SeqApsNum );
+         if (psDestinationAddress->eAddressMode == E_ZCL_AM_SHORT_NO_ACK)
+         {
+			 eReturnCode = ZPS_eAplAfUnicastDataReq( myPDUM_thAPduInstance,
+												u16ClusterId,
+												u8SourceEndPointId,
+												u8DestinationEndPointId,
+												psDestinationAddress->uAddress.u16DestinationAddress,
+												ZPS_E_APL_AF_SECURE_NWK,
+												0,
+												pu8SeqApsNum );
+         } else {
+			 eReturnCode = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
+												u16ClusterId,
+												u8SourceEndPointId,
+												u8DestinationEndPointId,
+												psDestinationAddress->uAddress.u16DestinationAddress,
+												ZPS_E_APL_AF_SECURE_NWK,
+												0,
+												pu8SeqApsNum );
+         }
      }
     return(eReturnCode);
 }
