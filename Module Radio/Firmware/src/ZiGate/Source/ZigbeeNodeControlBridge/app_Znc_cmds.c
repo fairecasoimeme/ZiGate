@@ -324,7 +324,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 {
     uint8                  u8SeqNum = 0; // this contains now the APP (zcl, zdp)  sequence number
     uint8                  u8SeqApsNum = 0; // this contains the aps sequence number
-    uint8                  u8RequestSent = 0; // this contains an explanation of the previous two content , 0 : no aps sqn , no app sqn, 1 : aps sqn , 2 both are filled
+    uint8                  u8RequestSent = 0; // this contains an explanation of the previous two content , 0 : no sqn, 1 : zcl/aps , 2 : zdp/aps
     uint8                  u8Status = 0;
     uint16                 u16TargetAddress;
     tsZCL_Address          sAddress;
@@ -896,7 +896,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 u8Status    =  APP_eZdpComplexDescReq ( u16TargetAddress,
                                                         u16PayloadAddress,
                                                         &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -936,7 +936,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                       u8OutClusterCount,
                                                       au16OutClusterList,
                                                       &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -947,7 +947,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                u16TargetAddress    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 0 );
                u8Status            =  APP_eZdpNodeDescReq ( u16TargetAddress,
                                                             &u8SeqNum );
-               u8RequestSent = 1;
+               u8RequestSent = 2; //zdp
             }
             break;
 
@@ -960,7 +960,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 u8Status            =  APP_eZdpSimpleDescReq ( u16TargetAddress,
                                                                u8Endpoint,
                                                                &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2;
             }
             break;
 
@@ -987,7 +987,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 u16TargetAddress    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 0 );
                 u8Status            =  APP_eZdpPowerDescReq ( u16TargetAddress,
                                                               &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -997,7 +997,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 u16TargetAddress    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 0 );
                 u8Status            =  APP_eZdpActiveEndpointReq ( u16TargetAddress,
                                                                &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -1020,7 +1020,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                                   u8ScanCount,
                                                                   &u8SeqNum,
                                                                   u16NwkManagerAddr);
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -1033,7 +1033,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 
                 u8Status        =  APP_eZdpSystemServerDiscovery ( u16ServerMask,
                                                                &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -1051,7 +1051,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                          au8LinkRxBuffer[4],
                                                          au8LinkRxBuffer[5],
                                                          &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -1067,7 +1067,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                  au8LinkRxBuffer[10],
                                                  au8LinkRxBuffer[11],
                                                  &u8SeqNum);
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -1081,7 +1081,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                u8Status            = APP_eZdpMgmtLqiRequest ( u16TargetAddress,
                                                               u8StartIndex,
                                                               &u8SeqNum );
-               u8RequestSent = 1;
+               u8RequestSent = 2; //zdp
 
             }
             break;
@@ -1136,7 +1136,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                    au8LinkRxBuffer[10],
                                                    au8LinkRxBuffer[11],
                                                    &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
 
             }
             break;
@@ -1153,7 +1153,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                                                            &au8LinkRxBuffer[5],
                                                            au8LinkRxBuffer[4],
                                                            &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
 
@@ -1167,7 +1167,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 u8Status    =  APP_eZdpUserDescReq ( u16TargetAddress,
                                                      u16AddrInterest,
                                                      &u8SeqNum );
-                u8RequestSent = 1;
+                u8RequestSent = 2; //zdp
             }
             break;
             case E_SL_MSG_MANY_TO_ONE_ROUTE_REQUEST:
@@ -2586,7 +2586,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             vLog_Printf(TRACE_APP,LOG_DEBUG, "\nPacket Type %x \n",u16PacketType );
 
 			u8Length    =  0;
-			if (u8RequestSent == 1){
+			if (u8RequestSent != 0){
 //				u8SeqApsNum = u8ZCL_GetApsSequenceNumberOfLastTransmit ();
 				zps_tsApl *  s_sApl = ( zps_tsApl * ) ZPS_pvAplZdoGetAplHandle ();
 				u8SeqApsNum = s_sApl->sApsContext.u8SeqNum - 1 ;
@@ -3202,7 +3202,7 @@ PRIVATE ZPS_teStatus APP_eZdpPermitJoiningReq ( uint16    u16DstAddr,
             uDstAddr.u16Addr                             =  u16DstAddr;
             sAplZdpMgmtPermitJoiningReq.u8PermitDuration =  u8PermitDuration;
             sAplZdpMgmtPermitJoiningReq.bTcSignificance  =  1; /* We should always set this to 1 as per spec*/
-            *pu8RequestSent = 1;
+            *pu8RequestSent = 2; //zdp
             return ZPS_eAplZdpMgmtPermitJoiningRequest ( hAPduInst,
                                                          uDstAddr,
                                                          FALSE,
@@ -3304,7 +3304,7 @@ PRIVATE ZPS_teStatus APP_eBindUnbindEntry ( bool_t           bBind,
 
         if (PDUM_INVALID_HANDLE != hAPduInst)
         {
-        	*pu8RequestSent = 1;
+            *pu8RequestSent = 2; //zdp
             ZPS_tuAddress uDstAddr;
             /* always send to node of interest rather than a cache */
             uDstAddr.u64Addr             =  u64SrcAddr;
