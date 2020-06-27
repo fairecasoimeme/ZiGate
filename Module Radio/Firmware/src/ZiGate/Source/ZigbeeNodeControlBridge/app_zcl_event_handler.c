@@ -245,6 +245,9 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
     {
 
         case ZPS_EVENT_APS_DATA_INDICATION:
+            if (sZllState.u8RawMode == RAW_MODE_HYBRID)
+                    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+
             vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\nDATA: SEP=%d DEP=%d Profile=%04x Cluster=%04x\n",
                     psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
                     psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint,
@@ -410,7 +413,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     //vSL_WriteMessage ( 0x9999, u16Length,au8LinkTxBuffer,u8LinkQuality);
     u16Length =  0;
 
-    if (sZllState.bRawMode){
+    if (sZllState.u8RawMode == RAW_MODE_ON){
         ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
         if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE && psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT )
         {
