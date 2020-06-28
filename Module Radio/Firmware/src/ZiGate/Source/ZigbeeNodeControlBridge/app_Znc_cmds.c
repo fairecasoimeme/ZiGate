@@ -4299,7 +4299,7 @@ PRIVATE void APP_vUpdateReportableChange( tuZCL_AttributeReportable *puAttribute
         {
         case E_ZCL_UINT8:
         case E_ZCL_INT8:
-            puAttributeReportable->zuint8ReportableChange = pu8Buffer[*pu8Offset++];
+            puAttributeReportable->zuint8ReportableChange = pu8Buffer[(*pu8Offset)++];
             break;
         case E_ZCL_UINT16:
         case E_ZCL_INT16:
