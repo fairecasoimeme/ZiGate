@@ -623,10 +623,27 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],          psEvent->u8TransactionSequenceNumber,                                        u16Length );
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,             u16Length );
             ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,                   u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,             u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->eZCL_Status,                                                        u16Length );
+            vSL_WriteMessage ( E_SL_MSG_CONFIG_REPORTING_RESPONSE,
+                               u16Length,
+                               au8LinkTxBuffer,
+                               u8LinkQuality );
+        }
+        break;
+
+        case E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTES_CONFIGURE_RESPONSE:
+        {
+            vLog_Printf ( TRACE_ZCL, LOG_DEBUG, " (E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTES_CONFIGURE_RESPONSE)" );
+
+            /* Send event upwards */
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],          psEvent->u8TransactionSequenceNumber,                                        u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,             u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,                   u16Length );
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,              u16Length );
             //FRED
-            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->uMessage.sAttributeReportingConfigurationResponse.sAttributeReportingConfigurationRecord.u16AttributeEnum,              u16Length );
-            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeReportingConfigurationResponse.eCommandStatus,    u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->uMessage.sReportingConfigurationResponse.u16AttributeEnum,              u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sReportingConfigurationResponse.u8Status,    u16Length );
             vSL_WriteMessage ( E_SL_MSG_CONFIG_REPORTING_RESPONSE,
                                u16Length,
                                au8LinkTxBuffer,
