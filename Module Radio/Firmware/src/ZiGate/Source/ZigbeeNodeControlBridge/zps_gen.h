@@ -6,7 +6,7 @@
  *
  * COMPONENT:      zps_gen.h
  *
- * DATE:           Wed Nov  7 18:09:47 2018
+ * DATE:           Mon Jul  6 16:42:28 2020
  *
  * AUTHOR:         NXP Zigbee Protocol Stack Configuration Tool
  *
@@ -148,6 +148,7 @@
 #define ZLO_LEVEL_CONTROL_CLUSTER_ID    (0x0008)
 #define ZLO_COLOR_CONTROL_CLUSTER_ID    (0x0300)
 #define ZLO_DOOR_LOCK_CLUSTER_ID    (0x0101)
+#define ZLO_WINDOW_COVERING_CLUSTER_ID    (0x0102)
 #define ZLO_ZLL_COMMISSIONING_CLUSTER_ID    (0x1000)
 #define ZLO_IASZONE_CLUSTER_ID    (0x0500)
 #define ZLO_OTA_CLUSTER_ID    (0x0019)
@@ -174,15 +175,19 @@
 /* Endpoints */
 #define ZIGBEENODECONTROLBRIDGE_ZDO_ENDPOINT    (0)
 #define ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT    (1)
+#define ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT    (11)
 #define ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT    (10)
+#define ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT    (110)
+#define ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT    (21)
+#define ZIGBEENODECONTROLBRIDGE_LIVOLO_ENDPOINT    (8)
 /* Table Sizes */
-#define ZPS_NEIGHBOUR_TABLE_SIZE      (80)
-#define ZPS_ADDRESS_MAP_TABLE_SIZE    (80)
-#define ZPS_ROUTING_TABLE_SIZE        (70)
-#define ZPS_MAC_ADDRESS_TABLE_SIZE    (80)
+#define ZPS_NEIGHBOUR_TABLE_SIZE      (60)
+#define ZPS_ADDRESS_MAP_TABLE_SIZE    (70)
+#define ZPS_ROUTING_TABLE_SIZE        (255)
+#define ZPS_MAC_ADDRESS_TABLE_SIZE    (70)
 #define ZPS_BINDING_TABLE_SIZE        (5)
 #define ZPS_GROUP_TABLE_SIZE          (5)
-#define ZPS_CHILD_TABLE_SIZE          (50)
+#define ZPS_CHILD_TABLE_SIZE          (40)
 #define ZPS_MAX_CHANNEL_LIST_SIZE     (1)
 
 /****************************************************************************/

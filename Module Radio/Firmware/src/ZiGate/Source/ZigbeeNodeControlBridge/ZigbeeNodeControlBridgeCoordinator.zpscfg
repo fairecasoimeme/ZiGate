@@ -514,8 +514,8 @@
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
     <Endpoints Id="8" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="LIVOLO">
-    	 <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
-    	<OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
     <PDUConfiguration NumNPDUs="19" PDUMMutexName="mutexPDUM">
       <APDUs Id="ZigbeeNodeControlBridge->apduZDP" Name="apduZDP" Size="100" Instances="9"/>

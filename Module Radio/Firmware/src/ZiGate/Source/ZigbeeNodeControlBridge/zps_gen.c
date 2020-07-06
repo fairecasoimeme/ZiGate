@@ -6,7 +6,7 @@
  *
  * COMPONENT:      zps_gen.c
  *
- * DATE:           Wed Nov  7 18:09:47 2018
+ * DATE:           Mon Jul  6 16:42:28 2020
  *
  * AUTHOR:         Jennic Zigbee Protocol Stack Configuration Tool
  *
@@ -478,7 +478,7 @@ PRIVATE  uint32    g_u32MacTxUcastFail [ 1 ];
 PRIVATE  uint32    g_u32MacTxUcast [ 1 ]; 
 PRIVATE  uint32    g_u32MacCcaFail [ 1 ]; 
 PRIVATE  uint32    g_u32ApsRetry   [ 1 ]; 
-PUBLIC   uint32    g_u32ChannelMaskList [ 1 ] = {     0x02188800UL,
+PUBLIC   uint32    g_u32ChannelMaskList [ 1 ] = {     0x06188800UL,
 }; 
 zps_tsAplAfMMServerContext	s_sMultiMaskServer ={     ZPS_E_MULTIMASK_STATE_IDLE,     1,     0,     APP_bMultimaskJoinCallBack};
     /* ... ZPS_MULTIMASK_SUPPORT */
@@ -501,8 +501,8 @@ PRIVATE MAC_tsMacInterfaceTable g_asMacInterfaceTable =
   g_bIgnoreBroadcast,
   1
 };
-PUBLIC uint8 u8MaxZpsConfigEp = 2 ;
-PUBLIC uint8 au8EpMapPresent[2] = {1 , 10  }; 
+PUBLIC uint8 u8MaxZpsConfigEp = 6 ;
+PUBLIC uint8 au8EpMapPresent[6] = {1 ,11 ,10 ,110 ,21 , 8  }; 
 PUBLIC uint8 u8ZpsConfigStackProfileId = 2;
 PUBLIC const uint32 g_u32ApsFcSaveCountBitShift = 10;
 PUBLIC const uint32 g_u32NwkFcSaveCountBitShift = 10;
@@ -664,8 +664,15 @@ PRIVATE const uint16 s_au16Endpoint1InputClusterList[28] = { 0x0000, 0x0300, 0x0
 PRIVATE const PDUM_thAPdu s_ahEndpoint1InputClusterAPdus[28] = { apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, };
 PRIVATE uint8 s_au8Endpoint1InputClusterDiscFlags[4] = { 0x09, 0x04, 0x00, 0x08 };
 
-PRIVATE const uint16 s_au16Endpoint1OutputClusterList[23] = { 0x0b03, 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0204, 0x0001, 0x0b05, 0x1000, };
-PRIVATE uint8 s_au8Endpoint1OutputClusterDiscFlags[3] = { 0xff, 0xfe, 0x7f };
+PRIVATE const uint16 s_au16Endpoint1OutputClusterList[24] = { 0x0b03, 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0102, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0204, 0x0001, 0x0b05, 0x1000, };
+PRIVATE uint8 s_au8Endpoint1OutputClusterDiscFlags[3] = { 0xff, 0xfc, 0xff,  };
+
+PRIVATE const uint16 s_au16Endpoint11InputClusterList[7] = { 0x0000, 0x0702, 0x0019, 0x0201, 0x0402, 0x0001, 0xffff, };
+PRIVATE const PDUM_thAPdu s_ahEndpoint11InputClusterAPdus[7] = { apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, };
+PRIVATE uint8 s_au8Endpoint11InputClusterDiscFlags[1] = { 0x05 };
+
+PRIVATE const uint16 s_au16Endpoint11OutputClusterList[1] = { 0x0000, };
+PRIVATE uint8 s_au8Endpoint11OutputClusterDiscFlags[1] = { 0x01 };
 
 PRIVATE const uint16 s_au16Endpoint10InputClusterList[27] = { 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0001, 0x0204, 0x0001, 0x0b03, 0x0b04, 0x0b05, 0x1000, 0xffff, 0x0012, };
 PRIVATE const PDUM_thAPdu s_ahEndpoint10InputClusterAPdus[27] = { apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, };
@@ -674,12 +681,33 @@ PRIVATE uint8 s_au8Endpoint10InputClusterDiscFlags[4] = { 0x09, 0x00, 0x08, 0x00
 PRIVATE const uint16 s_au16Endpoint10OutputClusterList[23] = { 0x0b03, 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0204, 0x0001, 0x0b05, 0x1000, };
 PRIVATE uint8 s_au8Endpoint10OutputClusterDiscFlags[3] = { 0xff, 0xff, 0x7f };
 
+PRIVATE const uint16 s_au16Endpoint110InputClusterList[27] = { 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0001, 0x0204, 0x0001, 0x0b03, 0x0b04, 0x0b05, 0x1000, 0xffff, 0x0012, };
+PRIVATE const PDUM_thAPdu s_ahEndpoint110InputClusterAPdus[27] = { apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, };
+PRIVATE uint8 s_au8Endpoint110InputClusterDiscFlags[4] = { 0x09, 0x00, 0x08, 0x00 };
+
+PRIVATE const uint16 s_au16Endpoint110OutputClusterList[23] = { 0x0b03, 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0204, 0x0001, 0x0b05, 0x1000, };
+PRIVATE uint8 s_au8Endpoint110OutputClusterDiscFlags[3] = { 0xff, 0xff, 0x7f };
+
+PRIVATE const uint16 s_au16Endpoint21InputClusterList[27] = { 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0001, 0x0204, 0x0001, 0x0b03, 0x0b04, 0x0b05, 0x1000, 0xffff, 0x0012, };
+PRIVATE const PDUM_thAPdu s_ahEndpoint21InputClusterAPdus[27] = { apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, apduZDP, };
+PRIVATE uint8 s_au8Endpoint21InputClusterDiscFlags[4] = { 0x09, 0x00, 0x08, 0x00 };
+
+PRIVATE const uint16 s_au16Endpoint21OutputClusterList[23] = { 0x0b03, 0x0000, 0x0300, 0x0004, 0x0003, 0x0008, 0x0006, 0x0005, 0x0101, 0x0702, 0x0500, 0x0019, 0x0201, 0x0401, 0x0400, 0x0406, 0x0403, 0x0405, 0x0402, 0x0204, 0x0001, 0x0b05, 0x1000, };
+PRIVATE uint8 s_au8Endpoint21OutputClusterDiscFlags[3] = { 0xff, 0xff, 0x7f };
+
+PRIVATE const uint16 s_au16Endpoint8InputClusterList[1] = { 0x0001, };
+PRIVATE const PDUM_thAPdu s_ahEndpoint8InputClusterAPdus[1] = { apduZDP, };
+PRIVATE uint8 s_au8Endpoint8InputClusterDiscFlags[1] = { 0x00 };
+
+PRIVATE const uint16 s_au16Endpoint8OutputClusterList[1] = { 0x0001, };
+PRIVATE uint8 s_au8Endpoint8OutputClusterDiscFlags[1] = { 0x01 };
+
 PUBLIC void APP_vGenCallback(uint8 u8Endpoint, ZPS_tsAfEvent *psStackEvent);
 tszQueue zps_msgMlmeDcfmInd;
 tszQueue zps_msgMcpsDcfmInd;
 tszQueue zps_TimeEvents;
 tszQueue zps_msgMcpsDcfm;
-PRIVATE zps_tsAplAfSimpleDescCont s_asSimpleDescConts[3] = {
+PRIVATE zps_tsAplAfSimpleDescCont s_asSimpleDescConts[7] = {
     {
         {
             0x0000,
@@ -703,13 +731,29 @@ PRIVATE zps_tsAplAfSimpleDescCont s_asSimpleDescConts[3] = {
             0,
             1,
             28,
-            23,
+            24,
             s_au16Endpoint1InputClusterList,
             s_au16Endpoint1OutputClusterList,
             s_au8Endpoint1InputClusterDiscFlags,
             s_au8Endpoint1OutputClusterDiscFlags,
         },
         s_ahEndpoint1InputClusterAPdus,
+        1
+    },
+    {
+        {
+            0x0104,
+            2112,
+            0,
+            11,
+            7,
+            1,
+            s_au16Endpoint11InputClusterList,
+            s_au16Endpoint11OutputClusterList,
+            s_au8Endpoint11InputClusterDiscFlags,
+            s_au8Endpoint11OutputClusterDiscFlags,
+        },
+        s_ahEndpoint11InputClusterAPdus,
         1
     },
     {
@@ -726,6 +770,54 @@ PRIVATE zps_tsAplAfSimpleDescCont s_asSimpleDescConts[3] = {
             s_au8Endpoint10OutputClusterDiscFlags,
         },
         s_ahEndpoint10InputClusterAPdus,
+        1
+    },
+    {
+        {
+            0x0104,
+            2112,
+            0,
+            110,
+            27,
+            23,
+            s_au16Endpoint110InputClusterList,
+            s_au16Endpoint110OutputClusterList,
+            s_au8Endpoint110InputClusterDiscFlags,
+            s_au8Endpoint110OutputClusterDiscFlags,
+        },
+        s_ahEndpoint110InputClusterAPdus,
+        1
+    },
+    {
+        {
+            0x0104,
+            0,
+            0,
+            21,
+            27,
+            23,
+            s_au16Endpoint21InputClusterList,
+            s_au16Endpoint21OutputClusterList,
+            s_au8Endpoint21InputClusterDiscFlags,
+            s_au8Endpoint21OutputClusterDiscFlags,
+        },
+        s_ahEndpoint21InputClusterAPdus,
+        1
+    },
+    {
+        {
+            0x0104,
+            0,
+            0,
+            8,
+            1,
+            1,
+            s_au16Endpoint8InputClusterList,
+            s_au16Endpoint8OutputClusterList,
+            s_au8Endpoint8InputClusterDiscFlags,
+            s_au8Endpoint8OutputClusterDiscFlags,
+        },
+        s_ahEndpoint8InputClusterAPdus,
         1
     },
 };
@@ -765,12 +857,6 @@ PRIVATE zps_tsMsgRecord s_asApsSyncMsgPool[3];
 /* APSDE dcfm record pool */
 PRIVATE zps_tsDcfmRecord s_asApsDcfmRecordPool[5];
 
-/* APSDE fragmentation rx pool */
-PRIVATE zps_tsFragmentReceive s_asApsFragRxPool[3];
-
-/* APSDE fragmentation tx pool */
-PRIVATE zps_tsFragmentTransmit s_asApsFragTxPool[3];
-
 /* APSME Command Manager Command Containers */
 PRIVATE zps_tsApsmeCmdContainer s_sApsmeCmdContainer_4 = { NULL, {}, {}, NULL, 0 };
 PRIVATE zps_tsApsmeCmdContainer s_sApsmeCmdContainer_3 = { &s_sApsmeCmdContainer_4, {}, {}, NULL, 0 };
@@ -778,17 +864,7 @@ PRIVATE zps_tsApsmeCmdContainer s_sApsmeCmdContainer_2 = { &s_sApsmeCmdContainer
 PRIVATE zps_tsApsmeCmdContainer s_sApsmeCmdContainer_1 = { &s_sApsmeCmdContainer_2, {}, {}, NULL, 0 };
 
 /* Trust Center */
-PRIVATE zps_tsAplTCDeviceTable s_asTrustCenterDeviceTable[80] = {
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
-                                                            { 0xFFFF, 0 },
+PRIVATE zps_tsAplTCDeviceTable s_asTrustCenterDeviceTable[70] = {
                                                             { 0xFFFF, 0 },
                                                             { 0xFFFF, 0 },
                                                             { 0xFFFF, 0 },
@@ -864,7 +940,7 @@ PRIVATE zps_tsTrustCenterContext s_sTrustCenterContext = {
     zps_vAplTrustCenterInit,
     zps_vAplTrustCenterUpdateDevice,
     zps_vAplTrustCenterRequestKey,
-    { s_asTrustCenterDeviceTable, 80 },
+    { s_asTrustCenterDeviceTable, 70 },
  FALSE,
  FALSE,
 };
@@ -873,22 +949,22 @@ PRIVATE zps_tsTrustCenterContext s_sTrustCenterContext = {
 /* Network Layer Context */
 PRIVATE uint8                   s_sNwkContext[1904] __attribute__ ((aligned (4)));
 PRIVATE ZPS_tsNwkDiscNtEntry    s_asNwkNtDisc[8];
-PRIVATE ZPS_tsNwkActvNtEntry    s_asNwkNtActv[80];
+PRIVATE ZPS_tsNwkActvNtEntry    s_asNwkNtActv[60];
 PRIVATE ZPS_tsNwkRtDiscEntry    s_asNwkRtDisc[2];
-PRIVATE ZPS_tsNwkRtEntry        s_asNwkRt[70];
+PRIVATE ZPS_tsNwkRtEntry        s_asNwkRt[255];
 PRIVATE ZPS_tsNwkBtr            s_asNwkBtt[9];
 PRIVATE ZPS_tsNwkRctEntry       s_asNwkRct[1];
 PRIVATE ZPS_tsNwkSecMaterialSet s_asNwkSecMatSet[1];
-PRIVATE uint32                  s_asNwkInFCSet[80];
-PRIVATE uint16                  s_au16NwkAddrMapNwk[84];
-PRIVATE uint16                  s_au16NwkAddrMapLookup[84];
-PRIVATE uint64                  s_au64NwkAddrMapExt[84];
+PRIVATE uint32                  s_asNwkInFCSet[60];
+PRIVATE uint16                  s_au16NwkAddrMapNwk[74];
+PRIVATE uint16                  s_au16NwkAddrMapLookup[74];
+PRIVATE uint64                  s_au64NwkAddrMapExt[74];
 #ifdef ZPS_FRQAG
-PRIVATE uint32                  s_au32RxPacketCount[80];
-PRIVATE uint32                  s_au32TxPacketCount[80];
+PRIVATE uint32                  s_au32RxPacketCount[60];
+PRIVATE uint32                  s_au32TxPacketCount[60];
 #endif
-PRIVATE uint32                  s_au32ZedTimeoutCount[50];
-PRIVATE uint8                  s_au8KeepAliveFlags[50];
+PRIVATE uint32                  s_au32ZedTimeoutCount[40];
+PRIVATE uint8                  s_au8KeepAliveFlags[40];
 
 PRIVATE const zps_tsNwkNibInitialValues s_sNibInitialValues =
 {
@@ -922,17 +998,17 @@ PRIVATE const zps_tsNwkNibInitialValues s_sNibInitialValues =
 
 
 PRIVATE const ZPS_tsNwkNibTblSize     s_sNwkTblSize = {
-    80,
-    70,
+    60,
+    255,
     1,
-    80,
+    70,
     8,
     2,
     9,
     1,
     sizeof(s_sNibInitialValues),
-    50,
-    80
+    40,
+    70
 };
 
 PRIVATE const ZPS_tsNwkNibTbl s_sNwkTbl = {
@@ -1006,7 +1082,7 @@ PRIVATE zps_tsApl s_sApl = {
         NULL,
         &s_sNodeDescriptor,
         &s_sNodePowerDescriptor,
-        3,
+        7,
         s_asSimpleDescConts,
         NULL,
         NULL,
@@ -1027,11 +1103,11 @@ PRIVATE zps_tsApl s_sApl = {
         3,
         0,
         { s_asApsDcfmRecordPool, 1, 5 },
-        { s_asApsFragRxPool, 3, 100 },
-        { s_asApsFragTxPool, 3 },
-        zps_eStartFragmentedTransmission,
-        zps_vHandleExtendedDataAckFrame,
-        zps_vHandleApsdeDataFragInd,
+        { NULL, 0, 0 },
+        { NULL, 0 },
+        NULL,
+        NULL,
+        zps_vHandleApsdeDataFragIndNotSupported,
         { &s_sApsmeCmdContainer_1, NULL },
         { { /* Timer */}, 100, 0 },
         { NULL, NULL },
@@ -1144,7 +1220,6 @@ PUBLIC void* zps_vGetZpsMutex(void)
 
 PUBLIC void ZPS_vGetOptionalFeatures(void)
 {
-   ZPS_vAfInterPanInit();
 }
 
 /****************************************************************************/

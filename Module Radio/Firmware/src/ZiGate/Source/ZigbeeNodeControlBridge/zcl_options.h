@@ -69,6 +69,14 @@
 #define ZCL_NUMBER_OF_ENDPOINTS                             ( 6 )
 #define ZCL_NUMBER_DEVICES                                  ( 1 )
 
+/* Extra coordinator endpoints to register */
+#define ZCL_REG_ENDPOINT_ORVIBO
+#define ZCL_REG_ENDPOINT_LIVOLO
+#define ZCL_REG_ENDPOINT_TERNCY
+#define ZCL_REG_ENDPOINT_KONKE
+#define ZCL_REG_ENDPOINT_WISER
+
+
 #define ZCL_MANUFACTURER_CODE                               ( 0x1037 )
 
 /* For GP proxy cluster*/

@@ -411,7 +411,7 @@ PUBLIC  teZCL_Status eZCL_Register(tsZCL_EndPointDefinition *psEndPointDefinitio
         // store cluster reference
         psZCL_Common->psZCL_EndPointRecord[u8NumberOfRegEndpoints].bRegistered = TRUE;
         psZCL_Common->psZCL_EndPointRecord[u8NumberOfRegEndpoints].psEndPointDefinition = psEndPointDefinition;
-        vLog_Printf(TRACE_DEBUG,LOG_DEBUG,"u8NumberOfRegEndpoints : %d\n",u8NumberOfRegEndpoints);
+        vLog_Printf(TRACE_DEBUG,LOG_DEBUG,"\nu8NumberOfRegEndpoints : %d\n",u8NumberOfRegEndpoints);
     
         //Increment number of registered endpoints
         u8NumberOfRegEndpoints++;

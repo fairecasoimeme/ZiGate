@@ -109,6 +109,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 
 
     #if (defined CLD_BASIC) && (defined BASIC_SERVER)
+    	vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Basic Server");
         /* Create an instance of a Basic cluster as a server */
         if ( eCLD_BasicCreateBasic( &psDeviceInfo->sClusterInstance.sBasicServer,
                                TRUE,
@@ -123,6 +124,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Power Configuration Server");
         /* Create an instance of a Power Configuration cluster as a server */
         if(eCLD_PowerConfigurationCreatePowerConfiguration(&psDeviceInfo->sClusterInstance.sPowerConfigurationServer,
                               TRUE,
@@ -136,6 +138,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_IDENTIFY) && (defined IDENTIFY_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Identify Server");
         /* Create an instance of an Identify cluster as a server */
         if(eCLD_IdentifyCreateIdentify(&psDeviceInfo->sClusterInstance.sIdentifyServer,
                               TRUE,
@@ -150,6 +153,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_BINARY_INPUT_BASIC) && (defined BINARY_INPUT_BASIC_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Binary Input Basic Server");
 		/* Create an instance of a bianry input basic cluster as a server */
 		if(eCLD_BinaryInputBasicCreateBinaryInputBasic(&psDeviceInfo->sClusterInstance.sBinaryInputBasicServer,
 							  TRUE,
@@ -164,6 +168,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     
     /* Recommended Optional Server Cluster */
     #if (defined CLD_ZLL_COMMISSION) && (defined ZLL_COMMISSION_SERVER)
+		vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "ZLL Commission Server");
         /* Create an instance of a basic cluster as a server */
         if(eCLD_ZllCommissionCreateCommission(&psDeviceInfo->sClusterInstance.sZllCommissionServer,
                               TRUE,
@@ -178,6 +183,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_OTA) && (defined OTA_SERVER)
+       vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "OTA Server");
        if (eOTA_Create(
            &psDeviceInfo->sClusterInstance.sOTAServer,
            TRUE,  /* Server */
@@ -199,6 +205,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
      */
      
     #if (defined CLD_BASIC) && (defined BASIC_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Basic Client");
         /* Create an instance of a Basic cluster as a client */
         if(eCLD_BasicCreateBasic(&psDeviceInfo->sClusterInstance.sBasicClient,
                               FALSE,
@@ -212,6 +219,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_IDENTIFY) && (defined IDENTIFY_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Identify Client");
         /* Create an instance of an Identify cluster as a client */
         if ( eCLD_IdentifyCreateIdentify ( &psDeviceInfo->sClusterInstance.sIdentifyClient,
                                       FALSE,
@@ -226,6 +234,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_GROUPS) && (defined GROUPS_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Groups Client");
         /* Create an instance of a Groups cluster as a client */
         if ( eCLD_GroupsCreateGroups ( &psDeviceInfo->sClusterInstance.sGroupsClient,
                                   FALSE,
@@ -241,6 +250,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_SCENES) && (defined SCENES_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Scenes Client");
         /* Create an instance of a Scenes cluster as a client */
         if ( eCLD_ScenesCreateScenes ( &psDeviceInfo->sClusterInstance.sScenesClient,
                                   FALSE,
@@ -256,6 +266,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_ONOFF) && (defined ONOFF_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "On/Off Client");
         /* Create an instance of an On/Off cluster as a client */
         if ( eCLD_OnOffCreateOnOff ( &psDeviceInfo->sClusterInstance.sOnOffClient,
                                 FALSE,
@@ -271,6 +282,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 
 
     #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Level Control Client");
         /* Create an instance of a Level Control cluster as a client */
         if ( eCLD_LevelControlCreateLevelControl ( &psDeviceInfo->sClusterInstance.sLevelControlClient,
                                               FALSE,
@@ -285,6 +297,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Colour Control Client");
         /* Create an instance of a Colour Control cluster as a client */
         if(eCLD_ColourControlCreateColourControl(
                               &psDeviceInfo->sClusterInstance.sColourControlClient,
@@ -303,6 +316,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     /* Recommended optional client */
     
     #if (defined CLD_OTA) && (defined OTA_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "OTA Client");
         /* Create an instance of an OTA cluster as a client */
        if(eOTA_Create(&psDeviceInfo->sClusterInstance.sOTAClient,
                       FALSE,  /* client */
@@ -318,6 +332,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_ILLUMINANCE_MEASUREMENT) && (defined ILLUMINANCE_MEASUREMENT_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Illuminance Measurement Client");
         /* Create an instance of an Illuminance Measurement cluster as a client */
         if(eCLD_IlluminanceMeasurementCreateIlluminanceMeasurement(
                               &psDeviceInfo->sClusterInstance.sIlluminanceMeasurementClient,
@@ -332,6 +347,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_ILLUMINANCE_LEVEL_SENSING) && (defined ILLUMINANCE_LEVEL_SENSING_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Illuminance Level Sensing Client");
         /* Create an instance of an Illuminance Level Sensing  cluster as a client */
         if(eCLD_IlluminanceLevelSensingCreateIlluminanceLevelSensing(
                               &psDeviceInfo->sClusterInstance.sIlluminanceLevelSensingClient,
@@ -346,6 +362,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_OCCUPANCY_SENSING) && (defined OCCUPANCY_SENSING_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Occupancy Sensing Client");
         /* Create an instance of an Occupancy Sensing cluster as a client */
         if(eCLD_OccupancySensingCreateOccupancySensing(
                               &psDeviceInfo->sClusterInstance.sOccupancySensingClient,
@@ -360,6 +377,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_ZLL_COMMISSION) && (defined ZLL_COMMISSION_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "ZLL Commission Client");
         /* Create an instance of a zll commissioning cluster as a client */
         if(eCLD_ZllCommissionCreateCommission(&psDeviceInfo->sClusterInstance.sZllCommissionClient,
                               FALSE,
@@ -375,6 +393,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     
     /* Optional server */
     #if (defined CLD_ONOFF) && (defined ONOFF_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "On/Off Server");
         /* Create an instance of an On/Off cluster as a server */
         if ( eCLD_OnOffCreateOnOff ( &psDeviceInfo->sClusterInstance.sOnOffServer,
                                 TRUE,
@@ -389,6 +408,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Level Control Server");
         /* Create an instance of a Level Control cluster as a server */
         if(eCLD_LevelControlCreateLevelControl(&psDeviceInfo->sClusterInstance.sLevelControlServer,
                               TRUE,
@@ -403,22 +423,24 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_COLOUR_CONTROL) && (defined COLOUR_CONTROL_SERVER)
-		   /* Create an instance of a Colour Control cluster as a server */
-		   if(eCLD_ColourControlCreateColourControl(
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Colour Control Server");
+		/* Create an instance of a Colour Control cluster as a server */
+		if(eCLD_ColourControlCreateColourControl(
 								 &psDeviceInfo->sClusterInstance.sColourControlServer,
 								 FALSE,
 								 &sCLD_ColourControl,
 								 &psDeviceInfo->sColourControlServerCluster,
 								 &au8ColourControlAttributeControlBits[0],
 								 &psDeviceInfo->sColourControlServerCustomDataStructure) != E_ZCL_SUCCESS)
-		   {
-			  // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-			  return E_ZCL_FAIL;
-		   }
+		{
+			// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			return E_ZCL_FAIL;
+		}
 	   #endif
 
 
     #if (defined CLD_GROUPS) && (defined GROUPS_SERVER)
+	    vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Groups Server");
         /* Create an instance of a Groups cluster as a server */
         if ( eCLD_GroupsCreateGroups ( &psDeviceInfo->sClusterInstance.sGroupsServer,
                                   TRUE,
@@ -434,6 +456,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_APPLIANCE_STATISTICS) && (defined APPLIANCE_STATISTICS_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Appliance Statistics Server");
         /* Create an instance of a appliance statistics cluster as a server */
         if ( eCLD_ApplianceStatisticsCreateApplianceStatistics ( &psDeviceInfo->sClusterInstance.sASCServer,
                                                             TRUE,
@@ -448,6 +471,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_TIME) && (defined TIME_SERVER)
+       vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Time Server");
 	   /* Create an instance of a Basic cluster as a server */
 	   if ( eCLD_TimeCreateTime(&psDeviceInfo->sClusterInstance.sTimeServer,
 							  TRUE,
@@ -462,6 +486,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_ELECTRICAL_MEASUREMENT && defined ELECTRICAL_MEASUREMENT_SERVER)
+	    vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Electrical Measurement Server");
 		if (eCLD_ElectricalMeasurementCreateElectricalMeasurement(
 				&psDeviceInfo->sClusterInstance.sElectricalMeasurementServer,
 				TRUE,
@@ -475,6 +500,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 
     /* Optional CLient */
     #if (defined CLD_IASZONE) && (defined IASZONE_CLIENT)
+		vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "IAS Zone Client");
         /* Create an instance of a IAS Zone cluster as a client */
         if( eCLD_IASZoneCreateIASZone ( &psDeviceInfo->sClusterInstance.sIASZoneClient,
                                     FALSE,
@@ -489,7 +515,8 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_IASWD) && (defined IASWD_CLIENT)
-       /* Create an instance of a IAS Zone cluster as a client */
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "IAS Warning Device Client");
+       /* Create an instance of a IAS Warning Device cluster as a cluster */
        if( eCLD_IASWDCreateIASWD( &psDeviceInfo->sClusterInstance.sIASWDClient,
                                    FALSE,
                                    &sCLD_IASWD,
@@ -503,7 +530,8 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
    	   #endif
 
 	#if (defined CLD_IASZONE) && (defined IASZONE_SERVER)
-        /* Create an instance of a IAS Zone cluster as a client */
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "IAS Zone Server");
+        /* Create an instance of a IAS Zone cluster as a server */
         if( eCLD_IASZoneCreateIASZone ( &psDeviceInfo->sClusterInstance.sIASZoneServer,
                                     FALSE,
                                     &sCLD_IASZone,
@@ -517,6 +545,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_DOOR_LOCK) && (defined DOOR_LOCK_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Door Lock Client");
         /* Create an instance of a Door Lock cluster as a client */
         if( eCLD_DoorLockCreateDoorLock ( &psDeviceInfo->sClusterInstance.sDoorLockClient,
                                       FALSE,
@@ -530,19 +559,21 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_WINDOWCOVERING) && (defined WINDOWCOVERING_CLIENT)
-		   /* Create an instance of a Window Covering cluster as a client */
-		   if( eCLD_WindowCoveringCreateWindowCovering ( &psDeviceInfo->sClusterInstance.sWindowCoveringClient,
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Window Covering Client");
+		/* Create an instance of a Window Covering cluster as a client */
+		if( eCLD_WindowCoveringCreateWindowCovering ( &psDeviceInfo->sClusterInstance.sWindowCoveringClient,
 														 FALSE,
 														 &sCLD_WindowCovering,
 														 &psDeviceInfo->sWindowCoveringClientCluster,
 														 &au8WindowCoveringAttributeControlBits[0] ) != E_ZCL_SUCCESS )
-		   {
-			  // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-			  return E_ZCL_FAIL;
-		   }
+		{
+			// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			return E_ZCL_FAIL;
+		}
 	#endif
 
     #if (defined CLD_SIMPLE_METERING) && (defined SM_CLIENT)
+		vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Simple Metering Client");
         /* Create an instance of a Simple Metering cluster as a client */
         if( eSE_SMCreate( u8EndPointIdentifier,                                    // uint8 u8Endpoint
                       FALSE,                                                       // bool_t bIsServer
@@ -563,6 +594,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 
 
     #if (defined CLD_TEMPERATURE_MEASUREMENT) && (defined TEMPERATURE_MEASUREMENT_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Temperature Measurement Client");
         /* Create an instance of a Temperature Measurement cluster as a client */
         if ( eCLD_TemperatureMeasurementCreateTemperatureMeasurement ( &psDeviceInfo->sClusterInstance.sTemperatureMeasurementClient,
                                                                   FALSE,
@@ -576,6 +608,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_RELATIVE_HUMIDITY_MEASUREMENT) && (defined RELATIVE_HUMIDITY_MEASUREMENT_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Relative Humidity Measurement Client");
         /* Create an instance of a Relative Humidity Measurement cluster as a client */
         if ( eCLD_RelativeHumidityMeasurementCreateRelativeHumidityMeasurement ( &psDeviceInfo->sClusterInstance.sRelativeHumidityMeasurementClient,
                                                                            FALSE,
@@ -589,7 +622,8 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
 	#if (defined CLD_PRESSURE_MEASUREMENT) && (defined PRESSURE_MEASUREMENT_CLIENT)
-        /* Create an instance of a Relative Humidity Measurement cluster as a client */
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Pressure Measurement Client");
+        /* Create an instance of a Pressure Measurement cluster as a client */
         if ( eCLD_PressureMeasurementCreatePressureMeasurement( &psDeviceInfo->sClusterInstance.sCLD_PressureMeasurementClient,
                                                                            FALSE,
                                                                            &sCLD_PressureMeasurement,
@@ -602,6 +636,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Thermostat Client");
         /* Create an instance of a Thermostat cluster as a client */
         if ( eCLD_ThermostatCreateThermostat ( &psDeviceInfo->sClusterInstance.sThermostatClient,
                                           FALSE,
@@ -615,6 +650,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
         }
     #endif
 	#if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_SERVER)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Thermostat Server");
 		/* Create an instance of a Thermostat cluster as a server */
 		if(eCLD_ThermostatCreateThermostat(&psDeviceInfo->sClusterInstance.sThermostatServer,
 							  TRUE,
@@ -628,6 +664,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 	#endif
 
     #if (defined CLD_THERMOSTAT_UI_CONFIG) && (defined THERMOSTAT_UI_CONFIG_CLIENT)
+		vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Thermostat UI Config Client");
         /* Create an instance of a Thermostat cluster as a client */
         if ( eCLD_ThermostatUIConfigCreateThermostatUIConfig(&psDeviceInfo->sClusterInstance.sThermostatUiConfigClient,
                                           FALSE,
@@ -642,6 +679,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
     
     #if (defined CLD_APPLIANCE_STATISTICS) && (defined APPLIANCE_STATISTICS_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Appliance Statistics Client");
         /* Create an instance of a appliance statistics cluster as a server */
         if ( eCLD_ApplianceStatisticsCreateApplianceStatistics ( &psDeviceInfo->sClusterInstance.sASCClient,
                                                             FALSE,
@@ -656,6 +694,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
     #endif
 
     #if (defined CLD_DIAGNOSTICS) && (defined DIAGNOSTICS_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Diagnostics Client");
         /* Create an instance of a Diagnostic cluster as a client */
         if ( eCLD_DiagnosticsCreateDiagnostics ( &psDeviceInfo->sClusterInstance.sDiagnosticClient,
                                               FALSE,
@@ -671,47 +710,48 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 
 //RAJOUT FRED
 	#if (defined CLD_MULTISTATE_INPUT_BASIC) && (defined MULTISTATE_INPUT_BASIC_SERVER)
-       /* Create an instance of a Basic cluster as a server */
-       if ( eCLD_MultistateInputBasicCreateMultistateInputBasic( &psDeviceInfo->sClusterInstance.sMultistateServer,
-                              TRUE,
-                              &sCLD_MultistateInputBasic,
-                              &psDeviceInfo->sMultistateServerCluster,
-                              &au8MultistateInputBasicAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
-       {
-       // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-           return E_ZCL_FAIL;
-       }
-     //  psDeviceInfo->sClusterInstance.sMultistateServer.psClusterDefinition->u8ClusterControlFlags = (E_ZCL_SECURITY_NETWORK | CLUSTER_MIRROR_BIT) ;
-   #endif
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Multistate Input Basic Server");
+        /* Create an instance of a Basic cluster as a server */
+        if ( eCLD_MultistateInputBasicCreateMultistateInputBasic( &psDeviceInfo->sClusterInstance.sMultistateServer,
+                               TRUE,
+                               &sCLD_MultistateInputBasic,
+                               &psDeviceInfo->sMultistateServerCluster,
+                               &au8MultistateInputBasicAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
+        {
+        // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+            return E_ZCL_FAIL;
+        }
+    #endif
 
 	#if (defined CLD_MULTISTATE_INPUT_BASIC) && (defined MULTISTATE_INPUT_BASIC_CLIENT)
-       /* Create an instance of a Basic cluster as a server */
-       if ( eCLD_MultistateInputBasicCreateMultistateInputBasic( &psDeviceInfo->sClusterInstance.sMultistateClient,
-                              TRUE,
-                              &sCLD_MultistateInputBasicClient,
-                              &psDeviceInfo->sMultistateClientCluster,
-                              &au8MultistateInputBasicClientAttributeControlBits[ 0 ] ) != E_ZCL_SUCCESS )
-       {
-       // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-           return E_ZCL_FAIL;
-       }
-      // psDeviceInfo->sClusterInstance.sMultistateClient.psClusterDefinition->u8ClusterControlFlags = (E_ZCL_SECURITY_NETWORK | CLUSTER_MIRROR_BIT) ;
-   #endif
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Multistate Input Basic Client");
+        /* Create an instance of a Basic cluster as a server */
+        if ( eCLD_MultistateInputBasicCreateMultistateInputBasic( &psDeviceInfo->sClusterInstance.sMultistateClient,
+                               TRUE,
+                               &sCLD_MultistateInputBasicClient,
+                               &psDeviceInfo->sMultistateClientCluster,
+                               &au8MultistateInputBasicClientAttributeControlBits[ 0 ] ) != E_ZCL_SUCCESS )
+		{
+        	// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+        	return E_ZCL_FAIL;
+		}
+    #endif
 
 	#if (defined CLD_ANALOG_INPUT_BASIC) && (defined CLD_ANALOG_INPUT_BASIC_CLIENT)
-		   /* Create an instance of a Basic cluster as a server */
-		   if ( eCLD_AnalogInputBasicCreateAnalogInputBasic(&psDeviceInfo->sClusterInstance.sAnalogInputCLient,
-								  TRUE,
-								  &sCLD_AnalogInputBasic,
-								  &psDeviceInfo->sAnalogInputClientCluster,
-								  &au8AnalogInputBasicAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
-		   {
-		   // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-			   return E_ZCL_FAIL;
-		   }
-		  // psDeviceInfo->sClusterInstance.sMultistateClient.psClusterDefinition->u8ClusterControlFlags = (E_ZCL_SECURITY_NETWORK | CLUSTER_MIRROR_BIT) ;
-	   #endif
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Analog Input Basic Client");
+        /* Create an instance of a Basic cluster as a server */
+        if ( eCLD_AnalogInputBasicCreateAnalogInputBasic(&psDeviceInfo->sClusterInstance.sAnalogInputCLient,
+							  TRUE,
+							  &sCLD_AnalogInputBasic,
+							  &psDeviceInfo->sAnalogInputClientCluster,
+							  &au8AnalogInputBasicAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
+	    {
+		    // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+		    return E_ZCL_FAIL;
+	    }
+	#endif
 	#if (defined CLD_PRIVATE_PHILIPS) && (defined PRIVATE_PHILIPS_SERVER)
+		vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Private Philips Client");
         /* Create an instance of a Temperature Measurement cluster as a client */
         if ( eCLD_PrivatePhilipsCreate ( &psDeviceInfo->sClusterInstance.sPrivatePhilips,
                                                                   FALSE,
@@ -724,21 +764,22 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
         }
     #endif
 	#if (defined CLD_PRIVATE_TERNCY)
-			/* Create an instance of a Temperature Measurement cluster as a client */
-			if ( eCLD_PrivateTerncyCreate ( &psDeviceInfo->sClusterInstance.sPrivateTerncy,
-																	  FALSE,
-																	  &sCLD_PrivateTerncy,
-																	  &psDeviceInfo->sPrivateTerncyCluster,
-																	  &au8PrivateTerncyAttributeControlBits[0]) != E_ZCL_SUCCESS )
-			{
-				// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-				return E_ZCL_FAIL;
-			}
-		#endif
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Private Terncy Server");
+		/* Create an instance of a Terncy cluster as a client */
+		if ( eCLD_PrivateTerncyCreate ( &psDeviceInfo->sClusterInstance.sPrivateTerncy,
+																  FALSE,
+																  &sCLD_PrivateTerncy,
+																  &psDeviceInfo->sPrivateTerncyCluster,
+																  &au8PrivateTerncyAttributeControlBits[0]) != E_ZCL_SUCCESS )
+		{
+			// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			return E_ZCL_FAIL;
+		}
+	#endif
 
-     teZCL_Status status;
-    status= eZCL_Register(&psDeviceInfo->sEndPoint);
-    vLog_Printf(1,LOG_DEBUG,"\n Status : %d\n",status);
+    teZCL_Status status;
+    status = eZCL_Register(&psDeviceInfo->sEndPoint);
+    vLog_Printf(1,LOG_DEBUG,"\n Endpoint Registration Status : %d\n",status);
 
     return status;
 
@@ -760,6 +801,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPointLivolo ( uint8            
 
 
     #if (defined CLD_BASIC) && (defined BASIC_SERVER)
+    	vLog_Printf(1, LOG_DEBUG, "\n Registering %s cluster...", "Basic Server");
         /* Create an instance of a Basic cluster as a server */
         if ( eCLD_BasicCreateBasic( &psDeviceInfo->sClusterInstance.sBasicServer,
                                TRUE,
@@ -773,20 +815,21 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPointLivolo ( uint8            
 
     #endif
 	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
-			/* Create an instance of a Power Configuration cluster as a server */
-			if(eCLD_PowerConfigurationCreatePowerConfiguration(&psDeviceInfo->sClusterInstance.sPowerConfigurationServer,
-								  TRUE,
-								  &sCLD_PowerConfiguration,
-								  &psDeviceInfo->sPowerConfigServerCluster,
-								  &au8PowerConfigurationAttributeControlBits[0]) != E_ZCL_SUCCESS)
-			{
-				// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-				return E_ZCL_FAIL;
-			}
-		#endif
+    	vLog_Printf(1, LOG_DEBUG, "\n Registering %s cluster...", "Power Configuration Server");
+		/* Create an instance of a Power Configuration cluster as a server */
+		if(eCLD_PowerConfigurationCreatePowerConfiguration(&psDeviceInfo->sClusterInstance.sPowerConfigurationServer,
+							  TRUE,
+							  &sCLD_PowerConfiguration,
+							  &psDeviceInfo->sPowerConfigServerCluster,
+							  &au8PowerConfigurationAttributeControlBits[0]) != E_ZCL_SUCCESS)
+		{
+			// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			return E_ZCL_FAIL;
+		}
+	#endif
 
-     teZCL_Status status;
-    status= eZCL_Register(&psDeviceInfo->sEndPoint);
+    teZCL_Status status;
+    status = eZCL_Register(&psDeviceInfo->sEndPoint);
 
     return status;
 

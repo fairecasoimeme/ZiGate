@@ -9,5 +9,5 @@ pdum_apduZDP:
     .long    s_asapduZDPInstances
     .short    0
     .short    100
-    .short    4
+    .short    9
     .zero     2

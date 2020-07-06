@@ -180,7 +180,7 @@ PUBLIC void APP_ZCL_vInitialise ( void )
     eZCL_Status =  eApp_ZLO_RegisterEndpoint ( &APP_ZCL_cbEndpointCallback );
     if ( eZCL_Status !=  E_ZCL_SUCCESS )
     {
-        vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT,"eApp_ZLO_RegisterEndpoint %x\n", eZCL_Status );
+        vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT, "\eApp_ZLO_RegisterEndpoint FAILED with code %x\n", eZCL_Status );
         vSL_LogFlush ( );
     }
     sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
@@ -1341,27 +1341,73 @@ void vAPP_ZCL_DeviceSpecific_Init ( void )
  ****************************************************************************/
 teZCL_Status eApp_ZLO_RegisterEndpoint ( tfpZCL_ZCLCallBackFunction    fptr )
 {
+    teZCL_Status eZCL_Status = E_ZCL_SUCCESS;
 
-	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
-	                                                fptr,
-	                                                &sControlBridge );
-	eZLO_RegisterControlBridgeEndPointLivolo ( ZIGBEENODECONTROLBRIDGE_LIVOLO_ENDPOINT,
-				                                                fptr,
-				                                                &sControlBridge );
-	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT,
-		                                                fptr,
-		                                                &sControlBridge );
-	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT,
-			                                                fptr,
-			                                                &sControlBridge );
+#ifdef ZCL_REG_ENDPOINT_ORVIBO
+    vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Registering endpoint %s...", "ORVIBO");
+	eZCL_Status = eZLO_RegisterControlBridgeEndPoint(ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
+	                                                 fptr,
+	                                                 &sControlBridge);
 
-	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT,
-				                                                fptr,
-				                                                &sControlBridge );
+	if (eZCL_Status != E_ZCL_SUCCESS)
+	{
+		vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Endpoint registration failed with code %d!", eZCL_Status);
+		return eZCL_Status;
+	}
+#endif
 
-    return eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT,
-                                                fptr,
-                                                &sControlBridge );
+#ifdef ZCL_REG_ENDPOINT_LIVOLO
+	vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Registering endpoint %s...", "LIVOLO");
+	eZCL_Status = eZLO_RegisterControlBridgeEndPointLivolo(ZIGBEENODECONTROLBRIDGE_LIVOLO_ENDPOINT,
+				                                           fptr,
+				                                           &sControlBridge);
+	if (eZCL_Status != E_ZCL_SUCCESS)
+	{
+		vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Endpoint registration failed with code %d!", eZCL_Status);
+		return eZCL_Status;
+	}
+#endif
+
+#ifdef ZCL_REG_ENDPOINT_TERNCY
+	vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Registering endpoint %s...", "TERNCY");
+	eZCL_Status = eZLO_RegisterControlBridgeEndPoint (ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT,
+		                                              fptr,
+		                                              &sControlBridge);
+	if (eZCL_Status != E_ZCL_SUCCESS)
+	{
+		vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Endpoint registration failed with code %d!", eZCL_Status);
+		return eZCL_Status;
+	}
+#endif
+
+#ifdef ZCL_REG_ENDPOINT_KONKE
+	vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Registering endpoint %s...", "KONKE");
+	eZCL_Status = eZLO_RegisterControlBridgeEndPoint (ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT,
+			                                          fptr,
+			                                          &sControlBridge);
+	if (eZCL_Status != E_ZCL_SUCCESS)
+	{
+		vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Endpoint registration failed with code %d!", eZCL_Status);
+		return eZCL_Status;
+	}
+#endif
+
+#ifdef ZCL_REG_ENDPOINT_WISER
+	vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Registering endpoint %s...", "WISER");
+	eZCL_Status = eZLO_RegisterControlBridgeEndPoint(ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT,
+				                                     fptr,
+				                                     &sControlBridge);
+	if (eZCL_Status != E_ZCL_SUCCESS)
+	{
+		vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Endpoint registration failed with code %d!", eZCL_Status);
+		return eZCL_Status;
+	}
+#endif
+
+	vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\n Registering endpoint %s...\n", "ZLO");
+    return eZLO_RegisterControlBridgeEndPoint (ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT,
+                                               fptr,
+                                               &sControlBridge);
 }
 
 

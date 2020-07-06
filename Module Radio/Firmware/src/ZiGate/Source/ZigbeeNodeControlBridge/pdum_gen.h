@@ -6,7 +6,7 @@
  *
  * COMPONENT:      pdum_gen.h
  *
- * DATE:           Wed Nov  7 18:09:47 2018
+ * DATE:           Mon Jul  6 16:42:27 2020
  *
  * AUTHOR:         NXP PDU Manager Configuration Tool
  *

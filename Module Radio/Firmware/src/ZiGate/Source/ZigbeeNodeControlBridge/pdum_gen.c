@@ -6,7 +6,7 @@
  *
  * COMPONENT:      pdum_gen.c
  *
- * DATE:           Wed Nov  7 18:09:47 2018
+ * DATE:           Mon Jul  6 16:42:27 2020
  *
  * AUTHOR:         NXP PDU Manager Configuration Tool
  *
@@ -89,11 +89,21 @@ PRIVATE uint8 s_au8apduZDPInstance0Storage[100];
 PRIVATE uint8 s_au8apduZDPInstance1Storage[100];
 PRIVATE uint8 s_au8apduZDPInstance2Storage[100];
 PRIVATE uint8 s_au8apduZDPInstance3Storage[100];
-PUBLIC pdum_tsAPduInstance s_asapduZDPInstances[4] = {
+PRIVATE uint8 s_au8apduZDPInstance4Storage[100];
+PRIVATE uint8 s_au8apduZDPInstance5Storage[100];
+PRIVATE uint8 s_au8apduZDPInstance6Storage[100];
+PRIVATE uint8 s_au8apduZDPInstance7Storage[100];
+PRIVATE uint8 s_au8apduZDPInstance8Storage[100];
+PUBLIC pdum_tsAPduInstance s_asapduZDPInstances[9] = {
     { s_au8apduZDPInstance0Storage, 0, 0, 0 },
     { s_au8apduZDPInstance1Storage, 0, 0, 0 },
     { s_au8apduZDPInstance2Storage, 0, 0, 0 },
     { s_au8apduZDPInstance3Storage, 0, 0, 0 },
+    { s_au8apduZDPInstance4Storage, 0, 0, 0 },
+    { s_au8apduZDPInstance5Storage, 0, 0, 0 },
+    { s_au8apduZDPInstance6Storage, 0, 0, 0 },
+    { s_au8apduZDPInstance7Storage, 0, 0, 0 },
+    { s_au8apduZDPInstance8Storage, 0, 0, 0 },
 };
 
 /****************************************************************************/
