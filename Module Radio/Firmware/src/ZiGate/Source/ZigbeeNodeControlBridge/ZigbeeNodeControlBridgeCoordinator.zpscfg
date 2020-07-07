@@ -110,6 +110,9 @@
     <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_RELATIVE_HUMIDITY_MEASUREMENT" Id="0x0405"/>
     <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" Id="0x0402"/>
     <Clusters Name="MEASUREMENT_AND_SENSING_CLUSTER_ID_PRESSURE_MEASUREMENT" Id="0x0403"/>
+    <Clusters Name="DevelcoVolatileOrganicCompounds" Id="0xFC03"/>
+    <Clusters Name="ClimaxCO2Concentration" Id="0xFC01"/>
+    <Clusters Name="ClimaxPM2.5Measurement" Id="0xFC02"/>
     <Clusters Name="ASC" Id="0x0B03"/>
     <Clusters Name="Electrical_Measurements" Id="0x0B04"/>
     <Clusters Name="Diagnostics" Id="0x0B05"/>
@@ -322,6 +325,9 @@
       <InputClusters Cluster="Default" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="MultiStateInput" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="BinaryInput" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="ClimaxCO2Concentration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="ClimaxPM2.5Measurement" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="DevelcoVolatileOrganicCompounds" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <OutputClusters Cluster="ASC" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Basic" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Color_Control" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
@@ -346,8 +352,11 @@
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="DevelcoVolatileOrganicCompounds" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="ClimaxCO2Concentration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <OutputClusters Cluster="ClimaxPM2.5Measurement" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
-    <Endpoints Id="11" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="WISER">
+    <Endpoints Id="11" Enabled="false" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="WISER">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Metering" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="OTA" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
@@ -357,7 +366,7 @@
       <InputClusters Cluster="Default" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <OutputClusters Cluster="Basic" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
-    <Endpoints Id="10" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="ORVIBO">
+    <Endpoints Id="10" Enabled="false" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="ORVIBO">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
@@ -409,7 +418,7 @@
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
-    <Endpoints Id="110" Enabled="true" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="TERNCY">
+    <Endpoints Id="110" Enabled="false" ApplicationDeviceId="2112" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="TERNCY">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
@@ -461,7 +470,7 @@
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
-    <Endpoints Id="21" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="KONKE">
+    <Endpoints Id="21" Enabled="false" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="KONKE">
       <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <InputClusters Cluster="Color_Control" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <InputClusters Cluster="Groups" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
@@ -513,7 +522,7 @@
       <OutputClusters Cluster="Diagnostics" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
       <OutputClusters Cluster="ZLL_Commissioning" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
-    <Endpoints Id="8" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="LIVOLO">
+    <Endpoints Id="8" Enabled="false" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="LIVOLO">
       <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
@@ -529,7 +538,7 @@
     <MacInterfaceList>
       <MacInterface RouterAllowed="true" ChannelListSize="1" index="0" RadioType="RT2400MHz" Enabled="true"/>
     </MacInterfaceList>
-    <TrustCenter DeviceTableSize="70"/>
+    <TrustCenter DeviceTableSize="254"/>
     <ZDOServers>
       <DefaultServer OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>
       <ZdoClient OutputAPdu="ZigbeeNodeControlBridge->apduZDP"/>

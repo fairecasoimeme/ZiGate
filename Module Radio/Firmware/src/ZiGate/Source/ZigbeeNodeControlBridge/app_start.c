@@ -1144,6 +1144,22 @@ bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
 			break;
 		}
 
+		// Climax
+		//
+		case(0x7959):
+		{
+			return TRUE;
+			break;
+		}
+
+		// Develco
+		//
+		case(0x1015):
+		{
+			return TRUE;
+			break;
+		}
+
 		default:
 		{
 			return FALSE;

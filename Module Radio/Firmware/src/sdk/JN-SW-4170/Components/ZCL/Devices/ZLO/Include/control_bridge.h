@@ -116,6 +116,18 @@ extern "C" {
 #include "PrivateTerncy.h"
 #endif
 
+#ifdef CLD_CLIMAX_PM25_MEASUREMENT
+#include "ClimaxPM25Measurement.h"
+#endif
+
+#ifdef CLD_CLIMAX_CO2_CONCENTRATION
+#include "ClimaxCO2Concentration.h"
+#endif
+
+#ifdef CLD_DEVELCO_VOC_MEASUREMENT
+#include "DevelcoVOCMeasurement.h"
+#endif
+
 
 #ifdef CLD_GREENPOWER
 #include "GreenPower.h"
@@ -290,9 +302,9 @@ typedef struct
     #if (defined CLD_RELATIVE_HUMIDITY_MEASUREMENT) && (defined RELATIVE_HUMIDITY_MEASUREMENT_CLIENT)
         tsZCL_ClusterInstance sRelativeHumidityMeasurementClient;
     #endif
-#if (defined CLD_PRESSURE_MEASUREMENT) && (defined PRESSURE_MEASUREMENT_CLIENT)
-       tsZCL_ClusterInstance sCLD_PressureMeasurementClient;
-   #endif
+    #if (defined CLD_PRESSURE_MEASUREMENT) && (defined PRESSURE_MEASUREMENT_CLIENT)
+        tsZCL_ClusterInstance sCLD_PressureMeasurementClient;
+    #endif
 
     #if (defined CLD_DIAGNOSTICS) && (defined DIAGNOSTICS_CLIENT)
         tsZCL_ClusterInstance sDiagnosticClient;
@@ -321,6 +333,18 @@ typedef struct
 	#if (defined CLD_PRIVATE_TERNCY)
        tsZCL_ClusterInstance sPrivateTerncy;
     #endif
+
+	#if (defined CLD_CLIMAX_CO2_CONCENTRATION) && (defined CLIMAX_CO2_CONCENTRATION_CLIENT)
+       tsZCL_ClusterInstance sClimaxCO2ConcentrationClient;
+	#endif
+
+	#if (defined CLD_CLIMAX_PM25_MEASUREMENT) && (defined CLIMAX_PM25_MEASUREMENT_CLIENT)
+       tsZCL_ClusterInstance sClimaxPM25MeasurementClient;
+	#endif
+
+	#if (defined CLD_DEVELCO_VOC_MEASUREMENT) && (defined DEVELCO_VOC_MEASUREMENT_CLIENT)
+       tsZCL_ClusterInstance sDevelcoVOCMeasurementClient;
+	#endif
 
 
 } tsZLO_ControlBridgeDeviceClusterInstances __attribute__ ((aligned(4)));
@@ -580,6 +604,18 @@ typedef struct
     #if (defined CLD_PRIVATE_TERNCY)
         tsCLD_PrivateTerncy sPrivateTerncyCluster;
     #endif
+
+	#if (defined CLD_CLIMAX_CO2_CONCENTRATION) && (defined CLIMAX_CO2_CONCENTRATION_CLIENT)
+        tsCLD_ClimaxCO2Concentration sClimaxCO2ConcentrationClientCluster;
+	#endif
+
+	#if (defined CLD_CLIMAX_PM25_MEASUREMENT) && (defined CLIMAX_PM25_MEASUREMENT_CLIENT)
+        tsCLD_ClimaxPM25Measurement sClimaxPM25MeasurementClientCluster;
+	#endif
+
+	#if (defined CLD_DEVELCO_VOC_MEASUREMENT) && (defined DEVELCO_VOC_MEASUREMENT_CLIENT)
+        tsCLD_DevelcoVOCMeasurement sDevelcoVOCMeasurementClientCluster;
+	#endif
 
 } tsZLO_ControlBridgeDevice;
 

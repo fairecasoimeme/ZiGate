@@ -66,15 +66,15 @@
 #define GROUPS_REQUIRED                                     ( 16 )
 #define CLD_GROUPS_MAX_NUMBER_OF_GROUPS                     ( 5  )
 /* Sets the number of endpoints that will be created by the ZCL library */
-#define ZCL_NUMBER_OF_ENDPOINTS                             ( 6 )
+#define ZCL_NUMBER_OF_ENDPOINTS                             ( 1 )
 #define ZCL_NUMBER_DEVICES                                  ( 1 )
 
 /* Extra coordinator endpoints to register */
-#define ZCL_REG_ENDPOINT_ORVIBO
-#define ZCL_REG_ENDPOINT_LIVOLO
-#define ZCL_REG_ENDPOINT_TERNCY
-#define ZCL_REG_ENDPOINT_KONKE
-#define ZCL_REG_ENDPOINT_WISER
+#undef ZCL_REG_ENDPOINT_ORVIBO
+#undef ZCL_REG_ENDPOINT_LIVOLO
+#undef ZCL_REG_ENDPOINT_TERNCY
+#undef ZCL_REG_ENDPOINT_KONKE
+#undef ZCL_REG_ENDPOINT_WISER
 
 
 #define ZCL_MANUFACTURER_CODE                               ( 0x1037 )
@@ -384,6 +384,15 @@
 #define PRIVATE_PHILIPS_SERVER
 
 #define CLD_PRIVATE_TERNCY
+
+#define CLD_CLIMAX_CO2_CONCENTRATION
+#define CLIMAX_CO2_CONCENTRATION_CLIENT
+
+#define CLD_CLIMAX_PM25_MEASUREMENT
+#define CLIMAX_PM25_MEASUREMENT_CLIENT
+
+#define CLD_DEVELCO_VOC_MEASUREMENT
+#define DEVELCO_VOC_MEASUREMENT_CLIENT
 
 //#define CLD_APPLIANCE_STATISTICS
 //#define APPLIANCE_STATISTICS_SERVER
