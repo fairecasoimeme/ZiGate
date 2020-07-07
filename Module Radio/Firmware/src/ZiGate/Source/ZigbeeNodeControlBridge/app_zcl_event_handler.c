@@ -480,6 +480,18 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
 
         case E_ZCL_CBET_WRITE_ATTRIBUTES_RESPONSE:
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],          psEvent->u8TransactionSequenceNumber,                               u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,          u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId,           u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->eZCL_Status,                                               u16Length );
+
+            vSL_WriteMessage ( E_SL_MSG_WRITE_ATTRIBUTE_RESPONSE,
+                               u16Length,
+                               au8LinkTxBuffer,
+                               u8LinkQuality );
+        break;
+        case E_ZCL_CBET_WRITE_INDIVIDUAL_ATTRIBUTE_RESPONSE:
         case E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTE:
         case E_ZCL_CBET_READ_INDIVIDUAL_ATTRIBUTE_RESPONSE:
         {
