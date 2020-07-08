@@ -63,7 +63,7 @@ typedef enum
     E_CLD_DEVELCO_VOC_MEASUREMENT_ATTR_ID_MIN_MEASURED_VALUE,                /* Mandatory */
     E_CLD_DEVELCO_VOC_MEASUREMENT_ATTR_ID_MAX_MEASURED_VALUE,                /* Mandatory */
     E_CLD_DEVELCO_VOC_MEASUREMENT_ATTR_ID_RESOLUTION,                        /* Mandatory */
-} teCLD_DVOCM_ClusterID;
+} teCLD_DevelcoVOCMeasurement_AttributeID;
 
 
 /* Develco VOC Measurement Cluster */

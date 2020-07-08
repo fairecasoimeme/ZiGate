@@ -183,7 +183,9 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT, "\eApp_ZLO_RegisterEndpoint FAILED with code %x\n", eZCL_Status );
         vSL_LogFlush ( );
     }
+#if defined(CLD_THERMOSTAT) && defined(THERMOSTAT_CLIENT)
     sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
+#endif
 
     sDeviceTable.asDeviceRecords[0].u64IEEEAddr = ZPS_u64NwkNibGetExtAddr( ZPS_pvAplZdoGetNwkHandle() );
 

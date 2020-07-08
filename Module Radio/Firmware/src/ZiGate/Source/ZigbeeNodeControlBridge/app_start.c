@@ -1135,37 +1135,7 @@ bool_t APP_vProfileWideCommandSupportedForCluster ( uint16 u16Clusterid )
 
 bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
 {
-	switch(u16ManufacturerCode)
-	{
-		// Ikea
-		case(0x117C):
-		{
-			return TRUE;
-			break;
-		}
-
-		// Climax
-		//
-		case(0x7959):
-		{
-			return TRUE;
-			break;
-		}
-
-		// Develco
-		//
-		case(0x1015):
-		{
-			return TRUE;
-			break;
-		}
-
-		default:
-		{
-			return FALSE;
-		}
-	}
-	return FALSE;
+	return TRUE;
 }
 
 /****************************************************************************

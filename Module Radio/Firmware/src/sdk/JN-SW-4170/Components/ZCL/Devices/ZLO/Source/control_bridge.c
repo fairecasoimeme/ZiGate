@@ -718,7 +718,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
                                &psDeviceInfo->sMultistateServerCluster,
                                &au8MultistateInputBasicAttributeControlBits [ 0 ] ) != E_ZCL_SUCCESS )
         {
-        // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+            // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
             return E_ZCL_FAIL;
         }
     #endif
@@ -759,7 +759,7 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
                                                                   &psDeviceInfo->sPrivatePhilipsCluster,
                                                                   &au8PrivatePhilipsAttributeControlBits[0]) != E_ZCL_SUCCESS )
         {
-            // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+            // Need	to convert from cluster specific to ZCL return type so we lose the extra information of the return code
             return E_ZCL_FAIL;
         }
     #endif
@@ -776,6 +776,48 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPoint ( uint8                  
 			return E_ZCL_FAIL;
 		}
 	#endif
+
+    #if (defined CLD_CLIMAX_CO2_CONCENTRATION) && (defined CLIMAX_CO2_CONCENTRATION_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Climax CO2 Concentration Client");
+	    /* Create an instance of a Climax CO2 Concentration cluster as a client */
+	    if ( eCLD_ClimaxCO2ConcentrationCreateClimaxCO2Concentration(&psDeviceInfo->sClusterInstance.sClimaxCO2ConcentrationClient,
+															         FALSE,
+															         &sCLD_ClimaxCO2Concentration,
+															         &psDeviceInfo->sClimaxCO2ConcentrationClientCluster,
+															         &au8ClimaxCO2ConcentrationAttributeControlBits[0]) != E_ZCL_SUCCESS )
+	    {
+		    // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+		    return E_ZCL_FAIL;
+	    }
+    #endif
+
+    #if (defined CLD_CLIMAX_PM25_MEASUREMENT) && (defined CLIMAX_PM25_MEASUREMENT_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Climax PM2.5 Measurement Client");
+	    /* Create an instance of a Climax PM2.5 Measurement cluster as a client */
+	    if ( eCLD_ClimaxPM25MeasurementCreateClimaxPM25Measurement(&psDeviceInfo->sClusterInstance.sClimaxPM25MeasurementClient,
+															       FALSE,
+															       &sCLD_ClimaxPM25Measurement,
+															       &psDeviceInfo->sClimaxPM25MeasurementClientCluster,
+															       &au8ClimaxPM25MeasurementAttributeControlBits[0]) != E_ZCL_SUCCESS )
+	    {
+		    // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+		    return E_ZCL_FAIL;
+	    }
+    #endif
+
+    #if (defined CLD_DEVELCO_VOC_MEASUREMENT) && (defined DEVELCO_VOC_MEASUREMENT_CLIENT)
+        vLog_Printf(1, LOG_DEBUG, "\n Creating %s cluster...", "Develco VOC Measurement Client");
+	    /* Create an instance of a Develco VOC Measurement cluster as a client */
+	    if ( eCLD_DevelcoVOCMeasurementCreateDevelcoVOCMeasurement(&psDeviceInfo->sClusterInstance.sDevelcoVOCMeasurementClient,
+															       FALSE,
+															       &sCLD_DevelcoVOCMeasurement,
+															       &psDeviceInfo->sDevelcoVOCMeasurementClientCluster,
+															       &au8DevelcoVOCMeasurementAttributeControlBits[0]) != E_ZCL_SUCCESS )
+	    {
+		    // Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+		    return E_ZCL_FAIL;
+	    }
+    #endif
 
     teZCL_Status status;
     status = eZCL_Register(&psDeviceInfo->sEndPoint);
