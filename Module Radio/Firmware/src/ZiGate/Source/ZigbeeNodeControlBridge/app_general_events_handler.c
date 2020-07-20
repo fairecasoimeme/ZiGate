@@ -520,10 +520,14 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
         case ZPS_EVENT_APS_DATA_INDICATION:
         {
-            if (sZllState.bRawMode){
-                    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
-                    return;
-                }
+            if (sZllState.u8RawMode == RAW_MODE_HYBRID)
+                Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+
+            if (sZllState.u8RawMode == RAW_MODE_ON){
+                Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+                return;
+            }
+
             uint8*    dataPtr =  ( uint8* ) PDUM_pvAPduInstanceGetPayload ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
             uint8     u8Size  =  PDUM_u16APduInstanceGetPayloadSize ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
 

@@ -132,6 +132,13 @@ extern uint8 u8GPZCLTimerEvent;
 #define GP_ZCL_TICK_TIME        ZTIMER_TIME_MSEC(1)
 #endif
 
+typedef enum
+{
+	RAW_MODE_OFF = 0x00,
+	RAW_MODE_ON  ,
+	RAW_MODE_HYBRID
+} teAPP_RawMode;
+
 /****************************************************************************/
 /***        Type Definitions                                              ***/
 /****************************************************************************/
@@ -166,7 +173,7 @@ typedef struct {
     uint16 u16NwkAddrOfServer;
     uint8 u8OTAserverEP;
 #endif
-    bool_t bRawMode;
+    uint8_t u8RawMode;
 }tsZllState;
 
 typedef struct {
