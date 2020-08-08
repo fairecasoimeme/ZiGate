@@ -4,7 +4,7 @@
  *
  * COMPONENT: pdm_host.c
  *
- * $AUTHOR: Faisal Bhaiyat$
+ * $AUTHOR: schrodingersket $
  *
  * DESCRIPTION:
  *
@@ -45,6 +45,7 @@
 #include <stdlib.h>
 #include <jendefs.h>
 #include "PDM.h"
+#include "SerialLink.h"
 
 #ifndef PDM_NO_RTOS
 #include "os.h"
@@ -62,15 +63,11 @@
 // Default length of transmitted PDM record data in bytes. Kept small to keep
 // message RAM footprint small. Must be less than MAX_PACKET_SIZE.
 //
-uint16 PDM_RECORD_LENGTH = 256;
+uint8 PDM_RECORD_LENGTH = 244;
 
 /****************************************************************************/
 /***        Type Definitions                                              ***/
 /****************************************************************************/
-/****************************************************************************/
-/***        Local Function Prototypes                                     ***/
-/****************************************************************************/
-PRIVATE void vUart_TxByte(bool bSpecialCharacter, uint8 u8Data);
 /****************************************************************************/
 /***        Exported Variables                                            ***/
 /****************************************************************************/
@@ -87,55 +84,6 @@ PDM_tsRecordDescriptor     *pHead = NULL;
 /****************************************************************************/
 /***        Exported Public Functions                                     ***/
 /****************************************************************************/
-
-
-/****************************************************************************
- *
- * NAME: vUart_WriteMessage
- *
- * DESCRIPTION:
- * Write message to the serial link
- *
- * PARAMETERS: Name                   RW  Usage
- *             u16Type                R   Message type
- *             u16Length              R   Message length
- *             pu8Data                R   Message payload
- * RETURNS:
- * void
- ****************************************************************************/
-PUBLIC void vUart_WriteMessage(uint16 u16Type, uint16 u16Length, uint8 *pu8Data)
-{
-	int n;
-	uint8 u8CRC;
-	u16Length++;
-
-	pu8Data[u16Length-1]=0;
-	u8CRC = u8SL_CalculateCRC(u16Type, u16Length, pu8Data);
-
-	/* Send start character */
-	vUart_TxByte(TRUE, SL_START_CHAR);
-
-	/* Send message type */
-	vUart_TxByte(FALSE, (u16Type >> 8) & 0xff);
-	vUart_TxByte(FALSE, (u16Type >> 0) & 0xff);
-
-	/* Send message length */
-	vUart_TxByte(FALSE, (u16Length >> 8) & 0xff);
-	vUart_TxByte(FALSE, (u16Length >> 0) & 0xff);
-
-	/* Send message checksum */
-	vUart_TxByte(FALSE, u8CRC);
-
-	/* Send message payload */
-	for(n = 0; n < u16Length; n++)
-	{
-		vUart_TxByte(FALSE, pu8Data[n]);
-	}
-
-	/* Send end character */
-	vUart_TxByte(TRUE, SL_END_CHAR);
-}
-
 
 /****************************************************************************
  *
@@ -163,7 +111,9 @@ PUBLIC PDM_teStatus PDM_eInitialise(
 #endif
 )
 {
+	DBG_vPrintf( TRACE_DEBUG, "Host PDM: Awaiting host readiness...\n");
 	PDM_vWaitHost();
+	DBG_vPrintf( TRACE_DEBUG, "Host PDM: Host ready.\n");
 	return PDM_E_STATUS_OK;
 }
 
@@ -214,7 +164,7 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
 #endif
 
 	/* flush hardware buffer */
-    UART_vOverrideInterrupt(FALSE);
+    UART_vSetTxInterrupt(FALSE);
 
    	// Set bytes read to zero
    	//
@@ -227,7 +177,7 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
    	// Create and send record load request
    	//
    	memcpy(au8Buffer, &u16IdValue, sizeof(uint16));
-   	vUart_WriteMessage(E_SL_MSG_LOAD_PDM_RECORD_REQUEST, sizeof(uint16), au8Buffer);
+   	vSL_WriteMessage(E_SL_MSG_LOAD_PDM_RECORD_REQUEST, sizeof(uint16), au8Buffer, 0);
 
    	// Wait for record load response
    	//
@@ -237,13 +187,10 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
 		if(UART_bGetRxData((uint8*) &u8QueueByte) ){
    	    	if(TRUE == bSL_ReadMessage(&u16PacketType, &u16PacketLength, MAX_PACKET_SIZE, au8LinkRxBuffer, u8QueueByte))
    	    	{
-   	    		//vLog_Printf(TRACE_DEBUG,LOG_LEVEL," send bSL_ReadMessage status : %ld\n",au8LinkRxBuffer[0]);
-   	    		//vLog_Printf(TRACE_DEBUG,LOG_LEVEL," send bSL_ReadMessage u16RecordId : %d %d\n",au8LinkRxBuffer[1],au8LinkRxBuffer[2]);
   	    		switch(u16PacketType)
    	    		{
    	    		case(E_SL_MSG_LOAD_PDM_RECORD_RESPONSE):
    	    		{
-   	    			vLog_Printf(TRACE_DEBUG,LOG_LEVEL," E_SL_MSG_LOAD_PDM_RECORD_RESPONSE\n");
    	    			// Get response status
    	    			//
    	    			uint8 u8Status = au8LinkRxBuffer[0];
@@ -252,29 +199,23 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
    	    			//
 					memcpy(&u16RecordId, &au8LinkRxBuffer[1], sizeof(uint16));
 
-
    	    			if (u16RecordId == u16IdValue)
    	    			{
-   	    				vLog_Printf(TRACE_DEBUG,LOG_LEVEL," u16RecordId : %d \n",u16IdValue);
    	    				// Load total record size in bytes
 						//
 						memcpy(&u16TotalRecordSize, &au8LinkRxBuffer[3], sizeof(uint16));
-						vLog_Printf(TRACE_DEBUG,LOG_LEVEL," u16TotalRecordSize %d : \n",u16TotalRecordSize);
 
 						// Read total number of expected blocks for this record
 						//
 						memcpy(&u16TotalBlocks, &au8LinkRxBuffer[5], sizeof(uint16));
-						vLog_Printf(TRACE_DEBUG,LOG_LEVEL," u16TotalBlocks %d : \n",u16TotalBlocks);
 
 						// Read block number for this record
 						//
 						memcpy(&u16CurrentBlockId, &au8LinkRxBuffer[7], sizeof(uint16));
-						vLog_Printf(TRACE_DEBUG,LOG_LEVEL," u16CurrentBlockId %d : \n",u16CurrentBlockId);
 
 						// Read size of this block in bytes
 						//
 						memcpy(&u16CurrentBlockSize, &au8LinkRxBuffer[9], sizeof(uint16));
-						vLog_Printf(TRACE_DEBUG,LOG_LEVEL," u16CurrentBlockSize %d : \n",u16CurrentBlockSize);
 
 						// Check if the record id is the one of interest.
 						//
@@ -287,13 +228,11 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
 								// prevent buffer overflow.
 								//
 								u8ReadStatus = PDM_E_STATUS_INVLD_PARAM;
-								vLog_Printf(TRACE_DEBUG,LOG_LEVEL," PDM_E_STATUS_INVLD_PARAM \n");
 							}
 							else
 							{
 								// Copy block data to RAM.
 								//
-								vLog_Printf(TRACE_DEBUG,LOG_LEVEL," COPY TO RAM : u16CurrentBlockSize : %d \n",u16CurrentBlockSize);
 								memcpy(pdmBuffer, &au8LinkRxBuffer[11], u16CurrentBlockSize);
 								pdmBuffer += u16CurrentBlockSize;
 
@@ -309,23 +248,17 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
 							// If this is the final block to read, we're all done and can
 							// exit the read loop.
 							//
-	   	    				vLog_Printf(TRACE_DEBUG,LOG_LEVEL,"u16BlocksRead : %d - u16TotalBlocks : %d \n",u16BlocksRead,u16TotalBlocks);
 							if(u16BlocksRead == u16TotalBlocks)
 							{
-								vLog_Printf(TRACE_DEBUG,LOG_LEVEL,"u16BlocksRead : %d - u16TotalBlocks : %d \nNO MORE !!!\n",u16BlocksRead,u16TotalBlocks);
 								bNoMoreData = TRUE;
 							}
 						}
 						else
 						{
-							vLog_Printf(TRACE_DEBUG,LOG_LEVEL,"No Data\n");
 							// No data available; break out of read loop.
 							//
 							bNoMoreData = TRUE;
 						}
-   	    			}else{
-   	    				u8ReadStatus = PDM_E_STATUS_INVLD_PARAM;
-   	    				bNoMoreData = TRUE;
    	    			}
    	    		}
 					break;
@@ -336,7 +269,11 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
    	    	}
 
 		}
-		vAHI_WatchdogRestart(); //RAJOUT FRED
+
+		// Restart watchdog on each iteration to prevent reset on loading large
+		// record sets.
+		//
+		vAHI_WatchdogRestart();
    	}
    	while(!bNoMoreData);
 
@@ -351,9 +288,8 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
    	//
 	au8Buffer[0] = (u8ReadStatus != PDM_E_STATUS_OK);
 	au8Buffer[1] = u8ReadStatus;
-	au8Buffer[2] = (uint8_t)(E_SL_MSG_LOAD_PDM_RECORD_REQUEST >> 8);
-	au8Buffer[3] = (uint8_t)E_SL_MSG_LOAD_PDM_RECORD_REQUEST;
-	vUart_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer);
+	memcpy(&au8Buffer[2], &u16RecordId, sizeof(uint16));
+	vSL_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer, 0);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -361,7 +297,7 @@ PUBLIC PDM_teStatus PDM_eReadDataFromRecord(
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
     return PDM_E_STATUS_OK;
 }
 
@@ -400,27 +336,16 @@ PUBLIC PDM_teStatus PDM_eSaveRecordData(
 	uint16 u16NumberOfWrites = (u16Datalength / PDM_RECORD_LENGTH) + (((u16Datalength % PDM_RECORD_LENGTH) > 0) ? 1 : 0);
 	uint16 u16BlocksWritten = 0,
            u16Size = 0,
-           u16MessageLength,
-           u16RecordId,
-           u16BlockId;
+           u16MessageLength;
 
-	// Whether save acknowledgment has been received; once received, this function
-	// terminates.
-	//
-	bool_t bSaveAck = FALSE;
-	vLog_Printf(TRACE_DEBUG,LOG_LEVEL," 1: %ld\n",(u16Datalength / PDM_RECORD_LENGTH));
-	vLog_Printf(TRACE_DEBUG,LOG_LEVEL," 2: %ld\n",(u16Datalength % PDM_RECORD_LENGTH));
-	vLog_Printf(TRACE_DEBUG,LOG_LEVEL," PDM_eSaveRecordData - u16Datalength: %d\n",u16Datalength);
-
-	vLog_Printf(TRACE_DEBUG,LOG_LEVEL," PDM_eSaveRecordData - u16NumberOfWrites: %d\n",u16NumberOfWrites);
     // If number of writes is zero, return early since there's no data to persist.
 	//
-	if( u16NumberOfWrites == 0)
+	if(u16NumberOfWrites == 0)
 	{
 		return PDM_E_STATUS_OK;
 	}
 
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -491,57 +416,13 @@ PUBLIC PDM_teStatus PDM_eSaveRecordData(
 
 		// Write save data to UART
 		//
-		vUart_WriteMessage(E_SL_MSG_SAVE_PDM_RECORD_REQUEST, u16MessageLength, au8Buffer);
+		vSL_WriteMessage(E_SL_MSG_SAVE_PDM_RECORD_REQUEST, u16MessageLength, au8Buffer, 0);
 
-
-		// Wait for acknowledgment of this record block before writing the next one.
-		//
-		bSaveAck = FALSE;
-		while(bSaveAck == FALSE)
-		{
-
-	   		u8QueueByte = 0xff;
-			if(UART_bGetRxData((uint8*)&u8QueueByte) )
-			{
-	   	    	if(TRUE == bSL_ReadMessage(&u16PacketType, &u16PacketLength, MAX_PACKET_SIZE, au8LinkRxBuffer, u8QueueByte))
-	   	    	{
-	   	    		if(u16PacketType == E_SL_MSG_SAVE_PDM_RECORD_RESPONSE)
-	   	    		{
-	   	    			// Load bitmap id
-						//
-
-						u16RecordId = ZNC_RTN_U16(au8LinkRxBuffer, 1);
-						u16BlockId = ZNC_RTN_U16(au8LinkRxBuffer, 3);
-						vLog_Printf(TRACE_DEBUG,LOG_LEVEL," E_SL_MSG_SAVE_PDM_RECORD_RESPONSE - BlockId : %ld\n", u16BlockId);
-
-						if (u16RecordId == u16IdValue && u16BlockId == u16BlocksWritten)
-						{
-							// Set return status
-							//
-							u8Status = au8LinkRxBuffer[0];
-
-							// Set flag to exit loop
-							//
-							bSaveAck = TRUE;
-
-							// Increment blocks written counter
-							//
-							u16BlocksWritten++;
-						}
-	   	    		}
-	   	    	}
-			}
-			vAHI_WatchdogRestart(); //RAJOUT FRED
-		}
+		u16BlocksWritten++;
+		DBG_vPrintf( TRACE_DEBUG, "\nRecord %x: Block %d/%d written.", u16IdValue, u16BlocksWritten, u16NumberOfWrites);
 
 	}
 	while(u16BlocksWritten != u16NumberOfWrites);
-
-	au8Buffer[0] = (uint8_t)(PDM_E_STATUS_OK >> 8);
-	au8Buffer[1] = (uint8_t)PDM_E_STATUS_OK;
-	au8Buffer[2] = (uint8_t)(E_SL_MSG_SAVE_PDM_RECORD_REQUEST >> 8);
-	au8Buffer[3] = (uint8_t)E_SL_MSG_SAVE_PDM_RECORD_REQUEST;
-	vUart_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -549,7 +430,9 @@ PUBLIC PDM_teStatus PDM_eSaveRecordData(
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
+
+	vAHI_WatchdogRestart();
 
 	return u8Status;
 }
@@ -582,7 +465,7 @@ PUBLIC PDM_teStatus PDM_eCreateBitmap(uint16 u16IdValue, uint32 u32InitialValue)
 	//
 	bool_t bSaveAck = FALSE;
 
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -606,7 +489,7 @@ PUBLIC PDM_teStatus PDM_eCreateBitmap(uint16 u16IdValue, uint32 u32InitialValue)
 
 	// Write bitmap create request to UART
 	//
-	vUart_WriteMessage(E_SL_MSG_CREATE_BITMAP_RECORD_REQUEST, u16MessageLength, au8Buffer);
+	vSL_WriteMessage(E_SL_MSG_CREATE_BITMAP_RECORD_REQUEST, u16MessageLength, au8Buffer, 0);
 
 	// Wait for acknowledgment.
 	//
@@ -637,12 +520,7 @@ PUBLIC PDM_teStatus PDM_eCreateBitmap(uint16 u16IdValue, uint32 u32InitialValue)
 			}
 		}
 	}
-
-	au8Buffer[0] = (uint8_t)(PDM_E_STATUS_OK >> 8);
-	au8Buffer[1] = (uint8_t)PDM_E_STATUS_OK;
-	au8Buffer[2] = (uint8_t)(E_SL_MSG_CREATE_BITMAP_RECORD_REQUEST >> 8);
-	au8Buffer[3] = (uint8_t)E_SL_MSG_CREATE_BITMAP_RECORD_REQUEST;
-	vUart_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer);
+	vAHI_WatchdogRestart();
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -650,7 +528,7 @@ PUBLIC PDM_teStatus PDM_eCreateBitmap(uint16 u16IdValue, uint32 u32InitialValue)
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
 
 	return u8Status;
 }
@@ -676,7 +554,7 @@ PUBLIC PDM_teStatus PDM_eDeleteBitmap(uint16 u16IdValue)
 
 	uint16 u16MessageLength;
 
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -694,7 +572,7 @@ PUBLIC PDM_teStatus PDM_eDeleteBitmap(uint16 u16IdValue)
 
 	// Write bitmap create request to UART
 	//
-	vUart_WriteMessage(E_SL_MSG_DELETE_BITMAP_RECORD_REQUEST, u16MessageLength, au8Buffer);
+	vSL_WriteMessage(E_SL_MSG_DELETE_BITMAP_RECORD_REQUEST, u16MessageLength, au8Buffer, 0);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -702,7 +580,7 @@ PUBLIC PDM_teStatus PDM_eDeleteBitmap(uint16 u16IdValue)
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
 
 	return PDM_E_STATUS_OK;
 }
@@ -736,7 +614,7 @@ PUBLIC PDM_teStatus PDM_eIncrementBitmap(uint16 u16IdValue)
 	//
 	bool_t bSaveAck = FALSE;
 
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -754,7 +632,7 @@ PUBLIC PDM_teStatus PDM_eIncrementBitmap(uint16 u16IdValue)
 
 	// Write bitmap create request to UART
 	//
-	vUart_WriteMessage(E_SL_MSG_INCREMENT_BITMAP_RECORD_REQUEST, u16MessageLength, au8Buffer);
+	vSL_WriteMessage(E_SL_MSG_INCREMENT_BITMAP_RECORD_REQUEST, u16MessageLength, au8Buffer, 0);
 
 	// Wait for acknowledgment.
 	//
@@ -767,7 +645,6 @@ PUBLIC PDM_teStatus PDM_eIncrementBitmap(uint16 u16IdValue)
 			{
 				if(u16PacketType == E_SL_MSG_INCREMENT_BITMAP_RECORD_RESPONSE)
 				{
-					vLog_Printf(TRACE_DEBUG,LOG_LEVEL," E_SL_MSG_INCREMENT_BITMAP_RECORD_RESPONSE\n");
 					// Load bitmap id
 					//
 					u16RecordId = ZNC_RTN_U16(au8LinkRxBuffer, 1);
@@ -786,12 +663,7 @@ PUBLIC PDM_teStatus PDM_eIncrementBitmap(uint16 u16IdValue)
 			}
 		}
 	}
-
-	au8Buffer[0] = (uint8_t)(PDM_E_STATUS_OK >> 8);
-	au8Buffer[1] = (uint8_t)PDM_E_STATUS_OK;
-	au8Buffer[2] = (uint8_t)(E_SL_MSG_INCREMENT_BITMAP_RECORD_REQUEST >> 8);
-	au8Buffer[3] = (uint8_t)E_SL_MSG_INCREMENT_BITMAP_RECORD_REQUEST;
-	vUart_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer);
+	vAHI_WatchdogRestart();
 
 #ifndef PDM_NO_RTOS
     if (NULL != s_hPdmMutex) {
@@ -799,7 +671,7 @@ PUBLIC PDM_teStatus PDM_eIncrementBitmap(uint16 u16IdValue)
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
 
 	return u8Status;
 }
@@ -846,7 +718,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
 #endif
 
 	/* flush hardware buffer */
-    UART_vOverrideInterrupt(FALSE);
+    UART_vSetTxInterrupt(FALSE);
 
    	pu8Buffer = au8Buffer;
 
@@ -859,7 +731,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
    	// Send record request
    	//
    	u16MessageType = E_SL_MSG_GET_BITMAP_RECORD_REQUEST;
-   	vUart_WriteMessage(u16MessageType, u16MessageLength, au8Buffer);
+   	vSL_WriteMessage(u16MessageType, u16MessageLength, au8Buffer, 0);
 
    	while (bGetBitmapAck == FALSE)
    	{
@@ -872,7 +744,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
 				case(E_SL_MSG_GET_BITMAP_RECORD_RESPONSE):
 				{
 					uint8 u8Status = au8LinkRxBuffer[0];
-					vLog_Printf(TRACE_DEBUG,LOG_LEVEL," E_SL_MSG_GET_BITMAP_RECORD_RESPONSE\n");
+
 					// Load bitmap id
 					//
 					u16RecordId = ZNC_RTN_U16(au8LinkRxBuffer, 1);
@@ -898,8 +770,8 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
 								OS_eExitCriticalSection(s_hPdmMutex);
 							}
 #endif
-							UART_vOverrideInterrupt(TRUE);
-   								return u8Status;
+							UART_vSetTxInterrupt(TRUE);
+   							return u8Status;
 						}
 
 
@@ -910,7 +782,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
 						memcpy(au8Buffer, &u8Status, sizeof(uint8));
 						memcpy(&au8Buffer[1], &u8Status, sizeof(uint8));
 						memcpy(&au8Buffer[2], &u16MessageType, sizeof(uint16));
-						vUart_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer);
+						vSL_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer, 0);
 
 						// Set flag to exit wait loop
 						//
@@ -925,6 +797,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
 			}
 		}
    	}
+	vAHI_WatchdogRestart();
 
 
 #ifndef PDM_NO_RTOS
@@ -933,7 +806,7 @@ PUBLIC PDM_teStatus PDM_eGetBitmap(
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
     return PDM_E_STATUS_OK;
 }
 
@@ -977,7 +850,7 @@ PUBLIC bool_t PDM_bDoesDataExist(
 #endif
 
 	/* flush hardware buffer */
-    UART_vOverrideInterrupt(FALSE);
+    UART_vSetTxInterrupt(FALSE);
 
    	pu8Buffer = au8Buffer;
 
@@ -990,7 +863,7 @@ PUBLIC bool_t PDM_bDoesDataExist(
    	// Send record request
    	//
    	u16MessageType = E_SL_MSG_PDM_EXISTENCE_REQUEST;
-   	vUart_WriteMessage(u16MessageType, u16MessageLength, au8Buffer);
+   	vSL_WriteMessage(u16MessageType, u16MessageLength, au8Buffer, 0);
 
    	while (bRecordExistenceAck == FALSE)
    	{
@@ -1025,9 +898,6 @@ PUBLIC bool_t PDM_bDoesDataExist(
 						}
 
 						bRecordExistenceAck = TRUE;
-					}else{
-						bDataExists = FALSE;
-						bRecordExistenceAck = TRUE;
 					}
 					break;
 				}
@@ -1037,6 +907,7 @@ PUBLIC bool_t PDM_bDoesDataExist(
 			}
 		}
    	}
+	vAHI_WatchdogRestart();
 
 
 #ifndef PDM_NO_RTOS
@@ -1045,7 +916,7 @@ PUBLIC bool_t PDM_bDoesDataExist(
     }
 #endif
 
-    UART_vOverrideInterrupt(TRUE);
+    UART_vSetTxInterrupt(TRUE);
     return bDataExists;
 }
 
@@ -1070,7 +941,7 @@ PUBLIC void PDM_vDeleteAllDataRecords(void)
 		  au8Buffer[4];
 
 	uint16 u16Value = E_SL_MSG_DELETE_ALL_PDM_RECORDS_REQUEST;
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 	// Write status to UART; copy status twice to comply with
 	// status message format
@@ -1079,13 +950,13 @@ PUBLIC void PDM_vDeleteAllDataRecords(void)
 	memcpy(&au8Buffer[1], &u8Status, sizeof(uint8));
 	memcpy(&au8Buffer[2],&u16Value,sizeof(uint16));
 
-	vUart_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer);
+	vSL_WriteMessage(E_SL_MSG_STATUS, 4, au8Buffer, 0);
 
 	// Write message request to UART
 	//
-	vUart_WriteMessage(u16Value,0,NULL);
+	vSL_WriteMessage(u16Value, 0, NULL, 0);
 
-	UART_vOverrideInterrupt(TRUE);
+	UART_vSetTxInterrupt(TRUE);
 }
 
 /****************************************************************************
@@ -1110,7 +981,7 @@ PUBLIC void PDM_vDeleteDataRecord(uint16 u16IdValue)
 
 	uint16 u16Value = E_SL_MSG_DELETE_PDM_RECORD_REQUEST;
 
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 	// Send delete record status
 	//
@@ -1118,14 +989,14 @@ PUBLIC void PDM_vDeleteDataRecord(uint16 u16IdValue)
 	memcpy(&u8StatusBuffer[1], &u8Status, sizeof(uint8));
 	memcpy(&u8StatusBuffer[2],&u16Value,sizeof(uint16));
 
-	vUart_WriteMessage(E_SL_MSG_STATUS, 4, u8StatusBuffer);
+	vSL_WriteMessage(E_SL_MSG_STATUS, 4, u8StatusBuffer, 0);
 
 	// Write delete record request
 	//
 	memcpy(us8DeleteRecordBuffer, &u16IdValue, sizeof(uint16));
-	vUart_WriteMessage(u16Value, 2, us8DeleteRecordBuffer);
+	vSL_WriteMessage(u16Value, 2, us8DeleteRecordBuffer, 0);
 
-	UART_vOverrideInterrupt(TRUE);
+	UART_vSetTxInterrupt(TRUE);
 }
 
 /****************************************************************************
@@ -1148,17 +1019,17 @@ PUBLIC void PDM_vWaitHost(void)
 	bool_t bHostAvailableAck;
 	uint8 u8QueueByte;
 	volatile uint32 u32Delay;
-	UART_vOverrideInterrupt(FALSE);
+	UART_vSetTxInterrupt(FALSE);
 
 
 	bHostAvailableAck = FALSE;
-	vUart_WriteMessage(E_SL_MSG_PDM_HOST_AVAILABLE,0,NULL);
+	vSL_WriteMessage(E_SL_MSG_PDM_HOST_AVAILABLE, 0, NULL, 0);
 	while(bHostAvailableAck == FALSE)
 	{
         u32Delay++;
         if(u32Delay > 500000)
         {
-        	vUart_WriteMessage(E_SL_MSG_PDM_HOST_AVAILABLE,0,NULL);
+        	vSL_WriteMessage(E_SL_MSG_PDM_HOST_AVAILABLE, 0, NULL, 0);
         	u32Delay = 0;
         }
    		u8QueueByte = 0xff;
@@ -1171,9 +1042,9 @@ PUBLIC void PDM_vWaitHost(void)
    	    		}
    	    	}
 		}
-		vAHI_WatchdogRestart();
 	}
-	UART_vOverrideInterrupt(TRUE);
+	vAHI_WatchdogRestart();
+	UART_vSetTxInterrupt(TRUE);
 }
 
 /****************************************************************************/
@@ -1184,30 +1055,6 @@ PUBLIC void PDM_vWaitHost(void)
 /****************************************************************************/
 /***        Local Functions                                      */
 /****************************************************************************/
-/****************************************************************************
- *
- * NAME: vUart_TxByte
- *
- * DESCRIPTION:
- * Send, escaping if required, a byte to the serial link
- *
- * PARAMETERS: 	Name        		RW  Usage
- *              bSpecialCharacter   R   TRUE if this byte should not be escaped
- *              u8Data              R   Character to send
- *
- * RETURNS:
- * void
- ****************************************************************************/
-PRIVATE void vUart_TxByte(bool bSpecialCharacter, uint8 u8Data)
-{
-	if(!bSpecialCharacter && u8Data < 0x10)
-	{
-		/* Send escape character and escape byte */
-		u8Data ^= 0x10;
-		UART_vTxChar(SL_ESC_CHAR);
-	}
-	UART_vTxChar(u8Data);
-}
 
 
 /****************************************************************************/

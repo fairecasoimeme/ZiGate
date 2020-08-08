@@ -200,7 +200,7 @@ PRIVATE void vInitialiseApp ( void );
 #if (defined PDM_EEPROM && DBG_ENABLE)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode );
-										
+
 #endif
 
 #if (defined PDM_EEPROM)
@@ -374,11 +374,10 @@ PUBLIC void vAppMain(void)
         vLog_Printf ( TRACE_EXC, LOG_CRIT, "\n\n\n%s WATCHDOG RESET @ %08x ", "WDR", ( ( uint32* ) &_heap_location) [ 0 ] );
         vSL_LogFlush ( );
     }
-    //bAHI_FlashInit(141, NULL);
     vInitialiseApp ();
     //app_vFormatAndSendUpdateLists ( );
 
-    
+
     if (sZllState.eNodeState == E_RUNNING)
     {
         /* Declared within if statement. If it is declared at the top
@@ -518,10 +517,19 @@ PRIVATE void vInitialiseApp ( void )
     BDB_tsInitArgs    sArgs;
     uint8             u8DeviceType;
 
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: Initialising PDM...\n");
     PDM_eInitialise ( 63 );
-    //APP_MigratePDM();
+    vLog_Printf ( TRACE_APPSTART, LOG_DEBUG, "APP: PDM Initialised.\n");
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: Migrating PDM...\n");
+    APP_MigratePDM();
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: PDM migration complete.\n");
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: Initializing PDUM...\n");
     PDUM_vInit ( );
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: PDUM initialization complete.\n");
+
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: Initializing PWRM...\n");
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: PWRM initialization complete.\n");
 
 #if (defined PDM_EEPROM && DBG_ENABLE)
     PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
@@ -532,11 +540,13 @@ PRIVATE void vInitialiseApp ( void )
 #endif
 
     sZllState.eNodeState =  E_STARTUP;
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: Restoring APP_ZLL_CMSSION data...\n");
     /* Restore any application data previously saved to flash */
     PDM_eReadDataFromRecord ( PDM_ID_APP_ZLL_CMSSION,
                               &sZllState,
                               sizeof ( tsZllState ),
                               &u16DataBytesRead );
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: APP_ZLL_CMSSION data restored.\n");
 #ifdef FULL_FUNC_DEVICE
     PDM_eReadDataFromRecord ( PDM_ID_APP_END_P_TABLE,
                               &sEndpointTable,
@@ -592,7 +602,9 @@ PRIVATE void vInitialiseApp ( void )
     BDB_vInit ( &sArgs );
 
     ZPS_vExtendedStatusSetCallback(vfExtendedStatusCallBack);
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: Initialising ZCL...\n");
     APP_ZCL_vInitialise();
+    vLog_Printf ( TRACE_APPSTART,LOG_DEBUG, "APP: ZCL initialised.\n");
     /* Needs to be after we initialise the ZCL and only if we are already
      * running. If we are not running we will send the notify after we
      * have a network formed notification.
@@ -622,7 +634,7 @@ PUBLIC void APP_vMainLoop(void)
     bSetPermitJoinForever = TRUE;
     while (TRUE)
     {
-        
+
         zps_taskZPS ( );
         bdb_taskBDB ( );
         APP_vHandleAppEvents ( );
@@ -1012,7 +1024,7 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
                            au8LinkTxBuffer,
                            0);
     }
-    
+
 }
 
 void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
