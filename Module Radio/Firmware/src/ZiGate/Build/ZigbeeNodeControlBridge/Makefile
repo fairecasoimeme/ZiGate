@@ -146,7 +146,14 @@ endif
 ifneq ($(GP_SUPPORT), 1)
 ifeq ($(NODE), COORDINATOR)
 $(info Building Node Coordinator Only...)
+
+ifeq ($(PDM_BUILD_TYPE), _NONE)
+APP_ZPSCFG = ZigbeeNodeControlBridgeCoordinator_HostPDM.zpscfg
+else
 APP_ZPSCFG = ZigbeeNodeControlBridgeCoordinator.zpscfg
+endif
+
+else ifeq ($(PDM_TYPE)
 else
 $(info Building Node Full functionality ...)
 APP_ZPSCFG = ZigbeeNodeControlBridge.zpscfg
