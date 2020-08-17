@@ -73,7 +73,7 @@ DEBUG                  ?= NONE
 # DEBUG_PORT ?= UART1
 # DEBUG_MODE ?= SWD
 
-STACK_SIZE              = 5300
+STACK_SIZE             ?= 6000
 MINIMUM_HEAP_SIZE       = 2000
 
 NODE                   ?= COORDINATOR
