@@ -772,18 +772,19 @@ PUBLIC teZCL_Status eZLO_RegisterControlBridgeEndPointLivolo ( uint8            
         }
 
     #endif
-	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
-			/* Create an instance of a Power Configuration cluster as a server */
-			if(eCLD_PowerConfigurationCreatePowerConfiguration(&psDeviceInfo->sClusterInstance.sPowerConfigurationServer,
-								  TRUE,
-								  &sCLD_PowerConfiguration,
-								  &psDeviceInfo->sPowerConfigServerCluster,
-								  &au8PowerConfigurationAttributeControlBits[0]) != E_ZCL_SUCCESS)
-			{
-				// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
-				return E_ZCL_FAIL;
-			}
-		#endif
+	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_CLIENT)
+		/* Create an instance of a Power Configuration cluster as a server */
+		if(eCLD_PowerConfigurationCreatePowerConfiguration(&psDeviceInfo->sClusterInstance.sPowerConfigurationClient,
+							  TRUE,
+							  &sCLD_PowerConfiguration,
+							  &psDeviceInfo->sPowerConfigClientCluster,
+							  &au8PowerConfigurationAttributeControlBits[0]) != E_ZCL_SUCCESS)
+		{
+			// Need to convert from cluster specific to ZCL return type so we lose the extra information of the return code
+			return E_ZCL_FAIL;
+		}
+		psDeviceInfo->sClusterInstance.sMeteringClient.psClusterDefinition->u8ClusterControlFlags = E_ZCL_SECURITY_NETWORK;
+	#endif
 
      teZCL_Status status;
     status= eZCL_Register(&psDeviceInfo->sEndPoint);

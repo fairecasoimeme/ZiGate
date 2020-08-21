@@ -197,7 +197,7 @@ void vReportException ( char*    sExStr );
 void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus );
 PRIVATE void vInitialiseApp ( void );
 
-#if (defined PDM_EEPROM)
+#if (defined PDM_EEPROM && DBG_ENABLE)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode );
 										
@@ -520,7 +520,7 @@ PRIVATE void vInitialiseApp ( void )
     PDUM_vInit ( );
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
 
-#if (defined PDM_EEPROM)
+#if (defined PDM_EEPROM && DBG_ENABLE)
     PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
 
 #endif
@@ -1017,7 +1017,7 @@ void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
     vLog_Printf ( TRACE_EXC,LOG_DEBUG, "ERROR: Extended status %x\n", eExtendedStatus );
 }
 
-#if (defined PDM_EEPROM)
+#if (defined PDM_EEPROM && DBG_ENABLE)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode )
 {
@@ -1116,7 +1116,9 @@ PRIVATE void APP_cbTimerZclTick (void*    pvParam)
     if(u8Tick100Ms > 9)
     {
     	sControlBridge.sTimeServerCluster.utctTime++;
-    	sControlBridge.sBasicServerCluster.u32PrivateLegrand = sControlBridge.sTimeServerCluster.utctTime;
+#ifdef CLD_BAS_ATTR_APPLICATION_LEGRAND
+    	sControlBridge.sBasicServerCluster.u32PrivateLegrand++;
+#endif
         u8Tick100Ms = 0;
         sCallBackEvent.pZPSevent = NULL;
         sCallBackEvent.eEventType = E_ZCL_CBET_TIMER;

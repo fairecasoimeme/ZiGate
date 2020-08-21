@@ -142,8 +142,8 @@ typedef struct
     #endif
 
 
-   #if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
-	   tsZCL_ClusterInstance sPowerConfigurationServer;
+   #if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_CLIENT)
+	   tsZCL_ClusterInstance sPowerConfigurationClient;
    #endif
 
 
@@ -343,9 +343,9 @@ typedef struct
     #endif
 
 
-	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
+	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_CLIENT)
 		/* Power Configuration Cluster - Server */
-		tsCLD_PowerConfiguration sPowerConfigServerCluster;
+		tsCLD_PowerConfiguration sPowerConfigClientCluster;
 	#endif
 
     #if (defined CLD_IDENTIFY) && (defined IDENTIFY_SERVER)

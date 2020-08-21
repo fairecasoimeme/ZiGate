@@ -577,11 +577,16 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],   u8value,    u16Length );
                     }
 
-                    else if ( u16SizeOfAttribute / u16Elements == sizeof(uint16) )
-                    {
-                        App_u16BufferReadNBO ( &au8LinkTxBuffer [u16Length],  "h",  psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData);
-                        u16Length += sizeof(uint16);
-                    }
+						else if ( u16SizeOfAttribute / u16Elements == sizeof(uint16) )
+						{
+
+							if (psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData!=NULL)
+							{
+								App_u16BufferReadNBO ( &au8LinkTxBuffer [u16Length],  "h",  psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData);
+								u16Length += sizeof(uint16);
+							}
+							vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"uint16\n",i);
+						}
 
                     else if ( u16SizeOfAttribute / u16Elements == sizeof(uint32) )
                     {

@@ -4,9 +4,18 @@
 * Add PDMonHost commands for future implementation
 * Add new message when PDM is loaded (usefull for PDMonHost implementation)
 * Add Write Attribute Request with no response
+* Upgrade UART RX buffer --> 255 octets instead of 127
+* Fix ignore unknow attribute on configureReportingCommand --> (for DANFOSS with specific attribute)
+* Fix When cluster is unknow and there is not customCallbackFunction, we transmit to 0x8002 command (actually, concern 0x0300, 0x0120 and 0x0005)
 * Fix Finally desactive 0x8035 command by default
 * Fix OTA bug for Legrand OTA
+* Fix Legrand timer for controler (increment all second and reset to 0 when restart)
 * Fix UART FIFO capacity 
+* Fix name error on cluster capacity (in ZCL_options.h 
+		POWER_CONFIGURATION_SERVER --> POWER_CONFIGURATION_CLIENT
+		BINARY_INPUT_BASIC_SERVER --> BINARY_INPUT_BASIC_CLIENT
+		delete ELECTRICAL_MEASUREMENT_SERVER
+* Change MAX_PACKET_SIZE ( for PDMonHost implementation)		
 * Fix some other bugs
 
 

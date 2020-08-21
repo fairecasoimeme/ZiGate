@@ -113,7 +113,7 @@
 /***        Local Functions                                               ***/
 /****************************************************************************/
 uint8 txbuf[16];
-uint8 rxbuf[127];
+uint8 rxbuf[255];
 
 /****************************************************************************
  *
@@ -141,7 +141,7 @@ PUBLIC void UART_vInit(void)
                 txbuf, //uint8 *pu8TxBufAd,
                 (uint8)16, //uint16 u16TxBufLen,
                 rxbuf, //uint8 *pu8RxBufAd,
-                (uint8)127); //uint16 u16RxBufLen);
+                (uint8)255); //uint16 u16RxBufLen);
 
     vAHI_UartReset(UART, TRUE, TRUE);
     vAHI_UartReset(UART, FALSE, FALSE);

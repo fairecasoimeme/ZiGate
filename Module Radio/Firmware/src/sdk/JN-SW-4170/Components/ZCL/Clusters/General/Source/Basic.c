@@ -431,7 +431,7 @@ PUBLIC  teZCL_Status eCLD_BasicCreateBasic(
 
 		#endif
 
-            ((tsCLD_Basic*)pvEndPointSharedStructPtr)->ePowerSource = CLD_BAS_POWER_SOURCE;
+           // ((tsCLD_Basic*)pvEndPointSharedStructPtr)->ePowerSource = CLD_BAS_POWER_SOURCE;
 
 
 

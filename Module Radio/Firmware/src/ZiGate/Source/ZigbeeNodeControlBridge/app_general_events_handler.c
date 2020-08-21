@@ -914,6 +914,8 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                      break;
 
                     default:
+                    	vLog_Printf(1,LOG_DEBUG,"default message : Znc_vSendDataIndicationToHost\n");
+                    	Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
                     break;
                     }
                 }

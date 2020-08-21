@@ -975,9 +975,25 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                 }
                 else
                 {    
-                    eCallbackReturn = psClusterInstance->pCustomcallCallBackFunction(pZPSevent, 
-                                                                                     psZCL_EndPointDefinition,
-                                                                                     psClusterInstance);
+                	vLog_Printf(1,LOG_DEBUG,"psClusterInstance->psClusterDefinition->u16ClusterEnum : %d\n",psClusterInstance->psClusterDefinition->u16ClusterEnum);
+                	//FRED Specific 
+					if(
+                			(psClusterInstance->psClusterDefinition->u16ClusterEnum == LIGHTING_CLUSTER_ID_COLOUR_CONTROL)
+                			|| (psClusterInstance->psClusterDefinition->u16ClusterEnum ==  CLOSURE_CLUSTER_ID_WINDOWCOVERING)
+                			|| (psClusterInstance->psClusterDefinition->u16ClusterEnum ==  GENERAL_CLUSTER_ID_SCENES)
+                			)
+                	{
+                		sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
+						sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
+						vZCL_PassEventToUser(&sZCL_CallBackEvent);
+
+						eCallbackReturn=0;
+                	}else{
+						eCallbackReturn = psClusterInstance->pCustomcallCallBackFunction(pZPSevent,
+																						 psZCL_EndPointDefinition,
+																						 psClusterInstance);
+
+                	}
                 }
 
                 if (eCallbackReturn != E_ZCL_SUCCESS)

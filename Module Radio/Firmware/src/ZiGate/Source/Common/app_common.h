@@ -124,7 +124,7 @@ extern uint8 u8GPZCLTimerEvent;
 
 
 #define ZCL_TICK_TIME           ZTIMER_TIME_MSEC(1000)
-#define MAX_PACKET_SIZE         256
+#define MAX_PACKET_SIZE         270
 #define DEFAULT_CHANNEL         11
 #define APP_IDENTIFY_TIME       10  /* Application specific identify time specified in seconds */
 #define ZNC_MAX_TCLK_DEVICES    70
@@ -246,7 +246,7 @@ extern uint32                     _heap_location;
 extern bool_t                     bSetPermitJoinForever;
 extern uint64                     u64CallbackMacAddress;
 extern ZPS_tsAfFlashInfoSet       sSet;
-extern uint8                      au8LinkRxBuffer[256];
+extern uint8                      au8LinkRxBuffer[270];
 extern tsZLO_ControlBridgeDevice    sControlBridge;
 /****************************************************************************/
 /****************************************************************************/

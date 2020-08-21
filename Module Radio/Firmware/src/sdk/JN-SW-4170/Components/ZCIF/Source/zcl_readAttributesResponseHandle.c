@@ -126,6 +126,7 @@ PUBLIC   void vZCL_HandleAttributesReadResponse(
     // get received payload length
     u16payloadSize = PDUM_u16APduInstanceGetPayloadSize(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst);
 
+	//sZCL_CallBackEvent.eEventType = E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTE;
 
     /* report attribute handling */
     if(sZCL_HeaderParams.u8CommandIdentifier == E_ZCL_REPORT_ATTRIBUTES)

@@ -1,0 +1,10 @@
+void initWebServer();
+void webServerHandleClient();
+void handleRoot();
+void handleNotFound();
+void handleSaveConfig();
+void handleTools();
+void handleReboot();
+void handleUpdate();
+void handleFSbrowser();
+void handleReadfile();
