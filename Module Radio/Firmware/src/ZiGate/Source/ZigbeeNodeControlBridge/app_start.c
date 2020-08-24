@@ -267,7 +267,7 @@ uint8                     u8TmrToggleLED;
 uint8                     u8HaModeTimer;
 uint8                     u8TickTimer;
 uint8                     u8JoinedDevice =  0;
-uint8                     au8LinkRxBuffer[256];
+uint8                     au8LinkRxBuffer[270];
 ZPS_tsAfFlashInfoSet      sSet;
 /****************************************************************************/
 /***        Exported Functions                                            ***/
