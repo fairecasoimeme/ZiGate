@@ -1,11 +1,17 @@
 # Version 3.1d
 
-* Add 0x8002 command (raw command) when cluster or attribute is unknown.
-* Add PDMonHost commands for future implementation
-* Add new message when PDM is loaded (usefull for PDMonHost implementation)
-* Add Write Attribute Request with no response
+* Add 0x8002 command (raw command) when cluster or attribute is unknown. https://github.com/fairecasoimeme/ZiGate/pull/287 / https://github.com/fairecasoimeme/ZiGate/pull/314 
+* Add PDMonHost commands for future implementation https://github.com/fairecasoimeme/ZiGate/pull/281
+* Add new message when PDM is loaded (usefull for PDMonHost implementation) https://github.com/fairecasoimeme/ZiGate/pull/281
+* Add Write Attribute Request with no response https://github.com/fairecasoimeme/ZiGate/pull/306
+* Add a new sequence number method to link status messages https://github.com/fairecasoimeme/ZiGate/pull/296 / https://github.com/fairecasoimeme/ZiGate/pull/298
+* Add rawmode hybrid and keep existing one https://github.com/fairecasoimeme/ZiGate/pull/307
 * Upgrade UART RX buffer --> 255 octets instead of 127
+* Fix configure report when using 8 bits datatype https://github.com/fairecasoimeme/ZiGate/pull/308
+* Fix 0x8100 vs 0x8102 https://github.com/fairecasoimeme/ZiGate/pull/299
 * Fix ignore unknow attribute on configureReportingCommand --> (for DANFOSS with specific attribute)
+* Fix a callback function which run before a registering https://github.com/fairecasoimeme/ZiGate/pull/293
+* Fix 24bits types handling https://github.com/fairecasoimeme/ZiGate/pull/290
 * Fix When cluster is unknow and there is not customCallbackFunction, we transmit to 0x8002 command (actually, concern 0x0300, 0x0120 and 0x0005)
 * Fix Finally desactive 0x8035 command by default
 * Fix OTA bug for Legrand OTA
