@@ -525,6 +525,8 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
             if (sZllState.u8RawMode == RAW_MODE_ON){
                 Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+				PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
+
                 return;
             }
 

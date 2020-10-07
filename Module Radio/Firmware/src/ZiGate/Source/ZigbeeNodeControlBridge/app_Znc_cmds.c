@@ -4006,8 +4006,9 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLqiRequest( uint16    u16Addr,
                                              uint8*    pu8Seq )
 {
     PDUM_thAPduInstance    hAPduInst;
-
+    ZPS_teStatus result;
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
+    DBG_vPrintf(TRACE_APP, "\n u8GetApduUse() : %d", u8GetApduUse());
 
     if ( PDUM_INVALID_HANDLE != hAPduInst )
     {
