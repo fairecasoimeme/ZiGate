@@ -7,6 +7,7 @@
 * Add a new sequence number method to link status messages https://github.com/fairecasoimeme/ZiGate/pull/296 / https://github.com/fairecasoimeme/ZiGate/pull/298
 * Add rawmode hybrid and keep existing one https://github.com/fairecasoimeme/ZiGate/pull/307
 * Upgrade UART RX buffer --> 255 octets instead of 127
+* Fix 0x8002 issue (raw command) Fix a leak on the aps_data_indication. Free APDU instance after treatment.
 * Fix configure report when using 8 bits datatype https://github.com/fairecasoimeme/ZiGate/pull/308
 * Fix 0x8100 vs 0x8102 https://github.com/fairecasoimeme/ZiGate/pull/299
 * Fix ignore unknow attribute on configureReportingCommand --> (for DANFOSS with specific attribute)
