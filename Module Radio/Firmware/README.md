@@ -30,6 +30,7 @@
 
 * Fix "Device announce" issue when device goes from off to on.
 
+
 # Version 3.1b
 
 * Add E_SL_MSG_APS_DATA_ACK (0x8011 command) to catch ack and nack when there are lost messages or not  https://github.com/fairecasoimeme/ZiGate/issues/239
