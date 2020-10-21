@@ -162,10 +162,7 @@ PUBLIC  void vZCL_HandleConfigureReportingResponse(
                     pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_ATTRIBUTE_ID, &sZCL_CallBackEvent.uMessage.sReportingConfigurationResponse.u16AttributeEnum);
 
                 // call user for every attribute
-                if(sZCL_CallBackEvent.uMessage.sReportingConfigurationResponse.u8Status != E_ZCL_CMDS_SUCCESS)
-                {
-                    psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
-                }
+                psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
                 // check for length error
                 if((u16payloadSize-u16inputOffset !=0) && (u16payloadSize-u16inputOffset < 3))
@@ -173,12 +170,12 @@ PUBLIC  void vZCL_HandleConfigureReportingResponse(
                     sZCL_CallBackEvent.eZCL_Status = E_ZCL_ERR_MALFORMED_MESSAGE;
                 }
             }
+        } else {
+            sZCL_CallBackEvent.eEventType = E_ZCL_CBET_REPORT_ATTRIBUTES_CONFIGURE_RESPONSE;
+            psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
         }
-
-        sZCL_CallBackEvent.eEventType = E_ZCL_CBET_REPORT_ATTRIBUTES_CONFIGURE_RESPONSE;
     }
 
-    psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
     if(sZCL_CallBackEvent.eZCL_Status != E_ZCL_SUCCESS)
     {

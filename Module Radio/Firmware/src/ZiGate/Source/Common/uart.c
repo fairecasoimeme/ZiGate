@@ -113,7 +113,7 @@
 /***        Local Functions                                               ***/
 /****************************************************************************/
 uint8 txbuf[16];
-uint8 rxbuf[127];
+uint8 rxbuf[255];
 
 /****************************************************************************
  *
@@ -141,7 +141,7 @@ PUBLIC void UART_vInit(void)
                 txbuf, //uint8 *pu8TxBufAd,
                 (uint8)16, //uint16 u16TxBufLen,
                 rxbuf, //uint8 *pu8RxBufAd,
-                (uint8)127); //uint16 u16RxBufLen);
+                (uint8)255); //uint16 u16RxBufLen);
 
     vAHI_UartReset(UART, TRUE, TRUE);
     vAHI_UartReset(UART, FALSE, FALSE);
@@ -332,7 +332,7 @@ PUBLIC bool_t UART_bTxReady()
  ****************************************************************************/
 PUBLIC void UART_vSetTxInterrupt(bool_t bState)
 {
-    vAHI_UartSetInterrupt (UART, FALSE, FALSE, bState, TRUE, E_AHI_UART_FIFO_LEVEL_1);
+    vAHI_UartSetInterrupt (UART, FALSE, FALSE, bState, TRUE, E_AHI_UART_FIFO_LEVEL_14);
 }
 
 
@@ -346,7 +346,7 @@ PUBLIC void UART_vSetTxInterrupt(bool_t bState)
  ****************************************************************************/
 PUBLIC void UART_vOverrideInterrupt(bool_t bState)
 {
-    vAHI_UartSetInterrupt ( UART, FALSE, FALSE, bState, bState, E_AHI_UART_FIFO_LEVEL_1);
+    vAHI_UartSetInterrupt ( UART, FALSE, FALSE, bState, bState, E_AHI_UART_FIFO_LEVEL_14);
     u8AHI_UartReadInterruptStatus ( UART );
 }
 

@@ -66,7 +66,7 @@
 #define GROUPS_REQUIRED                                     ( 16 )
 #define CLD_GROUPS_MAX_NUMBER_OF_GROUPS                     ( 5  )
 /* Sets the number of endpoints that will be created by the ZCL library */
-#define ZCL_NUMBER_OF_ENDPOINTS                             ( 5 )
+#define ZCL_NUMBER_OF_ENDPOINTS                             ( 6 )
 #define ZCL_NUMBER_DEVICES                                  ( 1 )
 
 #define ZCL_MANUFACTURER_CODE                               ( 0x1037 )
@@ -153,16 +153,16 @@
 #define ANALOG_INPUT_BASIC_SERVER
 
 #define CLD_POWER_CONFIGURATION
-#define POWER_CONFIGURATION_SERVER
+#define POWER_CONFIGURATION_CLIENT
 
 #define CLD_BINARY_INPUT_BASIC
-#define BINARY_INPUT_BASIC_SERVER
+#define BINARY_INPUT_BASIC_CLIENT
 
 #define CLD_TIME
 #define TIME_SERVER
 
 #define CLD_ELECTRICAL_MEASUREMENT
-#define ELECTRICAL_MEASUREMENT_SERVER
+//#define ELECTRICAL_MEASUREMENT_SERVER
 #define CLD_ANALOG_INPUT_BASIC
 //#define CLD_ANALOG_INPUT_BASIC_SERVER
 #define CLD_ANALOG_INPUT_BASIC_CLIENT
@@ -177,6 +177,7 @@
 
 #define CLD_OTA
 #define OTA_SERVER
+#define OTA_PAGE_REQUEST_SUPPORT
 #define OTA_MAX_BLOCK_SIZE                                    64
 #define OTA_TIME_INTERVAL_BETWEEN_RETRIES                     5
 #define OTA_COPY_MAC_ADDRESS
@@ -354,6 +355,11 @@
 #define DOOR_LOCK_CLIENT
 #define CLD_THERMOSTAT
 #define THERMOSTAT_CLIENT
+//#define THERMOSTAT_SERVER
+
+//#define CLD_THERMOSTAT_UI_CONFIG
+//#define THERMOSTAT_UI_CONFIG_CLIENT
+
 #define CLD_TEMPERATURE_MEASUREMENT
 #define TEMPERATURE_MEASUREMENT_CLIENT
 #define CLD_RELATIVE_HUMIDITY_MEASUREMENT

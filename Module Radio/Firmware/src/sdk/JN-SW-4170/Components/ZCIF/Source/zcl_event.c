@@ -602,12 +602,18 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
             u8Error=0;
 
         }
-        /* Verrue pour passer le message Xiaomi 0x115F */
-	    /* Avec cette verrue la ZiGate n'envoie pas de réponse à l'emetteur */
+        //workaround to avoid sending back default response with an error code for different devices like Xiaomi 0x115F , schneider 0x105E
 
-	    if(  sZCL_HeaderParams.bManufacturerSpecific && ((sZCL_HeaderParams.u16ManufacturerCode == 0x1228) || (sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||(sZCL_HeaderParams.u16ManufacturerCode == 0x115F) || (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) || (sZCL_HeaderParams.u16ManufacturerCode == 0x1234)  || (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
+	    if(  sZCL_HeaderParams.bManufacturerSpecific &&
+                ((sZCL_HeaderParams.u16ManufacturerCode == 0x1228) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x115F) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x1234) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x105E) ||
+                 (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
 	    {
-		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: Verrue pour passer le Attribute Report proprietaire Xiaomi 0x115F.\n", __FILE__, __LINE__, __func__);
+		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: workaround to avoid sending back default response with an error code for different devices: sZCL_HeaderParams.bManufacturerSpecific: 0x%04x\n", __FILE__, __LINE__, __func__,sZCL_HeaderParams.bManufacturerSpecific);
 		   u8Error=0;
 	    }
 
@@ -910,7 +916,10 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                 		 	*/
 
                 	}else{
-                		eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
+                        sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
+                        sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
+                        vZCL_PassEventToUser(&sZCL_CallBackEvent);
+                        //eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
                 	}
                 }
                 else
@@ -947,8 +956,11 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                 else
 #endif
                 {
+                    sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
+                    sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
+                    vZCL_PassEventToUser(&sZCL_CallBackEvent);
 
-                eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
+                //eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
                 }
             }
             else
@@ -963,9 +975,25 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                 }
                 else
                 {    
-                    eCallbackReturn = psClusterInstance->pCustomcallCallBackFunction(pZPSevent, 
-                                                                                     psZCL_EndPointDefinition,
-                                                                                     psClusterInstance);
+                	vLog_Printf(1,LOG_DEBUG,"psClusterInstance->psClusterDefinition->u16ClusterEnum : %d\n",psClusterInstance->psClusterDefinition->u16ClusterEnum);
+                	//FRED Specific 
+					if(
+                			(psClusterInstance->psClusterDefinition->u16ClusterEnum == LIGHTING_CLUSTER_ID_COLOUR_CONTROL)
+                			|| (psClusterInstance->psClusterDefinition->u16ClusterEnum ==  CLOSURE_CLUSTER_ID_WINDOWCOVERING)
+                			|| (psClusterInstance->psClusterDefinition->u16ClusterEnum ==  GENERAL_CLUSTER_ID_SCENES)
+                			)
+                	{
+                		sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
+						sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
+						vZCL_PassEventToUser(&sZCL_CallBackEvent);
+
+						eCallbackReturn=0;
+                	}else{
+						eCallbackReturn = psClusterInstance->pCustomcallCallBackFunction(pZPSevent,
+																						 psZCL_EndPointDefinition,
+																						 psClusterInstance);
+
+                	}
                 }
 
                 if (eCallbackReturn != E_ZCL_SUCCESS)

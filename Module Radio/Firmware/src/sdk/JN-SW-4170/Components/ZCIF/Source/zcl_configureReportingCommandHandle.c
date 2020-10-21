@@ -222,14 +222,14 @@ PUBLIC  void vZCL_HandleConfigureReportingCommand(
             u16inputOffset += u16ZCL_APduInstanceReadNBO(
                 pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT16, &psAttributeReportingRecord->u16AttributeEnum);
 
-            // find attribute definition
-            if(eZCL_SearchForAttributeEntry(
+            // find attribute definition //FRED Ignore unknown attribute
+           /* if(eZCL_SearchForAttributeEntry(
                 psEndPointDefinition->u8EndPointNumber, psAttributeReportingRecord->u16AttributeEnum, sZCL_HeaderParams.bManufacturerSpecific, sZCL_HeaderParams.bDirection, psClusterInstance, &psAttributeDefinition, &u16attributeIndex)!= E_ZCL_SUCCESS)
             {
                 // not supported - but we can still carry on
                 eCommandStatus = E_ZCL_CMDS_UNSUPPORTED_ATTRIBUTE;
                 sZCL_CallBackEvent.eZCL_Status = E_ZCL_ERR_ATTRIBUTE_NOT_FOUND;
-            }
+            }*/
             // All except LSB are reserved and so we must ignore their values
             psAttributeReportingRecord->u8DirectionIsReceived &= 0x01;
 

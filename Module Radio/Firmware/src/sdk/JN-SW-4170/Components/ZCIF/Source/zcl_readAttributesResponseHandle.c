@@ -56,9 +56,6 @@
 #include "pdum_apl.h"
 #include "zps_apl.h"
 #include "zps_apl_af.h"
-#include "Log.h"
-
-#include "app_common.h"
 
 
 /****************************************************************************/
@@ -111,8 +108,7 @@ PUBLIC   void vZCL_HandleAttributesReadResponse(
     uint16 u16typeSize;
     tsZCL_HeaderParams sZCL_HeaderParams;
     uint16 u16payloadSize;
-    uint16 u16Length;
-    uint8                  au8LinkTxBuffer[256];
+
 
     // fill in non-attribute specific values in callback event structure
     sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
@@ -130,10 +126,7 @@ PUBLIC   void vZCL_HandleAttributesReadResponse(
     // get received payload length
     u16payloadSize = PDUM_u16APduInstanceGetPayloadSize(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst);
 
-    u16Length =  0;
-	ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [0],u16payloadSize,         u16Length );
-
-	sZCL_CallBackEvent.eEventType = E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTE;
+	//sZCL_CallBackEvent.eEventType = E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTE;
 
     /* report attribute handling */
     if(sZCL_HeaderParams.u8CommandIdentifier == E_ZCL_REPORT_ATTRIBUTES)
@@ -181,13 +174,7 @@ PUBLIC   void vZCL_HandleAttributesReadResponse(
     }
 
     // parse the message whilst checking for malformed messages
-    while((u16payloadSize-u16inputOffset > 0) && (sZCL_CallBackEvent.eZCL_Status != E_ZCL_ERR_MALFORMED_MESSAGE))
-    {
-    	u16Length =  0;
-		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],sZCL_CallBackEvent.eZCL_Status,         u16Length );
-		//vSL_WriteMessage ( 0x6644, u16Length,au8LinkTxBuffer,0);
-		u16Length =  0;
-		ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [0],u16inputOffset,         u16Length );
+    while((u16payloadSize-u16inputOffset > 0) && (sZCL_CallBackEvent.eZCL_Status != E_ZCL_ERR_MALFORMED_MESSAGE)){
 
         // read the attribute record from the message
         // read attribute Id

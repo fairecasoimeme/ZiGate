@@ -142,8 +142,8 @@ typedef struct
     #endif
 
 
-   #if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
-	   tsZCL_ClusterInstance sPowerConfigurationServer;
+   #if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_CLIENT)
+	   tsZCL_ClusterInstance sPowerConfigurationClient;
    #endif
 
 
@@ -271,6 +271,13 @@ typedef struct
     #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_CLIENT)
         tsZCL_ClusterInstance sThermostatClient;
     #endif
+    #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_SERVER)
+        tsZCL_ClusterInstance sThermostatServer;
+    #endif
+
+    #if (defined CLD_THERMOSTAT_UI_CONFIG) && (defined THERMOSTAT_UI_CONFIG_CLIENT)
+        tsZCL_ClusterInstance sThermostatUiConfigClient;
+    #endif
     
     #if (defined CLD_SIMPLE_METERING) && (defined SM_CLIENT)
         tsZCL_ClusterInstance sMeteringClient;
@@ -336,9 +343,9 @@ typedef struct
     #endif
 
 
-	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_SERVER)
+	#if (defined CLD_POWER_CONFIGURATION) && (defined POWER_CONFIGURATION_CLIENT)
 		/* Power Configuration Cluster - Server */
-		tsCLD_PowerConfiguration sPowerConfigServerCluster;
+		tsCLD_PowerConfiguration sPowerConfigClientCluster;
 	#endif
 
     #if (defined CLD_IDENTIFY) && (defined IDENTIFY_SERVER)
@@ -516,6 +523,15 @@ typedef struct
     #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_CLIENT)
         tsCLD_Thermostat sThermostatClientCluster;        
         tsCLD_ThermostatCustomDataStructure sThermostatClientCustomDataStructure;
+    #endif
+    #if (defined CLD_THERMOSTAT) && (defined THERMOSTAT_SERVER)
+        tsCLD_Thermostat sThermostatServerCluster;
+        tsCLD_ThermostatCustomDataStructure sThermostatServerCustomDataStructure;
+    #endif
+
+    #if (defined CLD_THERMOSTAT_UI_CONFIG) && (defined THERMOSTAT_UI_CONFIG_CLIENT)
+       tsCLD_Thermostat sThermostatUiConfigClientCluster;
+       tsCLD_ThermostatCustomDataStructure sThermostatUiConfigClientCustomDataStructure;
     #endif
     
     #if (defined CLD_TEMPERATURE_MEASUREMENT) && (defined TEMPERATURE_MEASUREMENT_CLIENT)

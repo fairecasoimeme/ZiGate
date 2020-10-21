@@ -215,13 +215,6 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
 
 
 
-
-    // call user unless null cluster instance (as no atts will be read in that case and the user may attempt to access the cluster without checking and get an exception)
-    if (psClusterInstance != NULL)
-    {
-        psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
-    }
-
     // parse the incoming message, read each attribute from the device and write into the outgoing buffer
     i = 0;
 
@@ -337,6 +330,9 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
 												 pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality);
     }
 
+    //if (sZCL_CallBackEvent.eZCL_Status == E_ZCL_SUCCESS )
+    if (u8errorCode == E_ZCL_CMDS_SUCCESS)
+    {
     // build address structure
     eZCL_BuildTransmitAddressStructure(pZPSevent, &sZCL_Address);
     // transmit request
@@ -346,6 +342,14 @@ PUBLIC   void vZCL_HandleAttributesReadRequest(
                                 pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
                                 pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId,
                                 &sZCL_Address);
+    } else {
+    	  // call user unless null cluster instance (as no atts will be read in that case and the user may attempt to access the cluster without checking and get an exception)
+   	    if (psClusterInstance != NULL)
+   	    {
+   	        psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
+   	    }
+		PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
+    }
 }
 
 /****************************************************************************/

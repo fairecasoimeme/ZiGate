@@ -113,6 +113,9 @@ PUBLIC uint16 App_u16BufferReadNBO ( uint8         *pu8Struct,
                                      void          *pvData );
 PRIVATE void APP_ZCL_cbGeneralCallback ( tsZCL_CallBackEvent*    psEvent );
 PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent );
+PRIVATE  teZCL_Status APP_ZCL_eCLD_ThermostatCommandHandler(ZPS_tsAfEvent               *pZPSevent,
+                    tsZCL_EndPointDefinition    *psEndPointDefinition,
+                    tsZCL_ClusterInstance       *psClusterInstance);
 #ifdef FULL_FUNC_DEVICE
 PRIVATE void APP_ZCL_cbZllUtilityCallback ( tsZCL_CallBackEvent*    psEvent );
 #endif
@@ -173,7 +176,6 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZCL,LOG_CRIT, "Error: eZCL_Initialise returned %d\r\n", eZCL_Status );
         vSL_LogFlush ( );
     }
-
     /* Register Commission EndPoint */
     eZCL_Status =  eApp_ZLO_RegisterEndpoint ( &APP_ZCL_cbEndpointCallback );
     if ( eZCL_Status !=  E_ZCL_SUCCESS )
@@ -181,8 +183,10 @@ PUBLIC void APP_ZCL_vInitialise ( void )
         vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_CRIT,"eApp_ZLO_RegisterEndpoint %x\n", eZCL_Status );
         vSL_LogFlush ( );
     }
+    sControlBridge.sClusterInstance.sThermostatClient.pCustomcallCallBackFunction = APP_ZCL_eCLD_ThermostatCommandHandler;
 
     sDeviceTable.asDeviceRecords[0].u64IEEEAddr = ZPS_u64NwkNibGetExtAddr( ZPS_pvAplZdoGetNwkHandle() );
+
 
     vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG, "\ntsCLD_Groups %d", sizeof ( tsCLD_Groups ) );
     vLog_Printf ( TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG, "\ntsCLD_GroupTableEntry %d", sizeof ( tsCLD_GroupTableEntry ) );
@@ -241,6 +245,9 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
     {
 
         case ZPS_EVENT_APS_DATA_INDICATION:
+            if (sZllState.u8RawMode == RAW_MODE_HYBRID)
+                    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+
             vLog_Printf(TRACE_ZCL,LOG_DEBUG, "\nDATA: SEP=%d DEP=%d Profile=%04x Cluster=%04x\n",
                     psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
                     psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint,
@@ -285,6 +292,7 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16DstAddr,       u16Length );
 			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,       u16Length );
 			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8SequenceNum,       u16Length );
 
 
             vSL_WriteMessage ( E_SL_MSG_APS_DATA_ACK,
@@ -365,6 +373,20 @@ PRIVATE void APP_ZCL_cbGeneralCallback ( tsZCL_CallBackEvent*    psEvent )
 #endif
 }
 
+PRIVATE  teZCL_Status APP_ZCL_eCLD_ThermostatCommandHandler(
+                    ZPS_tsAfEvent               *pZPSevent,
+                    tsZCL_EndPointDefinition    *psEndPointDefinition,
+                    tsZCL_ClusterInstance       *psClusterInstance)
+{
+    uint8                  au8LinkTxBuffer[256];
+
+    vLog_Printf ( TRUE,LOG_CRIT, "APP_ZCL_eCLD_ThermostatCommandHandler\r\n");
+    ZPS_tsAfEvent* psStackEvent = pZPSevent;
+    Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+
+    return(E_ZCL_SUCCESS);
+}
+
 
 /****************************************************************************
  *
@@ -391,7 +413,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     //vSL_WriteMessage ( 0x9999, u16Length,au8LinkTxBuffer,u8LinkQuality);
     u16Length =  0;
 
-    if (sZllState.bRawMode){
+    if (sZllState.u8RawMode == RAW_MODE_ON){
         ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
         if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE && psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT )
         {
@@ -402,10 +424,19 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     
     switch (psEvent->eEventType)
     {
+        case E_ZCL_CBET_READ_REQUEST:
+    	{
+            vLog_Printf(TRACE_ZCL, LOG_DEBUG, "EP EVT:E_ZCL_CBET_READ_REQUEST\r\n");
+            ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
+            Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+            //psEvent->eZCL_Status = E_ZCL_FAIL; // we want zcl to stop processing the request
+            //psEvent->eZCL_Status = E_ZCL_SUCCESS;
+    	}
+        break;
+
         case E_ZCL_CBET_LOCK_MUTEX:
         case E_ZCL_CBET_UNLOCK_MUTEX:
         case E_ZCL_CBET_READ_ATTRIBUTES_RESPONSE:
-        case E_ZCL_CBET_READ_REQUEST:
         case E_ZCL_CBET_TIMER:
         case E_ZCL_CBET_ZIGBEE_EVENT:
             //vLog_Printf(TRACE_ZCL, "EP EVT:No action\r\n");
@@ -419,7 +450,13 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
         case E_ZCL_CBET_UNHANDLED_EVENT:
         {
+
             vLog_Printf ( TRACE_ZCL, LOG_DEBUG, " (E_ZCL_CBET_UNHANDLED_EVENT)" );
+            ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
+            if (psStackEvent->eType == ZPS_EVENT_APS_DATA_INDICATION)
+            {
+            	Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+            }
         }
         break;
 
@@ -540,11 +577,16 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],   u8value,    u16Length );
                     }
 
-                    else if ( u16SizeOfAttribute / u16Elements == sizeof(uint16) )
-                    {
-                        App_u16BufferReadNBO ( &au8LinkTxBuffer [u16Length],  "h",  psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData);
-                        u16Length += sizeof(uint16);
-                    }
+						else if ( u16SizeOfAttribute / u16Elements == sizeof(uint16) )
+						{
+
+							if (psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData!=NULL)
+							{
+								App_u16BufferReadNBO ( &au8LinkTxBuffer [u16Length],  "h",  psEvent->uMessage.sIndividualAttributeResponse.pvAttributeData);
+								u16Length += sizeof(uint16);
+							}
+							vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"uint16\n",i);
+						}
 
                     else if ( u16SizeOfAttribute / u16Elements == sizeof(uint32) )
                     {
@@ -589,10 +631,27 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],          psEvent->u8TransactionSequenceNumber,                                        u16Length );
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,             u16Length );
             ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,                   u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,             u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->eZCL_Status,                                                        u16Length );
+            vSL_WriteMessage ( E_SL_MSG_CONFIG_REPORTING_RESPONSE,
+                               u16Length,
+                               au8LinkTxBuffer,
+                               u8LinkQuality );
+        }
+        break;
+
+        case E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTES_CONFIGURE_RESPONSE:
+        {
+            vLog_Printf ( TRACE_ZCL, LOG_DEBUG, " (E_ZCL_CBET_REPORT_INDIVIDUAL_ATTRIBUTES_CONFIGURE_RESPONSE)" );
+
+            /* Send event upwards */
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],          psEvent->u8TransactionSequenceNumber,                                        u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,             u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,                   u16Length );
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psEvent->psClusterInstance->psClusterDefinition->u16ClusterEnum,              u16Length );
             //FRED
-            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->uMessage.sAttributeReportingConfigurationResponse.sAttributeReportingConfigurationRecord.u16AttributeEnum,              u16Length );
-            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sAttributeReportingConfigurationResponse.eCommandStatus,    u16Length );
+            ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  psEvent->uMessage.sReportingConfigurationResponse.u16AttributeEnum,              u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->uMessage.sReportingConfigurationResponse.u8Status,    u16Length );
             vSL_WriteMessage ( E_SL_MSG_CONFIG_REPORTING_RESPONSE,
                                u16Length,
                                au8LinkTxBuffer,
@@ -753,6 +812,15 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                         }
                         break;
 
+                        case E_CLD_OTA_COMMAND_PAGE_REQUEST:
+                        {
+                        	vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "E_CLD_OTA_COMMAND_PAGE_REQUEST\r\n" );
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "SrcAddress: %04x\r\n", psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr );
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "bPageReqRespSpacing: %02x\r\n", psCallBackMessage->sPageReqServerParams.bPageReqRespSpacing);
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "sReceiveEventAddress: %08x\r\n", psCallBackMessage->sPageReqServerParams.sReceiveEventAddress );
+							vLog_Printf ( TRACE_ZCL, LOG_DEBUG, "u16DataSent: %08x\r\n", psCallBackMessage->sPageReqServerParams.u16DataSent );
+
+                        }
                         case E_CLD_OTA_COMMAND_BLOCK_REQUEST:
                         {
 
@@ -1130,6 +1198,8 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                 {
                     case E_CLD_IASZONE_CMD_ZONE_ENROLL_REQUEST:
                     {
+                    	ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
+                    	Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
                     }
                     break;
 
@@ -1311,6 +1381,11 @@ teZCL_Status eApp_ZLO_RegisterEndpoint ( tfpZCL_ZCLCallBackFunction    fptr )
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT,
 			                                                fptr,
 			                                                &sControlBridge );
+
+	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT,
+				                                                fptr,
+				                                                &sControlBridge );
+
     return eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT,
                                                 fptr,
                                                 &sControlBridge );
@@ -1496,7 +1571,8 @@ PUBLIC uint16 APP_u16ZncWriteDataPattern ( uint8*                    pu8Data,
                     u32Val |= (0xff << 24);
                 }
             }
-            memcpy(pu8Data, &u32Val, sizeof(uint32));
+            u32Val = u32Val << 8;
+            memcpy(pu8Data, &u32Val , sizeof(uint32)-1);
             // increment ptr to keep size calculation correct
             pu8Struct++;
             break;

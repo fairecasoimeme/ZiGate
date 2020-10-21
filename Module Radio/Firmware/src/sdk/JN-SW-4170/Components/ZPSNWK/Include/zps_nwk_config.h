@@ -132,7 +132,8 @@ extern "C" {
 #else
 #define ZPS_NWK_OPT_FS_MAX_DEPTH          15  /**< How deep a network is */
 #endif
-#define ZPS_NWK_OPT_FS_MAX_CHILDREN       20  /**< How many children a ZC/ZR can have - ZigBee FS only */
+//#define ZPS_NWK_OPT_FS_MAX_CHILDREN       20  /**< How many children a ZC/ZR can have - ZigBee FS only */
+#define ZPS_NWK_OPT_FS_MAX_CHILDREN       100  /**< How many children a ZC/ZR can have - ZigBee FS only */
 #define ZPS_NWK_OPT_FS_MAX_ROUTERS        6  /**< How many of the children can be routers */
 
 /**

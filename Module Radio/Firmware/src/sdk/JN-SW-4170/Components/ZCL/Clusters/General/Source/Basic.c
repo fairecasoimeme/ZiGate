@@ -112,7 +112,7 @@ const tsZCL_AttributeDefinition asCLD_BasicClusterAttributeDefinitions[] = {
     #endif
 
 	#ifdef CLD_BAS_ATTR_APPLICATION_LEGRAND
-        {E_CLD_BAS_ATTR_ID_LEGRAND,                ( E_ZCL_AF_RD | E_ZCL_AF_MS),      E_ZCL_UINT32,    (uint32)(&((tsCLD_Basic*)(0))->u32PrivateLegrand),0},
+        {E_CLD_BAS_ATTR_ID_LEGRAND,                ( E_ZCL_AF_RD | E_ZCL_AF_WR |E_ZCL_AF_MS),      E_ZCL_UINT32,    (uint32)(&((tsCLD_Basic*)(0))->u32PrivateLegrand),0},
     #endif
 
         {E_CLD_BAS_ATTR_ID_POWER_SOURCE,            E_ZCL_AF_RD,                E_ZCL_ENUM8,    (uint32)(&((tsCLD_Basic*)(0))->ePowerSource),0},  /* Mandatory */
@@ -425,11 +425,13 @@ PUBLIC  teZCL_Status eCLD_BasicCreateBasic(
         #endif
 
 		#ifdef CLD_BAS_ATTR_APPLICATION_LEGRAND
-			((tsCLD_Basic*)pvEndPointSharedStructPtr)->u32PrivateLegrand = RND_u32GetRand ( 1, 0x0000ff ) ;
+			//((tsCLD_Basic*)pvEndPointSharedStructPtr)->u32PrivateLegrand = RND_u32GetRand ( 1, 0x0000ff ) ;
+            ((tsCLD_Basic*)pvEndPointSharedStructPtr)->u32PrivateLegrand = 0;
+
 
 		#endif
 
-            ((tsCLD_Basic*)pvEndPointSharedStructPtr)->ePowerSource = CLD_BAS_POWER_SOURCE;
+           // ((tsCLD_Basic*)pvEndPointSharedStructPtr)->ePowerSource = CLD_BAS_POWER_SOURCE;
 
 
 

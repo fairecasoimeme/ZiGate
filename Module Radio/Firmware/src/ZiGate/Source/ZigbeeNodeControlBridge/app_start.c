@@ -114,7 +114,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003031c
+#define VERSION    0x0003031d
 #endif
 
 #ifndef TRACE_EXC
@@ -196,8 +196,13 @@ void vReportException ( char*    sExStr );
 
 void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus );
 PRIVATE void vInitialiseApp ( void );
+
+#if (defined PDM_EEPROM && DBG_ENABLE)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode );
+										
+#endif
+
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
 #endif
@@ -239,7 +244,7 @@ tsZllState sZllState = {
         .u16NwkAddrOfServer     = 0,
         .u8OTAserverEP          = 0,
 #endif
-		.bRawMode               = FALSE
+		.u8RawMode               = 0
 };
 
 PUBLIC tszQueue           APP_msgSerialRx;
@@ -262,7 +267,7 @@ uint8                     u8TmrToggleLED;
 uint8                     u8HaModeTimer;
 uint8                     u8TickTimer;
 uint8                     u8JoinedDevice =  0;
-uint8                     au8LinkRxBuffer[256];
+uint8                     au8LinkRxBuffer[270];
 ZPS_tsAfFlashInfoSet      sSet;
 /****************************************************************************/
 /***        Exported Functions                                            ***/
@@ -514,11 +519,10 @@ PRIVATE void vInitialiseApp ( void )
     APP_MigratePDM();
     PDUM_vInit ( );
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
+
+#if (defined PDM_EEPROM && DBG_ENABLE)
     PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
-#if (defined PDM_EEPROM)
-#if TRACE_APPSTART
-    PDM_vRegisterSystemCallback ( vPdmEventHandlerCallback );
-#endif
+
 #endif
 #ifdef CLD_GREENPOWER
     vAPP_GP_LoadPDMData();
@@ -567,6 +571,15 @@ PRIVATE void vInitialiseApp ( void )
         ZPS_vNwkNibSetPanId (ZPS_pvAplZdoGetNwkHandle(), (uint16) RND_u32GetRand ( 1, 0xfff0 ) );
 
     }
+    //Envoie message Start after PDM loaded
+    uint8_t au8values[1];
+    uint8_t u8Length=0;
+    ZNC_BUF_U8_UPD  ( &au8values[ 0 ], 0,      u8Length );
+    vSL_WriteMessage ( E_SL_MSG_PDM_LOADED,
+                                       1,
+                                       au8values,
+                                       0 );
+
     /* If the device state has been restored from flash, re-start the stack
      * and set the application running again.
      */
@@ -1004,6 +1017,7 @@ void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
     vLog_Printf ( TRACE_EXC,LOG_DEBUG, "ERROR: Extended status %x\n", eExtendedStatus );
 }
 
+#if (defined PDM_EEPROM && DBG_ENABLE)
 PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
                                         PDM_eSystemEventCode    eSystemEventCode )
 {
@@ -1019,6 +1033,7 @@ PRIVATE void vPdmEventHandlerCallback ( uint32                  u32EventNumber,
 
 
 }
+#endif
 
 #if (defined PDM_EEPROM)
 #if TRACE_APPSTART
@@ -1101,6 +1116,9 @@ PRIVATE void APP_cbTimerZclTick (void*    pvParam)
     if(u8Tick100Ms > 9)
     {
     	sControlBridge.sTimeServerCluster.utctTime++;
+#ifdef CLD_BAS_ATTR_APPLICATION_LEGRAND
+    	sControlBridge.sBasicServerCluster.u32PrivateLegrand++;
+#endif
         u8Tick100Ms = 0;
         sCallBackEvent.pZPSevent = NULL;
         sCallBackEvent.eEventType = E_ZCL_CBET_TIMER;
@@ -1119,6 +1137,8 @@ bool_t APP_vProfileWideCommandSupportedForCluster ( uint16 u16Clusterid )
 
 bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
 {
+	return TRUE;
+	/*
 	switch(u16ManufacturerCode)
 	{
 		// Ikea
@@ -1133,7 +1153,7 @@ bool_t APP_bZCL_IsManufacturerCodeSupported(uint16 u16ManufacturerCode)
 			return FALSE;
 		}
 	}
-	return FALSE;
+	return FALSE;*/
 }
 
 /****************************************************************************
@@ -1305,7 +1325,7 @@ PRIVATE void APP_MigratePDM( void )
     *  - Size should always be same            *
     *******************************************/
     ZPS_tsAplAib tmpZPS_tsAplAib;
-    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_AIB, &tmpZPS_tsAplAib, 20, &u16DataBytesRead );
+    PDM_eReadDataFromRecord ( PDM_ID_INTERNAL_AIB, &tmpZPS_tsAplAib, sizeof ( tmpZPS_tsAplAib ), &u16DataBytesRead );
 
     /*******************************************
     * Address: 0xF001 - Bind table             *
@@ -1550,7 +1570,7 @@ PRIVATE void APP_MigratePDM( void )
     vLog_Printf ( TRACE_MIGRATION,LOG_DEBUG,  "MIGRATION: Restoring data to EEPROM\n" );
 
     PDM_eSaveRecordData(PDM_ID_APP_ZLL_CMSSION,             &tmptsZllState,                     sizeof( tsZllState ));
-    PDM_eSaveRecordData(PDM_ID_INTERNAL_AIB,                &tmpZPS_tsAplAib,                   20);
+    PDM_eSaveRecordData(PDM_ID_INTERNAL_AIB,                &tmpZPS_tsAplAib,                   sizeof ( tmpZPS_tsAplAib ));
     PDM_eSaveRecordData(PDM_ID_INTERNAL_BINDS,              &tmpBindingTable,                   8 * struct_sizes[0].u8BindingTableSize);
     PDM_eSaveRecordData(PDM_ID_INTERNAL_GROUPS,             &tmpZPS_tsAPdmGroupTableEntry,      sizeof( ZPS_tsAPdmGroupTableEntry ) * struct_sizes[0].u8GroupTableSize);
     PDM_eSaveRecordData(PDM_ID_INTERNAL_APS_KEYS,           &tmpZPS_tsAplApsKeyDescriptorEntry, sizeof( tmpZPS_tsAplApsKeyDescriptorEntry ));
