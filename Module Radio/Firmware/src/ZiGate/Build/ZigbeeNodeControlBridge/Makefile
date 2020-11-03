@@ -61,9 +61,9 @@ PDM_BUILD_TYPE         ?= _EEPROM
 BAUD                   ?= 1000000
 
 GP_SUPPORT             ?= 0
-TRACE                  ?= 0
+TRACE                  ?= 1
 
-DEBUG                  ?= NONE
+DEBUG                  ?= UART1
 ###############################################################################
 # un-comment the lines below for Debugger
 # Debug options - define DEBUG to enable

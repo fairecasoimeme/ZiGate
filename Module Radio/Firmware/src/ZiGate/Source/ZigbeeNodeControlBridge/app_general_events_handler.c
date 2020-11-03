@@ -523,54 +523,57 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
             if (sZllState.u8RawMode == RAW_MODE_ON){
                 Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
-				PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
+				//PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
 
-                return;
+               // return;
             }
 
             uint8*    dataPtr =  ( uint8* ) PDUM_pvAPduInstanceGetPayload ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
             uint8     u8Size  =  PDUM_u16APduInstanceGetPayloadSize ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
 
+
             if( psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint != 0  &&
                 psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint != 0 )
             {
-                uint8    i =  0;
-                ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0],          psStackEvent->uEvent.sApsDataIndEvent.eStatus,          u16Length );
-                ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ProfileId,     u16Length );
-                ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId,     u16Length );
-                ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint,    u16Length );
-                ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint,    u16Length );
-                ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode,    u16Length );
-                if(psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode == ZPS_E_ADDR_MODE_IEEE)
-                {
-                    ZNC_BUF_U64_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u64Addr,    u16Length );
-                }
-                else
-                {
-                    ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
-                }
-                ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8DstAddrMode,    u16Length );
-                if( psStackEvent->uEvent.sApsDataIndEvent.u8DstAddrMode == ZPS_E_ADDR_MODE_IEEE )
-                {
-                    ZNC_BUF_U64_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uDstAddress.u64Addr,    u16Length );
-                }
-                else
-                {
-                    ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr,    u16Length );
-                }
-                ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  u8Size,    u16Length );
-                while ( i < u8Size )
-                {
-                    ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  dataPtr [ i ],          u16Length );
-                    i++;
-                }
+            	if (sZllState.u8RawMode != RAW_MODE_ON){
+					uint8    i =  0;
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0],          psStackEvent->uEvent.sApsDataIndEvent.eStatus,          u16Length );
+					ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ProfileId,     u16Length );
+					ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId,     u16Length );
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint,    u16Length );
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint,    u16Length );
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode,    u16Length );
+					if(psStackEvent->uEvent.sApsDataIndEvent.u8SrcAddrMode == ZPS_E_ADDR_MODE_IEEE)
+					{
+						ZNC_BUF_U64_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u64Addr,    u16Length );
+					}
+					else
+					{
+						ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,    u16Length );
+					}
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u8DstAddrMode,    u16Length );
+					if( psStackEvent->uEvent.sApsDataIndEvent.u8DstAddrMode == ZPS_E_ADDR_MODE_IEEE )
+					{
+						ZNC_BUF_U64_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uDstAddress.u64Addr,    u16Length );
+					}
+					else
+					{
+						ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.uDstAddress.u16Addr,    u16Length );
+					}
+					ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  u8Size,    u16Length );
+					while ( i < u8Size )
+					{
+						ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [u16Length],  dataPtr [ i ],          u16Length );
+						i++;
+					}
 
-                vSL_WriteMessage ( E_SL_MSG_DATA_INDICATION,
-                                   u16Length,
-                                   au8LinkTxBuffer,
-                                   u8LinkQuality);
-                vLog_Printf ( TRACE_APP,LOG_ERR, "NPDU: Current %d Max %d\n", PDUM_u8GetNpduUse(), PDUM_u8GetMaxNpduUse() );
-                vLog_Printf ( TRACE_APP,LOG_ERR, "APDU: Current %d Max %d\n", u8GetApduUse(), u8GetMaxApdu( ) );
+					vSL_WriteMessage ( E_SL_MSG_DATA_INDICATION,
+									   u16Length,
+									   au8LinkTxBuffer,
+									   u8LinkQuality);
+					vLog_Printf ( TRACE_APP,LOG_ERR, "NPDU: Current %d Max %d\n", PDUM_u8GetNpduUse(), PDUM_u8GetMaxNpduUse() );
+					vLog_Printf ( TRACE_APP,LOG_ERR, "APDU: Current %d Max %d\n", u8GetApduUse(), u8GetMaxApdu( ) );
+            	}
 
             }
             else
@@ -1013,6 +1016,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 
 
     }
+
 
 
     switch (sZllState.eNodeState)

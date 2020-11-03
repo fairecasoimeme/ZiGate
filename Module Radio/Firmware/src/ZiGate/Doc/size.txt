@@ -1,0 +1,54 @@
+Wed Oct 21 10:50:58 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192546	   2560	  30005	 225111	  36f57	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 12:25:51 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192446	   2556	  30029	 225031	  36f07	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 12:28:07 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192446	   2556	  30029	 225031	  36f07	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 12:42:03 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192442	   2556	  30029	 225027	  36f03	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 13:05:57 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192706	   2560	  30029	 225295	  3700f	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 13:37:19 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192786	   2556	  30033	 225375	  3705f	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 13:59:02 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192942	   2556	  30033	 225531	  370fb	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 16:30:25 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192942	   2556	  30033	 225531	  370fb	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 16:41:18 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192986	   2560	  30017	 225563	  3711b	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 17:00:07 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192966	   2560	  30017	 225543	  37107	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 17:07:14 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192966	   2560	  30017	 225543	  37107	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 17:10:42 2020
+   text	   data	    bss	    dec	    hex	filename
+ 192978	   2560	  30017	 225555	  37113	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 17:21:48 2020
+   text	   data	    bss	    dec	    hex	filename
+ 193006	   2560	  30017	 225583	  3712f	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 17:26:06 2020
+   text	   data	    bss	    dec	    hex	filename
+ 193078	   2560	  30017	 225655	  37177	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Wed Oct 21 17:33:11 2020
+   text	   data	    bss	    dec	    hex	filename
+ 193086	   2560	  30017	 225663	  3717f	ZigbeeNodeControlBridge_JN5168_COORDINATOR_115200.elf
+Tue Nov 03 13:40:09 2020
+   text	   data	    bss	    dec	    hex	filename
+ 203479	   2576	  30057	 236112	  39a50	ZigbeeNodeControlBridge_JN5169_COORDINATOR_115200.elf
+Tue Nov 03 14:10:52 2020
+   text	   data	    bss	    dec	    hex	filename
+ 203519	   2576	  30057	 236152	  39a78	ZigbeeNodeControlBridge_JN5169_COORDINATOR_115200.elf
+Tue Nov 03 14:30:19 2020
+   text	   data	    bss	    dec	    hex	filename
+ 203483	   2576	  30057	 236116	  39a54	ZigbeeNodeControlBridge_JN5169_COORDINATOR_115200.elf

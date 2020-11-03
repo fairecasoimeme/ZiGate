@@ -432,10 +432,10 @@
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_115200 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000"/>
+		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
 		</configuration>
-		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000 (JN5169)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_1000000 (JN5168)"/>
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
@@ -443,10 +443,10 @@
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_1000000"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_115200"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_1000000 (JN5169)"/>
-		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200 (JN5168)"/>
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
 		</configuration>
+		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200 (JN5168)"/>
 		<configuration configurationName="Full Function Device"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Full_Functionality_115200"/>
@@ -454,10 +454,10 @@
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_115200 (JN5168)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_Coordinator_1000000 (JN5168)"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_EEPROM_JN5169"/>
+		<configuration configurationName="Coordinator only"/>
 		<configuration configurationName="ZigbeeNodeControlBridge_EEPROM_JN5168">
 			<resource resourceType="PROJECT" workspacePath="/JN-AN-1216-Zigbee-3-0-IoT-ControlBridge"/>
 		</configuration>
-		<configuration configurationName="Coordinator only"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="scannerConfiguration">
