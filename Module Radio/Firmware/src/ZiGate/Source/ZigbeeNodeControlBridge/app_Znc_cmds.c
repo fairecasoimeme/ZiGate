@@ -354,6 +354,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 ZNC_BUF_U16_UPD ( &au8values[ u8Length ], u16PacketType, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8RequestSent, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8SeqApsNum,   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], PDUM_u8GetNpduUse(),   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8GetApduUse(),   u8Length );
                 vSL_WriteMessage ( E_SL_MSG_STATUS,
                                    u8Length,
                                    au8values,
@@ -418,6 +420,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 ZNC_BUF_U16_UPD ( &au8values[ u8Length ], u16PacketType, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8RequestSent, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8SeqApsNum,   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], PDUM_u8GetNpduUse(),   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8GetApduUse(),   u8Length );
 
 
                 vSL_WriteMessage ( E_SL_MSG_STATUS,
@@ -503,6 +507,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 ZNC_BUF_U16_UPD ( &au8values[ u8Length ], u16PacketType, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8RequestSent, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8SeqApsNum,   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], PDUM_u8GetNpduUse(),   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8GetApduUse(),   u8Length );
 
 
                 vSL_WriteMessage ( E_SL_MSG_STATUS,
@@ -542,6 +548,8 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 ZNC_BUF_U16_UPD ( &au8values[ u8Length ], u16PacketType, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8RequestSent, u8Length );
                 ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8SeqApsNum,   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], PDUM_u8GetNpduUse(),   u8Length );
+                ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8GetApduUse(),   u8Length );
 
 
                 vSL_WriteMessage ( E_SL_MSG_STATUS,
@@ -2596,6 +2604,9 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 			ZNC_BUF_U16_UPD ( &au8values [ u8Length ], u16PacketType, u8Length );
             ZNC_BUF_U8_UPD  ( &au8values [ u8Length ], u8RequestSent, u8Length );
             ZNC_BUF_U8_UPD  ( &au8values [ u8Length ], u8SeqApsNum,   u8Length );
+            ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], PDUM_u8GetNpduUse(),   u8Length );
+            ZNC_BUF_U8_UPD  ( &au8values[ u8Length ], u8GetApduUse(),   u8Length );
+
 			vSL_WriteMessage ( E_SL_MSG_STATUS,
 							   u8Length,
 							   au8values,

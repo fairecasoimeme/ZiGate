@@ -1014,7 +1014,16 @@ PUBLIC void app_vFormatAndSendUpdateLists ( void )
 
 void vfExtendedStatusCallBack ( ZPS_teExtendedStatus    eExtendedStatus )
 {
-    vLog_Printf ( TRACE_EXC,LOG_DEBUG, "ERROR: Extended status %x\n", eExtendedStatus );
+	uint16                 u16Length =  0;
+    uint8                  au8LinkTxBuffer[256];
+	vLog_Printf ( TRACE_EXC,LOG_DEBUG, "ERROR: Extended status %x\n", eExtendedStatus );
+
+    u16Length =  0;
+    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ 0 ],  eExtendedStatus,     u16Length );
+    vSL_WriteMessage ( 0x9999,
+                               u16Length,
+                               au8LinkTxBuffer,
+                               0);
 }
 
 #if (defined PDM_EEPROM && DBG_ENABLE)
