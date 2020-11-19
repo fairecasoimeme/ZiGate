@@ -161,14 +161,13 @@ PUBLIC void   vZCL_HandleAttributesWriteResponse(
                 // call user for every attribute
                 psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
             }
+        } else {
+            sZCL_CallBackEvent.eZCL_Status = eAttributeStatus;
+            sZCL_CallBackEvent.eEventType = E_ZCL_CBET_WRITE_ATTRIBUTES_RESPONSE;
+            psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
         }
-
-        // re-use last attribute generated structure for message but indicate command is complete, last attribute
-        // will get 2 callbacks effectively
-        sZCL_CallBackEvent.eEventType = E_ZCL_CBET_WRITE_ATTRIBUTES_RESPONSE;
     }
 
-    psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
     // incoming message is now parsed ok - send the default OK, if required
     eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_SUCCESS);
