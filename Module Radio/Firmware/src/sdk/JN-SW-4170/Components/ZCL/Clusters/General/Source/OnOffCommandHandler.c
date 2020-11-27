@@ -100,7 +100,7 @@
 /****************************************************************************/
 
 #ifdef ONOFF_SERVER
-PRIVATE teZCL_Status eCLD_OnOffHandleOnCommand(
+/*PRIVATE teZCL_Status eCLD_OnOffHandleOnCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -116,14 +116,14 @@ PRIVATE teZCL_Status eCLD_OnOffHandleToggleCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
-                    uint8                       u8CommandIdentifier);
+                    uint8                       u8CommandIdentifier);*/
                     
 #ifdef CLD_ONOFF_CMD_OFF_WITH_EFFECT
-PRIVATE teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
+/*PRIVATE teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
-                    uint8                       u8CommandIdentifier);
+                    uint8                       u8CommandIdentifier);*/
 #endif                    
 
 #ifdef CLD_ONOFF_CMD_ON_WITH_RECALL_GLOBAL_SCENE
@@ -135,11 +135,11 @@ PRIVATE teZCL_Status eCLD_OnOffHandleOnWithRecallGlobalSceneCommand(
 #endif
 
 #ifdef CLD_ONOFF_CMD_ON_WITH_TIMED_OFF
-PRIVATE teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
+/*PRIVATE teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
-                    uint8                       u8CommandIdentifier);
+                    uint8                       u8CommandIdentifier);*/
 #endif
 #endif /* ONOFF_SERVER */
 /****************************************************************************/
@@ -201,7 +201,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
     #endif
 
     // SERVER
-    switch(sZCL_HeaderParams.u8CommandIdentifier)
+    /*switch(sZCL_HeaderParams.u8CommandIdentifier)
     {
 
     case(E_CLD_ONOFF_CMD_ON):
@@ -239,19 +239,15 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
         break;
     #endif
     
-    case E_CLD_ONOFF_CMD_LORATAP:
-    	// for loratap remote
-    	break;
-
     default:
         // unlock
         #ifndef COOPERATIVE
             eZCL_ReleaseMutex(psEndPointDefinition);
         #endif
-
-        return(E_ZCL_ERR_CUSTOM_COMMAND_HANDLER_NULL_OR_RETURNED_ERROR);
+        //On laisse passer toutes les commandes
+        //return(E_ZCL_ERR_CUSTOM_COMMAND_HANDLER_NULL_OR_RETURNED_ERROR);
         break;
-    }
+    }*/
 
 
     /* Generate a custom command event */
@@ -309,7 +305,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
  ** teZCL_Status
  **
  ****************************************************************************/
-PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
+/*PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -322,7 +318,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
 
     DBG_vPrintf(TRACE_ONOFF, "On: ");
 
-    /* Receive the command */
+
     eStatus = eCLD_OnOffCommandReceive(pZPSevent,
                                     &u8TransactionSequenceNumber);
     if(eStatus != E_ZCL_SUCCESS)
@@ -331,11 +327,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
         return(E_ZCL_FAIL);
     }
 
-    /*
-     * 6.6.1.4.2 On command extensions
-     * On receipt of the on command, if the value of the OnTime attribute is equal to 0x0000, the device shall
-     * set the OffWaitTime attribute to 0x0000.
-     */
+
 #if (defined CLD_ONOFF_ATTR_ON_TIME) && (defined CLD_ONOFF_ATTR_OFF_WAIT_TIME)
     if(psSharedStruct->u16OnTime == 0x0000)
     {
@@ -344,11 +336,11 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
 #endif
 
 #ifdef CLD_ONOFF_ATTR_GLOBAL_SCENE_CONTROL
-    /* See ZCL specification 3.8.2.2.2 */
+
     psSharedStruct->bGlobalSceneControl = 0x01;
 #endif
 
-    /* If OnOff is already on, exit */
+
     if(psSharedStruct->bOnOff == 0x01)
     {
         return eStatus;
@@ -357,7 +349,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
 #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
     if(eCLD_LevelControlClusterIsPresent(psEndPointDefinition->u8EndPointNumber) == E_ZCL_SUCCESS)
     {
-        /* If not already on, set it on */
+
         if((bool_t)psSharedStruct->bOnOff != TRUE)
         {
             DBG_vPrintf(TRACE_ONOFF, "LC Set to 1");
@@ -375,7 +367,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
 #endif
 
     return eStatus;
-}
+}*/
 
 /****************************************************************************
  **
@@ -395,7 +387,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
  **
  ****************************************************************************/
 
-PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
+/*PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -408,7 +400,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
 
     DBG_vPrintf(TRACE_ONOFF, "Off: ");
 
-    /* Receive the command */
+
     eStatus = eCLD_OnOffCommandReceive(pZPSevent,
                                 &u8TransactionSequenceNumber);
     if(eStatus != E_ZCL_SUCCESS)
@@ -417,12 +409,12 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
         return(E_ZCL_FAIL);
     }
 
-    /* See ZCL Specification 3.8.2.3.1.1 */
+
 #if (defined CLD_ONOFF_ATTR_ON_TIME)
     psSharedStruct->u16OnTime = 0x0000;
 #endif
 
-    /* If already off, exit */
+
     if(psSharedStruct->bOnOff == 0)
     {
         return eStatus;
@@ -431,7 +423,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
 #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
     if(eCLD_LevelControlClusterIsPresent(psEndPointDefinition->u8EndPointNumber) == E_ZCL_SUCCESS)
     {
-        /* If not already off, set it off */
+
         if((bool_t)psSharedStruct->bOnOff != FALSE)
         {
             DBG_vPrintf(TRACE_ONOFF, "LC Set to 0");
@@ -449,7 +441,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
 #endif
 
     return eStatus;
-}
+}*/
 
 
 /****************************************************************************
@@ -469,7 +461,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
  ** teZCL_Status
  **
  ****************************************************************************/
-PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
+/*PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -482,7 +474,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
 
     DBG_vPrintf(TRACE_ONOFF, "Toggle: ");
 
-    /* Receive the command */
+
     eStatus = eCLD_OnOffCommandReceive(pZPSevent,
                                 &u8TransactionSequenceNumber);
     if(eStatus != E_ZCL_SUCCESS)
@@ -494,12 +486,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
     return eStatus;
 
 
-    /*
-     * 6.6.1.4.3 Toggle command extensions
-     * On receipt of the toggle command, if the value of the OnOff attribute is equal to 0x00 and if the value
-     * of the OnTime attribute is equal to 0x0000, the device shall set the OffWaitTime attribute to 0x0000. If
-     * the value of the OnOff attribute is equal to 0x01, the OnTime attribute shall be set to 0x0000.
-     */
+
 #if (defined CLD_ONOFF_ATTR_ON_TIME) && (defined CLD_ONOFF_ATTR_OFF_WAIT_TIME)
     if(psSharedStruct->bOnOff == 0)
     {
@@ -518,7 +505,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
 #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
     if(eCLD_LevelControlClusterIsPresent(psEndPointDefinition->u8EndPointNumber) == E_ZCL_SUCCESS)
     {
-        /* Toggle On/Off */
+
         DBG_vPrintf(TRACE_ONOFF, "LC Set to %d", psSharedStruct->bOnOff ^ 0x01);
         eCLD_LevelControlSetOnOffState(psEndPointDefinition->u8EndPointNumber,
                                        psSharedStruct->bOnOff ^ 0x01,
@@ -539,7 +526,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
     }
 #endif
     return eStatus;
-}
+}*/
 
 #ifdef  CLD_ONOFF_CMD_OFF_WITH_EFFECT
 /****************************************************************************
@@ -560,7 +547,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
  **
  ****************************************************************************/
 
-PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
+/*PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -576,7 +563,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
 
     DBG_vPrintf(TRACE_ONOFF, "Off With Effect: ");
 
-    /* Receive the command */
+
     eStatus = eCLD_OnOffCommandOffWithEffectReceive(pZPSevent,
                                 &u8TransactionSequenceNumber,
                                 &sPayload);
@@ -587,19 +574,11 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
     }
 
 
-    /*
-     * 6.6.1.4.4.3 Effect on receipt
-     * On receipt of the off with effect command and if the GlobalSceneControl attribute is equal to TRUE,
-     * the application on the associated endpoint shall store its settings in its global scene then set the
-     * GlobalSceneControl attribute to FALSE. The application shall then enter its “off” state, update the OnOff
-     * attribute accordingly, and set the OnTime attribute to 0x0000.
-     * In all other cases, the application on the associated endpoint shall enter its “off” state, update the OnOff
-     * attribute accordingly, and set the OnTime attribute to 0x0000.
-     */
+
 #ifdef CLD_ONOFF_ATTR_GLOBAL_SCENE_CONTROL
     if(psSharedStruct->bGlobalSceneControl != 0)
     {
-        /* Store the global scene */
+
         #ifdef SCENES_SERVER
             eCLD_ScenesStore(psEndPointDefinition->u8EndPointNumber, 0, 0);
         #endif
@@ -610,7 +589,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
 #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
     if(eCLD_LevelControlClusterIsPresent(psEndPointDefinition->u8EndPointNumber) == E_ZCL_SUCCESS)
     {
-        /* If not already off, set it off */
+
         if((bool_t)psSharedStruct->bOnOff != FALSE)
         {
             DBG_vPrintf(TRACE_ONOFF, "LC Set to 0");
@@ -625,9 +604,9 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
                                                    (teCLD_OnOff_OffWithEffect)(((sPayload.u8EffectId) << 8) | (sPayload.u8EffectVariant)));
                     break;
                 default:
-                    /* For reserved u8EffectId and u8EffectVariant send DefaultResponse with Invalid Value. */
+
                     eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_INVALID_VALUE);
-                    /* Doing u8EffectId=0|u8EffectVariant=0 (CLD_ONOFF_OFF_WITH_EFFECT_FADE_OFF) */
+
                     eCLD_LevelControlSetOnOffState(psEndPointDefinition->u8EndPointNumber,
                                                    FALSE,
                                                    CLD_ONOFF_OFF_WITH_EFFECT_FADE_OFF);
@@ -645,11 +624,11 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
 #endif
 
 #ifdef CLD_ONOFF_ATTR_ON_TIME
-    /* OnTime = 0 */
+
     psSharedStruct->u16OnTime = 0;
 #endif
 
-    /* Generate a callback to let the app know that we need to do an off effect */
+
     sCallBackMessage.u8CommandId                            = u8CommandIdentifier;
     sCallBackMessage.uMessage.psOffWithEffectRequestPayload = &sPayload;
 
@@ -662,7 +641,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
     psEndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
     return eStatus;
-}
+}*/
 #endif
 
 #ifdef CLD_ONOFF_CMD_ON_WITH_RECALL_GLOBAL_SCENE
@@ -757,7 +736,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithRecallGlobalSceneCommand(
  ** teZCL_Status
  **
  ****************************************************************************/
-PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
+/*PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -773,7 +752,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
 
     DBG_vPrintf(TRACE_ONOFF, "On With Timed Off: ");
 
-    /* Receive the command */
+
     eStatus = eCLD_OnOffCommandOnWithTimedOffReceive(pZPSevent,
                                 &u8TransactionSequenceNumber,
                                 &sPayload);
@@ -785,7 +764,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
 
     DBG_vPrintf(TRACE_ONOFF, "OnOff=%d OnTime=%d OffTime=%d", sPayload.u8OnOff, sPayload.u16OnTime, sPayload.u16OffTime);
     
-    /* Valid range of OnTime and OffWaitTime fields is 0x0000-0xFFFE*/
+
     if((sPayload.u16OffTime > 0xFFFE) ||
        (sPayload.u16OnTime  > 0xFFFE))
     {
@@ -794,24 +773,13 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
         return E_ZCL_CMDS_INVALID_VALUE;
     }
     
-    /*
-     * On receipt of this command, if the accept only when on sub-field of the on/off control field is set to
-     * 1 and the value of the OnOff attribute is equal to 0x00 (off), the command shall be discarded.
-     */
+
     if(((sPayload.u8OnOff & CLD_ONOFF_OWTO_BIT_ACCEPT_ONLY_WHEN_ON) != 0) && (psSharedStruct->bOnOff == 0))
     {
         return E_ZCL_SUCCESS;
     }
 
-    /*
-     * If the value of the OffWaitTime attribute is greater than zero and the value of the OnOff attribute is
-     * equal to 0x00, then the device shall set the OffWaitTime attribute to the minimum of the OffWaitTime
-     * attribute and the value specified in the off wait time field.
-     *
-     * In all other cases, the device shall set the OnTime attribute to the maximum of the OnTime attribute and
-     * the value specified in the on time field, set the OffWaitTime attribute to the value specified in the off
-     * wait time field and set the OnOff attribute to 0x01 (on).
-     */
+
     if((psSharedStruct->u16OffWaitTime > 0) && (psSharedStruct->bOnOff == 0))
     {
         psSharedStruct->u16OffWaitTime = MIN(psSharedStruct->u16OffWaitTime, sPayload.u16OffTime);
@@ -821,7 +789,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
         psSharedStruct->u16OnTime = MAX(psSharedStruct->u16OnTime, sPayload.u16OnTime);
         psSharedStruct->u16OffWaitTime = sPayload.u16OffTime;
 
-        /* If already on, exit */
+
         if(psSharedStruct->bOnOff == 0x01)
         {
             return eStatus;
@@ -830,7 +798,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
 #if (defined CLD_LEVEL_CONTROL) && (defined LEVEL_CONTROL_SERVER)
         if(eCLD_LevelControlClusterIsPresent(psEndPointDefinition->u8EndPointNumber) == E_ZCL_SUCCESS)
         {
-            /* Turn On*/
+
             eCLD_LevelControlSetOnOffState(psEndPointDefinition->u8EndPointNumber,
                                            TRUE,
                                            CLD_ONOFF_OFF_WITH_EFFECT_NONE);
@@ -844,7 +812,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
 #endif
     }
     
-    /* Generate a callback to let the app know that we need to do an on with timed off */
+
     sCallBackMessage.u8CommandId                             = u8CommandIdentifier;
     sCallBackMessage.uMessage.psOnWithTimedOffRequestPayload = &sPayload;
 
@@ -857,7 +825,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
     psEndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
     return eStatus;
-}
+}*/
 #endif
 #endif /* ONOFF_SERVER */
 /****************************************************************************/
