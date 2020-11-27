@@ -239,6 +239,10 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
         break;
     #endif
     
+    case E_CLD_ONOFF_CMD_LORATAP:
+    	// for loratap remote
+    	break;
+
     default:
         // unlock
         #ifndef COOPERATIVE

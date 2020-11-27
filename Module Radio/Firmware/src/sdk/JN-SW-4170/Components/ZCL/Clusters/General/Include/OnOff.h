@@ -116,7 +116,8 @@ typedef enum
 
     E_CLD_ONOFF_CMD_OFF_EFFECT               = 0x40,
     E_CLD_ONOFF_CMD_ON_RECALL_GLOBAL_SCENE,
-    E_CLD_ONOFF_CMD_ON_TIMED_OFF
+    E_CLD_ONOFF_CMD_ON_TIMED_OFF,
+    E_CLD_ONOFF_CMD_LORATAP					= 0xfd,
 } teCLD_OnOff_Command;
 
 

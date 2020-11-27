@@ -249,7 +249,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandReceive(
                                      pu8TransactionSequenceNumber,
                                      0,
                                      0,
-                                     E_ZCL_ACCEPT_EXACT);
+                                     E_ZCL_ACCEPT_LESS);
 
 }
 
@@ -289,7 +289,7 @@ PUBLIC teZCL_Status eCLD_OnOffCommandOffWithEffectReceive(
                                      pu8TransactionSequenceNumber,
                                      asPayloadDefinition,
                                      sizeof(asPayloadDefinition) / sizeof(tsZCL_RxPayloadItem),
-                                     E_ZCL_ACCEPT_EXACT);
+                                     E_ZCL_ACCEPT_LESS);
 
 }
 #endif
@@ -331,7 +331,7 @@ PUBLIC teZCL_Status eCLD_OnOffCommandOnWithTimedOffReceive(
                                      pu8TransactionSequenceNumber,
                                      asPayloadDefinition,
                                      sizeof(asPayloadDefinition) / sizeof(tsZCL_RxPayloadItem),
-                                     E_ZCL_ACCEPT_EXACT);
+                                     E_ZCL_ACCEPT_LESS);
 
 }
 #endif
