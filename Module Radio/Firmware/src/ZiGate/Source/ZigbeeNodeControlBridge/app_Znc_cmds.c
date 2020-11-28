@@ -328,7 +328,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
     uint8                  u8Status = 0;
     uint16                 u16TargetAddress;
     tsZCL_Address          sAddress;
-    uint8                  au8values[6];
+    uint8                  au8values[10];
     uint8                  u8Length = 0;
 #ifdef FULL_FUNC_DEVICE
     tsBDB_ZCLEvent         sEvent;
