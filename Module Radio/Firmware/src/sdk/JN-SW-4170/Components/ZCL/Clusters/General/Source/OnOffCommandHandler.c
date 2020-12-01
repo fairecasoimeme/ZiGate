@@ -100,7 +100,7 @@
 /****************************************************************************/
 
 #ifdef ONOFF_SERVER
-/*PRIVATE teZCL_Status eCLD_OnOffHandleOnCommand(
+PRIVATE teZCL_Status eCLD_OnOffHandleOnCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -116,14 +116,14 @@ PRIVATE teZCL_Status eCLD_OnOffHandleToggleCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
-                    uint8                       u8CommandIdentifier);*/
+                    uint8                       u8CommandIdentifier);
                     
 #ifdef CLD_ONOFF_CMD_OFF_WITH_EFFECT
-/*PRIVATE teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
+PRIVATE teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
-                    uint8                       u8CommandIdentifier);*/
+                    uint8                       u8CommandIdentifier);
 #endif                    
 
 #ifdef CLD_ONOFF_CMD_ON_WITH_RECALL_GLOBAL_SCENE
@@ -135,11 +135,11 @@ PRIVATE teZCL_Status eCLD_OnOffHandleOnWithRecallGlobalSceneCommand(
 #endif
 
 #ifdef CLD_ONOFF_CMD_ON_WITH_TIMED_OFF
-/*PRIVATE teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
+PRIVATE teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
-                    uint8                       u8CommandIdentifier);*/
+                    uint8                       u8CommandIdentifier);
 #endif
 #endif /* ONOFF_SERVER */
 /****************************************************************************/
@@ -201,7 +201,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
     #endif
 
     // SERVER
-    /*switch(sZCL_HeaderParams.u8CommandIdentifier)
+    switch(sZCL_HeaderParams.u8CommandIdentifier)
     {
 
     case(E_CLD_ONOFF_CMD_ON):
@@ -238,7 +238,18 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
         eCLD_OnOffHandleOnWithTimedOffCommand(pZPSevent, psEndPointDefinition, psClusterInstance, sZCL_HeaderParams.u8CommandIdentifier);
         break;
     #endif
-    
+    case E_CLD_ONOFF_CMD_LORATAP:
+	   // eCLD_OnOffHandleOnWithTimedOffCommand(pZPSevent, psEndPointDefinition, psClusterInstance, sZCL_HeaderParams.u8CommandIdentifier);
+		DBG_vPrintf(TRACE_ONOFF, "Toggle: ");
+		uint8 u8TransactionSequenceNumber;
+		tsCLD_OnOffCustomDataStructure sPayload;
+
+		eCLD_OnOffCommandLoratapReceive(pZPSevent,
+									&u8TransactionSequenceNumber,
+									&sPayload);
+		sOnOffCallBackMessage.uMessage.u8LoraTapData = sPayload.u8Dummy;
+
+		break;
     default:
         // unlock
         #ifndef COOPERATIVE
@@ -247,7 +258,8 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
         //On laisse passer toutes les commandes
         //return(E_ZCL_ERR_CUSTOM_COMMAND_HANDLER_NULL_OR_RETURNED_ERROR);
         break;
-    }*/
+    }
+
 
 
     /* Generate a custom command event */
@@ -305,7 +317,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
  ** teZCL_Status
  **
  ****************************************************************************/
-/*PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
+PRIVATE  teZCL_Status eCLD_OnOffHandleOnCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -367,7 +379,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
 #endif
 
     return eStatus;
-}*/
+}
 
 /****************************************************************************
  **
@@ -387,7 +399,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
  **
  ****************************************************************************/
 
-/*PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
+PRIVATE  teZCL_Status eCLD_OnOffHandleOffCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -441,7 +453,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
 #endif
 
     return eStatus;
-}*/
+}
 
 
 /****************************************************************************
@@ -461,7 +473,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
  ** teZCL_Status
  **
  ****************************************************************************/
-/*PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
+PRIVATE  teZCL_Status eCLD_OnOffHandleToggleCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -526,7 +538,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
     }
 #endif
     return eStatus;
-}*/
+}
 
 #ifdef  CLD_ONOFF_CMD_OFF_WITH_EFFECT
 /****************************************************************************
@@ -547,7 +559,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
  **
  ****************************************************************************/
 
-/*PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
+PRIVATE  teZCL_Status eCLD_OnOffHandleOffWithEffectCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -641,7 +653,7 @@ PUBLIC  teZCL_Status eCLD_OnOffCommandHandler(
     psEndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
     return eStatus;
-}*/
+}
 #endif
 
 #ifdef CLD_ONOFF_CMD_ON_WITH_RECALL_GLOBAL_SCENE
@@ -736,7 +748,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithRecallGlobalSceneCommand(
  ** teZCL_Status
  **
  ****************************************************************************/
-/*PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
+PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithTimedOffCommand(
                     ZPS_tsAfEvent               *pZPSevent,
                     tsZCL_EndPointDefinition    *psEndPointDefinition,
                     tsZCL_ClusterInstance       *psClusterInstance,
@@ -825,7 +837,7 @@ PRIVATE  teZCL_Status eCLD_OnOffHandleOnWithRecallGlobalSceneCommand(
     psEndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
 
     return eStatus;
-}*/
+}
 #endif
 #endif /* ONOFF_SERVER */
 /****************************************************************************/

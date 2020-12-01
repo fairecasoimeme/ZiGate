@@ -117,6 +117,7 @@ typedef enum
     E_CLD_ONOFF_CMD_OFF_EFFECT               = 0x40,
     E_CLD_ONOFF_CMD_ON_RECALL_GLOBAL_SCENE,
     E_CLD_ONOFF_CMD_ON_TIMED_OFF,
+    E_CLD_ONOFF_CMD_LORATAP					 = 0xfd,
 } teCLD_OnOff_Command;
 
 
@@ -217,6 +218,7 @@ typedef struct
     #ifdef CLD_ONOFF_CMD_ON_WITH_TIMED_OFF
         tsCLD_OnOff_OnWithTimedOffRequestPayload    *psOnWithTimedOffRequestPayload;
     #endif
+        uint8							u8LoraTapData;
     } uMessage;
 } tsCLD_OnOffCallBackMessage;
 

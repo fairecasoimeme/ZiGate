@@ -102,7 +102,14 @@ PUBLIC teZCL_Status eCLD_OnOffCommandOnWithTimedOffReceive(
                 ZPS_tsAfEvent               *pZPSevent,
                 uint8                       *pu8TransactionSequenceNumber,
                 tsCLD_OnOff_OnWithTimedOffRequestPayload *psPayload);
-#endif                
+#endif
+
+PUBLIC teZCL_Status eCLD_OnOffCommandLoratapReceive(
+                ZPS_tsAfEvent               *pZPSevent,
+                uint8                       *pu8TransactionSequenceNumber,
+                tsCLD_OnOffCustomDataStructure *psPayload);
+
+
 #endif /* ONOFF_SERVER */
 /****************************************************************************/
 /***        Exported Variables                                            ***/
