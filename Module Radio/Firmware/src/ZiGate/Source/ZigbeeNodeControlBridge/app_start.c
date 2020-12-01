@@ -516,7 +516,7 @@ PRIVATE void vInitialiseApp ( void )
     uint8             u8DeviceType;
 
     PDM_eInitialise ( 63 );
-    APP_MigratePDM();
+    //APP_MigratePDM();
     PDUM_vInit ( );
     PWRM_vInit ( E_AHI_SLEEP_OSCON_RAMON );
 
