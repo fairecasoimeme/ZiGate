@@ -73,6 +73,8 @@
 #include "appZdpExtraction.h"
 #include "bdb_DeviceCommissioning.h"
 
+#include "zps_struct.h"
+
 #ifdef CLD_OTA
 #include "app_ota_server.h"
 #endif
@@ -507,6 +509,10 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,       u16Length );
 			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId,       u16Length );
 			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8SequenceNum,       u16Length );
+			/*uint8_t u8SeqApsNum;
+			zps_tsApl *  s_sApl = ( zps_tsApl * ) ZPS_pvAplZdoGetAplHandle ();
+			u8SeqApsNum = s_sApl->sApsContext.u8SeqNum - 1 ;
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], u8SeqApsNum,       u16Length );*/
 
 
 			vSL_WriteMessage ( E_SL_MSG_APS_DATA_ACK,

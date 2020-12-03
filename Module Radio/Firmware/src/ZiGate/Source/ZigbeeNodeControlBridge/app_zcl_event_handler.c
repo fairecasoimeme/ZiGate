@@ -242,8 +242,7 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
     }
 
     vLog_Printf ( TRACE_ZCL,LOG_DEBUG, "ZCL_Task got event %d\r\n",psStackEvent->eType );
-    uint8_t u8SeqApsNum;
-    zps_tsApl *  s_sApl = ( zps_tsApl * ) ZPS_pvAplZdoGetAplHandle ();
+
     switch ( psStackEvent->eType )
     {
 
@@ -277,10 +276,7 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
 				ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u16Addr, u16Length );
 			}
 
-			//ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8SequenceNum,       u16Length );
-
-			u8SeqApsNum = s_sApl->sApsContext.u8SeqNum - 1 ;
-			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], u8SeqApsNum,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8SequenceNum,       u16Length );
 
 			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer[ u16Length ], PDUM_u8GetNpduUse(),   u16Length );
 			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer[ u16Length ], u8GetApduUse(),   u16Length );
@@ -288,7 +284,7 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
 
             if ( psStackEvent->uEvent.sApsDataConfirmEvent.u8Status )
             {
-            	//PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
+
                 vSL_WriteMessage ( E_SL_MSG_APS_DATA_CONFIRM_FAILED,
                                    u16Length,
                                    au8LinkTxBuffer,
@@ -313,9 +309,9 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
             ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16DstAddr,       u16Length );
 			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8DstEndpoint,       u16Length );
 			ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u16ClusterId,       u16Length );
-
-			u8SeqApsNum = s_sApl->sApsContext.u8SeqNum - 1 ;
-			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], u8SeqApsNum,       u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataAckEvent.u8SequenceNum,       u16Length );
+			/*u8SeqApsNum = s_sApl->sApsContext.u8SeqNum - 1 ;
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], u8SeqApsNum,       u16Length );*/
 
 
 
