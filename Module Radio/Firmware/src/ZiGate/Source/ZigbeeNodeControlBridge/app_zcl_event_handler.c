@@ -268,7 +268,7 @@ void APP_vHandleZclEvents ( ZPS_tsAfEvent*    psStackEvent )
 		    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8SrcEndpoint,       u16Length );
 		    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8DstEndpoint,       u16Length );
 		    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode,       u16Length );
-		    if (psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode == 0x03)
+		    if (psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode == E_ZCL_AM_IEEE || psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode == E_ZCL_AM_IEEE_NO_ACK)
 			{
 				ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u64Addr, u16Length );
 			}else

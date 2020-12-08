@@ -521,6 +521,47 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 												   u8LinkQuality);
 		}
 		break;
+        case ZPS_EVENT_APS_DATA_CONFIRM:
+            vLog_Printf(TRACE_APP,LOG_DEBUG, "\nCFM: SEP=%d DEP=%d Status=%d\n",
+                    psStackEvent->uEvent.sApsDataConfirmEvent.u8SrcEndpoint,
+                    psStackEvent->uEvent.sApsDataConfirmEvent.u8DstEndpoint,
+                    psStackEvent->uEvent.sApsDataConfirmEvent.u8Status);
+
+            //ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0], psStackEvent->uEvent.sApsDataConfirmEvent.u8SequenceNum,       u16Length );
+            ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],         psStackEvent->uEvent.sApsDataConfirmEvent.u8Status,            u16Length );
+		    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8SrcEndpoint,       u16Length );
+		    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8DstEndpoint,       u16Length );
+		    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode,       u16Length );
+		    if (psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode == E_ZCL_AM_IEEE || psStackEvent->uEvent.sApsDataConfirmEvent.u8DstAddrMode == E_ZCL_AM_IEEE_NO_ACK)
+			{
+				ZNC_BUF_U64_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u64Addr, u16Length );
+			}else
+			{
+				ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.uDstAddr.u16Addr, u16Length );
+			}
+
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psStackEvent->uEvent.sApsDataConfirmEvent.u8SequenceNum,       u16Length );
+
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer[ u16Length ], PDUM_u8GetNpduUse(),   u16Length );
+			ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer[ u16Length ], u8GetApduUse(),   u16Length );
+
+
+            if ( psStackEvent->uEvent.sApsDataConfirmEvent.u8Status )
+            {
+
+                vSL_WriteMessage ( E_SL_MSG_APS_DATA_CONFIRM_FAILED,
+                                   u16Length,
+                                   au8LinkTxBuffer,
+                                   u8LinkQuality);
+                //return;
+            }else{
+                vSL_WriteMessage ( E_SL_MSG_APS_DATA_CONFIRM,
+                                   u16Length,
+                                   au8LinkTxBuffer,
+                                   u8LinkQuality);
+            }
+
+            break;
 
         case ZPS_EVENT_APS_DATA_INDICATION:
         {
