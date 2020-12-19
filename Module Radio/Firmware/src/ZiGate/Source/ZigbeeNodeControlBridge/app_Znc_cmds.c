@@ -2790,6 +2790,7 @@ PRIVATE ZPS_teStatus APP_eZdpSystemServerDiscovery ( uint16    u16ServerMask,
                                                      uint8*    pu8Seq)
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -2799,12 +2800,16 @@ PRIVATE ZPS_teStatus APP_eZdpSystemServerDiscovery ( uint16    u16ServerMask,
 
         sSystemServerDiscReq.u16ServerMask =  u16ServerMask;
         vLog_Printf(TRACE_APP,LOG_DEBUG, "APP_eZdpSystemServerDiscovery Request\n");
-        return ZPS_eAplZdpSystemServerDiscoveryRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpSystemServerDiscoveryRequest ( hAPduInst,
                                                          pu8Seq,
                                                          &sSystemServerDiscReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -2823,6 +2828,7 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtNetworkUpdateReq ( uint16    u16Addr,
                                                     uint16    u16NwkManagerAddr )
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -2839,14 +2845,18 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtNetworkUpdateReq ( uint16    u16Addr,
         sMgmtNwkUpdateReq.u8NwkUpdateId     =  psNib->sPersist.u8UpdateId + 1;
         sMgmtNwkUpdateReq.u16NwkManagerAddr =  u16NwkManagerAddr;
 
-        return ZPS_eAplZdpMgmtNwkUpdateRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpMgmtNwkUpdateRequest ( hAPduInst,
                                                  uDstAddr,
                                                  FALSE,
                                                  pu8Seq,
                                                  &sMgmtNwkUpdateReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -2865,6 +2875,7 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLeave ( uint16    u16DstAddr,
 {
     PDUM_thAPduInstance    hAPduInst;
     //ZPS_teStatus eStatus = ZPS_EVENT_ERROR; //Fred
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
 
     hAPduInst = PDUM_hAPduAllocateAPduInstance ( apduZDP );
@@ -2880,14 +2891,18 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLeave ( uint16    u16DstAddr,
         sMgmtLeaveReq.u8Flags          =  bRejoin ? (1 << 7) : 0;
         sMgmtLeaveReq.u8Flags         |=  ((bRemoveChildren ? 1 : 0) << 6);
 
-        return ZPS_eAplZdpMgmtLeaveRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpMgmtLeaveRequest ( hAPduInst,
                                              uDstAddr,
                                              FALSE,
                                              pu8Seq,
                                              &sMgmtLeaveReq);
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -2945,6 +2960,7 @@ PRIVATE ZPS_teStatus APP_eZdpNodeDescReq ( uint16    u16Addr,
                                            uint8*    pu8SeqNum )
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -2958,14 +2974,18 @@ PRIVATE ZPS_teStatus APP_eZdpNodeDescReq ( uint16    u16Addr,
         uDstAddr.u16Addr                  =  u16Addr;
         sNodeDescReq.u16NwkAddrOfInterest =  u16Addr;
 
-        return ZPS_eAplZdpNodeDescRequest ( hAPduInst,
+        eStatus =  ZPS_eAplZdpNodeDescRequest ( hAPduInst,
                                             uDstAddr,
                                             FALSE,
                                             pu8SeqNum,
                                             &sNodeDescReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -2980,6 +3000,7 @@ PRIVATE ZPS_teStatus APP_eZdpPowerDescReq ( uint16    u16Addr,
                                             uint8*    pu8SeqNum)
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -2992,14 +3013,18 @@ PRIVATE ZPS_teStatus APP_eZdpPowerDescReq ( uint16    u16Addr,
         uDstAddr.u16Addr                   =  u16Addr;
         sPowerDescReq.u16NwkAddrOfInterest =  u16Addr;
 
-        return ZPS_eAplZdpPowerDescRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpPowerDescRequest ( hAPduInst,
                                              uDstAddr,
                                              FALSE,
                                              pu8SeqNum,
                                              &sPowerDescReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -3015,6 +3040,7 @@ PRIVATE ZPS_teStatus APP_eZdpSimpleDescReq ( uint16    u16Addr,
                                              uint8*    pu8Seq)
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -3029,14 +3055,18 @@ PRIVATE ZPS_teStatus APP_eZdpSimpleDescReq ( uint16    u16Addr,
         sSimpleDescReq.u16NwkAddrOfInterest =  u16Addr;
         sSimpleDescReq.u8EndPoint           =  u8Endpoint;
 
-        return ZPS_eAplZdpSimpleDescRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpSimpleDescRequest ( hAPduInst,
                                               uDstAddr,
                                               FALSE,
                                               pu8Seq,
                                               &sSimpleDescReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -3051,6 +3081,7 @@ PRIVATE ZPS_teStatus APP_eZdpActiveEndpointReq ( uint16    u16Addr,
                                                  uint8*    pu8SeqNum)
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -3064,14 +3095,18 @@ PRIVATE ZPS_teStatus APP_eZdpActiveEndpointReq ( uint16    u16Addr,
         uDstAddr.u16Addr                  = u16Addr;
         sActiveEpReq.u16NwkAddrOfInterest =  u16Addr;
 
-        return ZPS_eAplZdpActiveEpRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpActiveEpRequest ( hAPduInst,
                                             uDstAddr,
                                             FALSE,
                                             pu8SeqNum,
                                             &sActiveEpReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -3092,6 +3127,7 @@ PRIVATE ZPS_teStatus APP_eZdpMatchDescReq ( uint16    u16Addr,
                                             uint8*    pu8SeqNum)
 {
     PDUM_thAPduInstance    hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -3110,15 +3146,19 @@ PRIVATE ZPS_teStatus APP_eZdpMatchDescReq ( uint16    u16Addr,
         sMatchDescReq.u8NumOutClusters     =  u8OutputCount;
         sMatchDescReq.pu16OutClusterList   =  ( u8OutputCount == 0 )? NULL : pu16OutputList;
 
-        return ZPS_eAplZdpMatchDescRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpMatchDescRequest ( hAPduInst,
                                              uDstAddr,
                                              FALSE,
                                              pu8SeqNum,
                                              &sMatchDescReq );
 
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -3138,6 +3178,7 @@ PRIVATE ZPS_teStatus APP_eZdpIeeeAddrReq ( uint16    u16Dst,
     PDUM_thAPduInstance    hAPduInst;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     if ( PDUM_INVALID_HANDLE != hAPduInst )
     {
@@ -3150,14 +3191,18 @@ PRIVATE ZPS_teStatus APP_eZdpIeeeAddrReq ( uint16    u16Dst,
         sAplZdpIeeeAddrReq.u8RequestType        =  u8RequestType;
         sAplZdpIeeeAddrReq.u8StartIndex         =  u8StartIndex;
 
-        return ZPS_eAplZdpIeeeAddrRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpIeeeAddrRequest ( hAPduInst,
                                             uDstAddr,
                                             FALSE,
                                             pu8Seq,
                                             &sAplZdpIeeeAddrReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 
 }
 
@@ -3176,6 +3221,7 @@ PRIVATE ZPS_teStatus APP_eZdpNwkAddrReq ( uint16    u16Dst,
                                           uint8*    pu8Seq )
 {
     PDUM_thAPduInstance hAPduInst;
+    ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
 
@@ -3191,14 +3237,18 @@ PRIVATE ZPS_teStatus APP_eZdpNwkAddrReq ( uint16    u16Dst,
         sAplZdpNwkAddrReq.u8RequestType =  u8RequestType;
         sAplZdpNwkAddrReq.u8StartIndex  =  u8StartIndex;
 
-        return ZPS_eAplZdpNwkAddrRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpNwkAddrRequest ( hAPduInst,
                                            uDstAddr,
                                            FALSE,
                                            pu8Seq,
                                            &sAplZdpNwkAddrReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 
 }
 /****************************************************************************
@@ -3215,7 +3265,7 @@ PRIVATE ZPS_teStatus APP_eZdpPermitJoiningReq ( uint16    u16DstAddr,
                                                 uint8*    pu8Seq,
                                                 uint8*    pu8RequestSent)
 {
-
+	ZPS_teStatus eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     if(u16DstAddr != ZPS_u16NwkNibGetNwkAddr(ZPS_pvAplZdoGetNwkHandle()))
     {
@@ -3234,19 +3284,23 @@ PRIVATE ZPS_teStatus APP_eZdpPermitJoiningReq ( uint16    u16DstAddr,
             sAplZdpMgmtPermitJoiningReq.u8PermitDuration =  u8PermitDuration;
             sAplZdpMgmtPermitJoiningReq.bTcSignificance  =  1; /* We should always set this to 1 as per spec*/
             *pu8RequestSent = 2; //zdp
-            return ZPS_eAplZdpMgmtPermitJoiningRequest ( hAPduInst,
+            eStatus = ZPS_eAplZdpMgmtPermitJoiningRequest ( hAPduInst,
                                                          uDstAddr,
                                                          FALSE,
                                                          pu8Seq,
                                                          &sAplZdpMgmtPermitJoiningReq );
+            if (eStatus)
+            {
+                PDUM_eAPduFreeAPduInstance(hAPduInst);
+            }
         }
     }
     else
     {
-        return ZPS_eAplZdoPermitJoining(u8PermitDuration);
+    	eStatus = ZPS_eAplZdoPermitJoining(u8PermitDuration);
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -3267,14 +3321,14 @@ PRIVATE ZPS_teStatus APP_eBindUnbindEntry ( bool_t           bBind,
                                             uint8*           pu8Seq,
                                             uint8*           pu8RequestSent)
 {
-    ZPS_teStatus                 eReturnCode =  ZPS_APL_APS_E_INVALID_PARAMETER;
+    ZPS_teStatus                 eStatus =  ZPS_APL_APS_E_INVALID_PARAMETER;
     ZPS_tuAddress                uAddr;
     ZPS_tsAplZdpBindUnbindReq    sAplZdpBindReq;
 
     if ( u8DstAddrMode != 1  &&
          u8DstAddrMode != 3 )
     {
-        return eReturnCode;
+        return eStatus;
     }
 
     if( u8DstAddrMode == 0x1 )
@@ -3311,7 +3365,7 @@ PRIVATE ZPS_teStatus APP_eBindUnbindEntry ( bool_t           bBind,
         {
             if(bBind)
             {
-                eReturnCode = ZPS_eAplZdoBind ( u16ClusterId,
+            	eStatus = ZPS_eAplZdoBind ( u16ClusterId,
                                                 u8SrcEndpoint,
                                                 puDstAddress->u16Addr,
                                                 puDstAddress->u64Addr,
@@ -3319,7 +3373,7 @@ PRIVATE ZPS_teStatus APP_eBindUnbindEntry ( bool_t           bBind,
             }
             else
             {
-                eReturnCode = ZPS_eAplZdoUnbind ( u16ClusterId,
+            	eStatus = ZPS_eAplZdoUnbind ( u16ClusterId,
                                                   u8SrcEndpoint,
                                                   puDstAddress->u16Addr,
                                                   puDstAddress->u64Addr,
@@ -3344,15 +3398,19 @@ PRIVATE ZPS_teStatus APP_eBindUnbindEntry ( bool_t           bBind,
             sAplZdpBindReq.u16ClusterId  =  u16ClusterId;
             sAplZdpBindReq.u8DstAddrMode =  u8DstAddrMode;
 
-            eReturnCode = ZPS_eAplZdpBindUnbindRequest( hAPduInst,
+            eStatus = ZPS_eAplZdpBindUnbindRequest( hAPduInst,
                                                         uDstAddr,
                                                         TRUE,
                                                         pu8Seq,
                                                         bBind,
                                                         &sAplZdpBindReq );
+            if (eStatus)
+            {
+                PDUM_eAPduFreeAPduInstance(hAPduInst);
+            }
         }
     }
-    return eReturnCode;
+    return eStatus;
 }
 #ifdef FULL_FUNC_DEVICE
 /****************************************************************************
@@ -3874,7 +3932,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     //uint8                  u8CommandId   =  0x02;
     uint8                  *pu8Data      =  NULL ;
     uint16                 u16Size;
-    ZPS_teStatus           eReturnCode;
+    ZPS_teStatus           eStatus = E_ZCL_SUCCESS;
 
     /*  handle sequence number pass present value back to user */
     *pu8TransactionSequenceNumber =  u8GetTransactionSequenceNumber();
@@ -3900,6 +3958,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
 
     if ( PDUM_E_OK != PDUM_eAPduInstanceSetPayloadSize(myPDUM_thAPduInstance, ( u32PdumPayloadSize) ) )
     {
+    	PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
         return(E_ZCL_ERR_ZBUFFER_FAIL);
     }
 
@@ -3992,7 +4051,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
     // transmit the request
      if (u8CommandId==0x05)
      {
-    	 eReturnCode = ZPS_eAplAfBroadcastDataReq(myPDUM_thAPduInstance,
+    	 eStatus = ZPS_eAplAfBroadcastDataReq(myPDUM_thAPduInstance,
                                        u16ClusterId,
                                        u8SourceEndPointId,
                                        u8DestinationEndPointId,
@@ -4003,7 +4062,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
      }else{
          if (psDestinationAddress->eAddressMode == E_ZCL_AM_SHORT_NO_ACK)
          {
-			 eReturnCode = ZPS_eAplAfUnicastDataReq( myPDUM_thAPduInstance,
+        	 eStatus = ZPS_eAplAfUnicastDataReq( myPDUM_thAPduInstance,
 												u16ClusterId,
 												u8SourceEndPointId,
 												u8DestinationEndPointId,
@@ -4012,7 +4071,7 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
 												0,
 												pu8SeqApsNum );
          } else {
-			 eReturnCode = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
+        	 eStatus = ZPS_eAplAfUnicastAckDataReq  ( myPDUM_thAPduInstance,
 												u16ClusterId,
 												u8SourceEndPointId,
 												u8DestinationEndPointId,
@@ -4022,7 +4081,11 @@ PUBLIC  teZCL_Status  APP_eSendWriteAttributesRequest ( uint8               u8So
 												pu8SeqApsNum );
          }
      }
-    return(eReturnCode);
+     if (eStatus)
+     {
+         PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
+     }
+     return(eStatus);
 }
 
 
@@ -4037,7 +4100,8 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLqiRequest( uint16    u16Addr,
                                              uint8*    pu8Seq )
 {
     PDUM_thAPduInstance    hAPduInst;
-    ZPS_teStatus result;
+    ZPS_teStatus           eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
+
     hAPduInst =  PDUM_hAPduAllocateAPduInstance ( apduZDP );
     DBG_vPrintf(TRACE_APP, "\n u8GetApduUse() : %d", u8GetApduUse());
 
@@ -4051,13 +4115,17 @@ PRIVATE ZPS_teStatus APP_eZdpMgmtLqiRequest( uint16    u16Addr,
 
         DBG_vPrintf(TRACE_APP, "\nManagement Lqi Request");
 
-        return ZPS_eAplZdpMgmtLqiRequest ( hAPduInst,
+        eStatus = ZPS_eAplZdpMgmtLqiRequest ( hAPduInst,
                                            uDstAddr,
                                            FALSE,
                                            pu8Seq,
                                            &sMgmtLqiReq);
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -4071,7 +4139,7 @@ PRIVATE ZPS_teStatus APP_eZdpComplexDescReq ( uint16    u16Addr,
                                               uint8*    pu8Seq )
 {
     PDUM_thAPduInstance hAPduInst;
-
+    ZPS_teStatus        eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
     hAPduInst = PDUM_hAPduAllocateAPduInstance(apduZDP);
 
 
@@ -4085,14 +4153,18 @@ PRIVATE ZPS_teStatus APP_eZdpComplexDescReq ( uint16    u16Addr,
         uDstAddr.u16Addr = u16Addr;
         sComplexDescReq.u16NwkAddrOfInterest =  u16NwkAddressInterst;
 
-        return ZPS_eAplZdpComplexDescRequest( hAPduInst,
+        eStatus = ZPS_eAplZdpComplexDescRequest( hAPduInst,
                                               uDstAddr,
                                               FALSE,
                                               pu8Seq,
                                               &sComplexDescReq );
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 /****************************************************************************
  *
@@ -4213,6 +4285,7 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
         {
             vLog_Printf(TRACE_APP,LOG_DEBUG, "Payload too big  \n");
             eStatus = E_ZCL_ERR_ZBUFFER_FAIL ;
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
         }
         else
         {
@@ -4263,6 +4336,10 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
 												   psProfileDataReq,
 												   pu8Seq );
 			}
+            if (eStatus)
+            {
+                PDUM_eAPduFreeAPduInstance(hAPduInst);
+            }
         }
     }
 
@@ -4282,7 +4359,7 @@ PRIVATE ZPS_teStatus APP_eSetUserDescriptorReq( uint16    u16Addr,
                                                 uint8*    pu8Seq )
 {
     PDUM_thAPduInstance hAPduInst;
-
+    ZPS_teStatus        eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
     hAPduInst = PDUM_hAPduAllocateAPduInstance(apduZDP);
 
 
@@ -4299,14 +4376,18 @@ PRIVATE ZPS_teStatus APP_eSetUserDescriptorReq( uint16    u16Addr,
         sUserDescSet.u8Length = 16;
         memcpy(sUserDescSet.szUserDescriptor, pu8Data, 16);
         vLog_Printf(TRACE_APP,LOG_DEBUG,  "Set User descriptor Req\n");
-        return ZPS_eAplZdpUserDescSetRequest(
+        eStatus = ZPS_eAplZdpUserDescSetRequest(
                         hAPduInst,
                         uDstAddr,
                         FALSE,
                         pu8Seq,
                         &sUserDescSet);
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
@@ -4322,6 +4403,7 @@ PRIVATE ZPS_teStatus APP_eZdpUserDescReq( uint16    u16Addr,
     PDUM_thAPduInstance hAPduInst;
 
     hAPduInst = PDUM_hAPduAllocateAPduInstance(apduZDP);
+    ZPS_teStatus        eStatus = ZPS_APL_APS_E_INVALID_PARAMETER;
 
     if (PDUM_INVALID_HANDLE != hAPduInst)
     {
@@ -4333,15 +4415,19 @@ PRIVATE ZPS_teStatus APP_eZdpUserDescReq( uint16    u16Addr,
 
         sUserDescReq.u16NwkAddrOfInterest = u16AddrOfInt;
         vLog_Printf(TRACE_APP,LOG_DEBUG, "User Descriptor Req\n");
-        return ZPS_eAplZdpUserDescRequest(
+        eStatus = ZPS_eAplZdpUserDescRequest(
                 hAPduInst,
                 uDstAddr,
                 FALSE,
                 pu8Seq,
                 &sUserDescReq);
+        if (eStatus)
+        {
+            PDUM_eAPduFreeAPduInstance(hAPduInst);
+        }
     }
 
-    return ZPS_APL_APS_E_INVALID_PARAMETER;
+    return eStatus;
 }
 
 /****************************************************************************
