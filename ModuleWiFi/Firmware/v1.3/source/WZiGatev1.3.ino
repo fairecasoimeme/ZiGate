@@ -1,7 +1,6 @@
 /*
-  ESP8266 WZiGate v0.1
+  ESP8266 WZiGate v1.30
  */
-
 
 #define USE_WDT
 
@@ -13,7 +12,6 @@
 #include <ArduinoJson.h>
 #include "FS.h"
 
-SoftwareSerial swSer(12, 14, false, 256);
 // application config
 
 struct ConfigSettingsStruct
@@ -33,9 +31,8 @@ String modeWiFi="STA";
 
 #define BAUD_RATE 115200
 
-// swSer end ethernet buffer size
 #define BUFFER_SIZE 128
-#define VERSION "0.1"
+#define VERSION "1.30"
 
 ESP8266WebServer serverWeb(80);
 char serverIndex[1024];
@@ -70,13 +67,11 @@ IPAddress parse_ip_address(const char *str) {
 bool loadConfig() {
   File configFile = SPIFFS.open("/config.json", "r");
   if (!configFile) {
-    Serial.println("Failed to open config file");
     return false;
   }
 
   size_t size = configFile.size();
   if (size > 1024) {
-    Serial.println("Config file size is too large");
     return false;
   }
 
@@ -92,7 +87,6 @@ bool loadConfig() {
   JsonObject& json = jsonBuffer.parseObject(buf.get());
 
   if (!json.success()) {
-    Serial.println("Failed to parse config file");
     return false;
   }
 
@@ -150,19 +144,7 @@ bool setupSTAWifi() {
   WiFi.disconnect();
   delay(100);
 
-  Serial.print("SSID : ");
-  Serial.println(ConfigSettings.ssid);
-  Serial.print("PASS : ");
-  Serial.println(ConfigSettings.password);
-  Serial.print("IP : ");
-  Serial.println(ConfigSettings.ipAddress);
-  Serial.print("MASK : ");
-  Serial.println(ConfigSettings.ipMask);
-  Serial.print("GW : ");
-  Serial.println(ConfigSettings.ipGW);
- 
-  
-  WiFi.begin(ConfigSettings.ssid.c_str(), ConfigSettings.password.c_str());
+    WiFi.begin(ConfigSettings.ssid.c_str(), ConfigSettings.password.c_str());
 
   IPAddress ip_address = parse_ip_address(ConfigSettings.ipAddress.c_str());
   IPAddress gateway_address = parse_ip_address(ConfigSettings.ipGW.c_str());
@@ -180,7 +162,6 @@ bool setupSTAWifi() {
     {
       return false;
     }
-    Serial.print(".");
     delay(250);
   }
   return true;
@@ -199,13 +180,11 @@ void handleSaveConfig()
     String tcpListenPort = serverWeb.arg("tcpListenPort");
 
    StringConfig = "{\"ssid\":\""+ssid+"\",\"pass\":\""+pass+"\",\"ip\":\""+ipAddress+"\",\"mask\":\""+ipMask+"\",\"gw\":\""+ipGW+"\",\"tcpListenPort\":\""+tcpListenPort+"\"}";    
-   Serial.println(StringConfig);
    StaticJsonBuffer<512> jsonBuffer;
    JsonObject& json = jsonBuffer.parseObject(StringConfig);
  
    File configFile = SPIFFS.open("/config.json", "w");
    if (!configFile) {
-    Serial.println("Failed to open config file for writing");
    }else{
      json.printTo(configFile);
    }
@@ -220,20 +199,21 @@ void setup(void)
   wdt_enable(1000);
 #endif
 
-  swSer.begin(115200);
+  
   Serial.begin(115200);
-  Serial.setDebugOutput(true);
+  Serial.swap();
+  
 
   if (!SPIFFS.begin()) {
-    Serial.println("Failed to mount file system");
+    
     return;
   }
   
   if (!loadConfig()) {
-    Serial.println("Failed to load config");
+    
   } else {
     configOK=true;
-    Serial.println("Config loaded");
+   
   }
 
   if (configOK)
@@ -255,7 +235,7 @@ sprintf(serverIndexUpdate,"<h1>ZiGate WiFi Config v%s</h1><h2>Update Firmware</h
 
 
   
-  Serial.println("WIFI OK");
+  
   serverWeb.on("/", HTTP_GET, [](){
         serverWeb.sendHeader("Connection", "close");
         serverWeb.send(200, "text/html", strcat(serverIndex,Style));
@@ -287,9 +267,9 @@ sprintf(serverIndexUpdate,"<h1>ZiGate WiFi Config v%s</h1><h2>Update Firmware</h
     },[](){
       HTTPUpload& upload = serverWeb.upload();
       if(upload.status == UPLOAD_FILE_START){
-        Serial.setDebugOutput(true);
+        
         WiFiUDP::stopAll();
-        Serial.printf("Update: %s\n", upload.filename.c_str());
+        
         uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
         if(!Update.begin(maxSketchSpace)){//start with max available size
           Update.printError(Serial);
@@ -300,11 +280,10 @@ sprintf(serverIndexUpdate,"<h1>ZiGate WiFi Config v%s</h1><h2>Update Firmware</h
         }
       } else if(upload.status == UPLOAD_FILE_END){
         if(Update.end(true)){ //true to set the size to the current progress
-          Serial.printf("Update Success: %u\nRebooting...\n", upload.totalSize);
+         
         } else {
           Update.printError(Serial);
         }
-        Serial.setDebugOutput(false);
       }
       yield();
   });
@@ -340,8 +319,8 @@ void loop(void)
   // Check if a client has connected
   if (!client) {
     // eat any bytes in the swSer buffer as there is nothing to see them
-    while(swSer.available()) {
-      swSer.read();
+    while(Serial.available()) {
+      Serial.read();
     }
       
     client = server.available();
@@ -358,14 +337,14 @@ void loop(void)
     if(count > 0) {      
        
       bytes_read = client.read(net_buf, min(count, BUFFER_SIZE));
-      swSer.write(net_buf, bytes_read);
-      swSer.flush();
+      Serial.write(net_buf, bytes_read);
+      Serial.flush();
     }
     
     // now check the swSer for any bytes to send to the network
     bytes_read = 0;
-    while(swSer.available() && bytes_read < BUFFER_SIZE) {
-      serial_buf[bytes_read] = swSer.read();
+    while(Serial.available() && bytes_read < BUFFER_SIZE) {
+      serial_buf[bytes_read] = Serial.read();
       bytes_read++;
     }
     
