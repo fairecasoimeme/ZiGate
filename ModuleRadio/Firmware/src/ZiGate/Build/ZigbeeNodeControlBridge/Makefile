@@ -81,6 +81,10 @@ NODE                   ?= COORDINATOR
 CRC_NEW                ?= CRC_XOR
 #CRC_NEW                ?= CCITT_CRC
 
+ifneq ($(OS),Windows_NT)
+	DISABLE_LTO ?= 1
+endif
+
 ifneq ($(GP_SUPPORT), 1)
 GENERATED_FILE_NAME    ?= $(TARGET)_$(JENNIC_CHIP)_$(NODE)_$(BAUD)
 else
