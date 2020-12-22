@@ -3,16 +3,16 @@
 # MODULE:   Makefile
 #
 # DESCRIPTION: Makefile for the Control Bridge
-# 
+#
  ############################################################################
 #
 # This software is owned by NXP B.V. and/or its supplier and is protected
 # under applicable copyright laws. All rights are reserved. We grant You,
 # and any third parties, a license to use this software solely and
 # exclusively on NXP products [NXP Microcontrollers such as  JN516x,
-# JN517x]. 
+# JN517x].
 # You, and any third parties must reproduce the copyright and warranty notice
-# and any other legend of ownership on each copy or partial copy of the 
+# and any other legend of ownership on each copy or partial copy of the
 # software.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -79,7 +79,7 @@ MINIMUM_HEAP_SIZE       = 2000
 NODE                   ?= COORDINATOR
 
 CRC_NEW                ?= CRC_XOR
-#CRC_NEW                ?= CCITT_CRC 
+#CRC_NEW                ?= CCITT_CRC
 
 ifneq ($(GP_SUPPORT), 1)
 GENERATED_FILE_NAME    ?= $(TARGET)_$(JENNIC_CHIP)_$(NODE)_$(BAUD)
@@ -173,8 +173,8 @@ endif
 # Path definitions
 
 # Use if application directory contains multiple targets
-SDK_BASE_DIR           = $(abspath ../../../../sdk/$(JENNIC_SDK))
 APP_BASE               = $(abspath ../..)
+SDK_BASE_DIR           = $(abspath $(APP_BASE)/../sdk/$(JENNIC_SDK))
 APP_BLD_DIR            = $(APP_BASE)/Build/ZigbeeNodeControlBridge
 APP_SRC_DIR            = $(APP_BASE)/Source/ZigbeeNodeControlBridge
 ZBC_SRC_DIR            = $(COMPONENTS_BASE_DIR)/ZigbeeCommon/Source
@@ -262,7 +262,7 @@ INCFLAGS += -I$(COMPONENTS_BASE_DIR)/BDB/Source/OutOfBand
 # Application libraries
 # Specify additional Component libraries
 
-#APPLIBS += 
+#APPLIBS +=
 
 ###############################################################################
 
@@ -324,7 +324,7 @@ LDLIBS += JPT_$(JENNIC_CHIP)
 # Dependency rules
 
 .PHONY: all clean
-# Path to directories containing application source 
+# Path to directories containing application source
 vpath % $(APP_SRC_DIR):$(APP_COMMON_SRC_DIR):$(UTIL_SRC_DIR):$(ZCL_SRC):$(ZCL_SRC_DIRS):$(BDB_SRC_DIR):$(HWAPI_SRC_DIR)
 
 all: $(GENERATED_FILE_NAME).bin
@@ -354,41 +354,41 @@ $(APP_SRC_DIR)/zps_gen.c $(APP_SRC_DIR)/zps_gen.h: $(APP_SRC_DIR)/$(APP_ZPSCFG) 
 	$(info Configuring the Zigbee Protocol Stack ...)
 	$(ZPSCONFIG) -n $(TARGET)  -t $(JENNIC_CHIP) -l $(ZPS_NWK_LIB) -a $(ZPS_APL_LIB) -c $(TOOL_COMMON_BASE_DIR)/$(TOOLCHAIN_PATH) -f $< -o $(APP_SRC_DIR)
 
-endif 
+endif
 
 %.o: %.S
 	$(info Assembling $< ...)
 	$(CC) -c -o $(subst Source,Build,$@) $(CFLAGS) $(INCFLAGS) $< -MD -MF $*.d -MP
 	@echo
 
-%.o: %.c 
+%.o: %.c
 	$(info Compiling $< ...)
 	$(CC) -c -o $(subst Source,Build,$@) $(CFLAGS) $(INCFLAGS) $< -MD -MF $*.d -MP
 	@echo
 
-$(GENERATED_FILE_NAME).elf: $(APPOBJS) $(addsuffix.a,$(addprefix $(COMPONENTS_BASE_DIR)/Library/lib,$(APPLDLIBS))) 
+$(GENERATED_FILE_NAME).elf: $(APPOBJS) $(addsuffix.a,$(addprefix $(COMPONENTS_BASE_DIR)/Library/lib,$(APPLDLIBS)))
 	$(info Linking $@ ...)
-	$(CC) -Wl,--gc-sections -Wl,-u_AppColdStart -Wl,-u_AppWarmStart $(LDFLAGS) -T$(ZNCLKCMD) -o $@ -Wl,--start-group $(APPOBJS) $(addprefix -l,$(LDLIBS))  -lm -Wl,--end-group -Wl,-Map,$(GENERATED_FILE_NAME).map 
-	 
-	$(SIZE) $@ 
+	$(CC) -Wl,--gc-sections -Wl,-u_AppColdStart -Wl,-u_AppWarmStart $(LDFLAGS) -T$(ZNCLKCMD) -o $@ -Wl,--start-group $(APPOBJS) $(addprefix -l,$(LDLIBS))  -lm -Wl,--end-group -Wl,-Map,$(GENERATED_FILE_NAME).map
+
+	$(SIZE) $@
 	date +%c >> $(APP_BASE)/Doc/size.txt
 	$(SIZE) $@ >> $(APP_BASE)/Doc/size.txt
-	
+
 # Do a second linking with LTO disabled
 	$(CC) -Wl,--cref -Wl,--gc-sections -Wl,-u_AppColdStart -Wl,-u_AppWarmStart $(LDFLAGS) -T$(ZNCLKCMD) -L $(SDK_BASE_DIR)/Stack/ZCL/Build/  -o $@ -Wl,--start-group $(APPOBJS) $(addprefix -l,$(LDLIBS)) -lm -Wl,--end-group -fno-lto -Wl,-Map,$(GENERATED_FILE_NAME)_NOLTO.map
 # Run the Pyt
 
 
 ifeq ($(JENNIC_CHIP_FAMILY),JN517x)
-$(GENERATED_FILE_NAME).bin: $(GENERATED_FILE_NAME).elf 
+$(GENERATED_FILE_NAME).bin: $(GENERATED_FILE_NAME).elf
 	$(info Generating binary ...)
 	$(OBJCOPY) -S -O binary $< $@
 else
-$(GENERATED_FILE_NAME).bin: $(GENERATED_FILE_NAME).elf 
+$(GENERATED_FILE_NAME).bin: $(GENERATED_FILE_NAME).elf
 	$(info Generating binary ...)
 	$(OBJCOPY) -j .version -j .bir -j .flashheader -j .vsr_table -j .vsr_handlers -j .ro_mac_address -j .ro_ota_header -j .ro_se_customData -j .rodata -j .text -j .data -j .bss -j .heap -j .stack -S -O binary $< $@
-    
-endif    
+
+endif
 
 	$(SDK_BASE_DIR)/Tools/Memsize/memsize.exe $(APP_BLD_DIR)/$(GENERATED_FILE_NAME).elf $(APP_BLD_DIR)/$(GENERATED_FILE_NAME)_NOLTO.map $(TARGET).json
 
