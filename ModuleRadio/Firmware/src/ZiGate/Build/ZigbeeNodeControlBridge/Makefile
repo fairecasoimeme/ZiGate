@@ -395,7 +395,7 @@ endif
 ################################################################################
 
 clean:
-	rm -f $(APPOBJS) $(APPDEPS) $(GENERATED_FILE_NAME).bin $(GENERATED_FILE_NAME).elf $(GENERATED_FILE_NAME).map *.o *.d
+	rm -f $(APPOBJS) $(APPDEPS) $(GENERATED_FILE_NAME).bin $(GENERATED_FILE_NAME).elf $(GENERATED_FILE_NAME).map $(GENERATED_FILE_NAME)_NOLTO.map *.o *.d
 	rm -f $(APP_SRC_DIR)/pdum_gen.* $(APP_SRC_DIR)/zps_gen*.* $(APP_SRC_DIR)/pdum_apdu.*
 
 ###############################################################################
