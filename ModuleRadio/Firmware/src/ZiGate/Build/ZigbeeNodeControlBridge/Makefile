@@ -390,7 +390,9 @@ $(GENERATED_FILE_NAME).bin: $(GENERATED_FILE_NAME).elf
 
 endif
 
+ifeq ($(OS),Windows_NT)
 	$(SDK_BASE_DIR)/Tools/Memsize/memsize.exe $(APP_BLD_DIR)/$(GENERATED_FILE_NAME).elf $(APP_BLD_DIR)/$(GENERATED_FILE_NAME)_NOLTO.map $(TARGET).json
+endif
 
 ################################################################################
 
