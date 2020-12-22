@@ -36,7 +36,7 @@
 #define PORTMACRO_JN516x_H
 
 #include "jendefs.h"
-#include "MicroSPecific.h"
+#include "MicroSpecific.h"
 /*-----------------------------------------------------------
  * Chip specific definitions.
  *
