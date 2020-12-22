@@ -3,28 +3,28 @@
 # MODULE:   Config.mk
 #
 # DESCRIPTION: ZBPro stack configuration. Defines tool, library and
-#              header file details for building an app using the ZBPro stack 
-# 
+#              header file details for building an app using the ZBPro stack
+#
 ###############################################################################
 # This software is owned by NXP B.V. and/or its supplier and is protected
 # under applicable copyright laws. All rights are reserved. We grant You,
 # and any third parties, a license to use this software solely and
 # exclusively on NXP products [NXP Microcontrollers such as JN514x, JN516x, JN517x].
-# You, and any third parties must reproduce the copyright and warranty notice 
+# You, and any third parties must reproduce the copyright and warranty notice
 # and any other legend of ownership on each  copy or partial copy of the software.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-# POSSIBILITY OF SUCH DAMAGE. 
-# 
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
 # Copyright NXP B.V. 2015-2017. All rights reserved
 #
 # $HeadURL: https://www.collabnet.nxp.com/svn/lprf_sware/Projects/Stack/Modules/ZBPro/Trunk/Build/config_ZBPro.mk $
@@ -43,8 +43,8 @@ ifeq ($(OS),Windows_NT)
     PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/bin/PDUMConfig.exe
     ZPSCONFIG = $(TOOL_BASE_DIR)/ZPSConfig/bin/ZPSConfig.exe
 else
-    PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig
-    ZPSCONFIG = $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig
+    PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig.py
+    ZPSCONFIG = $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig.py
 endif
 STACK_SIZE ?= 5000
 MINIMUM_HEAP_SIZE ?= 2000
@@ -84,7 +84,7 @@ ifeq ($(JENNIC_MAC_PLATFORM),MULTI)
 $(info JENNIC_MAC_PLATFORM is MULTI)
 APPLIBS +=ZPSMAC_Mini_MULTI
 APPLIBS +=SerialMiniMacUpper
-endif   
+endif
 endif
 endif
 endif
@@ -235,8 +235,8 @@ ifeq ($(OS),Windows_NT)
     PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/bin/PDUMConfig.exe
     ZPSCONFIG  = $(TOOL_BASE_DIR)/ZPSConfig/bin/ZPSConfig.exe
 else
-    PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig
-    ZPSCONFIG  = $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig
+    PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig.py
+    ZPSCONFIG  = $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig.py
 endif
 JET_BASE            ?= $(SDK2_BASE_DIR)/tools/zigbee_3.0/JET/OTAUtils
 
@@ -305,10 +305,10 @@ ifeq ($(TRACE), 1)
 CFLAGS  += -DDBG_ENABLE
 CFLAGS  += -DDEBUG_ENABLE
 $(info Building trace version ...)
-endif 
+endif
 
 ##################################################################################
-## LIBS 
+## LIBS
 
 APPLIBS +=ZPSTSV
 APPLIBS +=aes_sw
