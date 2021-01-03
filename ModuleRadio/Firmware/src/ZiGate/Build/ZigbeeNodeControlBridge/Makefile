@@ -337,7 +337,7 @@ all: $(GENERATED_FILE_NAME).bin
 %.d:
 #    rm -f $*.o
 ifeq ($(JENNIC_CHIP_FAMILY),JN517x)
-$(APP_SRC_DIR)/pdum_gen.c $(APP_SRC_DIR)/pdum_gen.h: $(APP_SRC_DIR)/$(APP_ZPSCFG) $(PDUMCONFIG)
+$(APP_SRC_DIR)/pdum_gen.c $(APP_SRC_DIR)/pdum_gen.h $(APP_SRC_DIR)/pdum_apdu.S: $(APP_SRC_DIR)/$(APP_ZPSCFG) $(PDUMCONFIG)
 	$(info Configuring the PDUM ...)
 	$(PDUMCONFIG) -z $(TARGET) -e LITTLE_ENDIAN_PROCESSOR -f $< -o $(APP_SRC_DIR)
 
@@ -350,7 +350,7 @@ pdum_gen.o zps_gen.o: CFLAGS += -fno-lto
 endif
 
 ifeq ($(JENNIC_CHIP_FAMILY),JN516x)
-$(APP_SRC_DIR)/pdum_gen.c $(APP_SRC_DIR)/pdum_gen.h: $(APP_SRC_DIR)/$(APP_ZPSCFG) $(PDUMCONFIG)
+$(APP_SRC_DIR)/pdum_gen.c $(APP_SRC_DIR)/pdum_gen.h $(APP_SRC_DIR)/pdum_apdu.S: $(APP_SRC_DIR)/$(APP_ZPSCFG) $(PDUMCONFIG)
 	$(info Configuring the PDUM ...)
 	$(PDUMCONFIG) -z $(TARGET)  -f $< -o $(APP_SRC_DIR)
 
