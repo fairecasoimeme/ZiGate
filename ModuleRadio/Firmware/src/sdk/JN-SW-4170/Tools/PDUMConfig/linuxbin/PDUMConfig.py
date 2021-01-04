@@ -84,8 +84,90 @@ def outputC(dir, pdumConfig, sEndian):
     if os.path.exists(fsp) and os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_NORMAL)
     Cfile = open(fsp, 'w')
-    Cfile.write('/****************************************************************************\n *\n *                 THIS IS A GENERATED FILE. DO NOT EDIT!\n *\n * MODULE:         PDUMCOnfig\n *\n * COMPONENT:      pdum_gen.c\n *\n * DATE:           %s\n *\n * AUTHOR:         NXP PDU Manager Configuration Tool\n *\n * DESCRIPTION:    PDU definitions\n *\n ****************************************************************************\n *\n * This software is owned by NXP B.V. and/or its supplier and is protected\n * under applicable copyright laws. All rights are reserved. We grant You,\n * and any third parties, a license to use this software solely and\n * exclusively on NXP products [NXP Microcontrollers such as JN5168, JN5179].\n * You, and any third parties must reproduce the copyright and warranty notice\n * and any other legend of ownership on each copy or partial copy of the\n * software.\n *\n * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"\n * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE\n * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n * POSSIBILITY OF SUCH DAMAGE.\n *\n * Copyright NXP B.V. 2016. All rights reserved\n ****************************************************************************/\n\n/****************************************************************************/\n/***        Include files                                                 ***/\n/****************************************************************************/\n\n#include <jendefs.h>\n#include <pdum_nwk.h>\n#include <pdum_apl.h>\n\n' % datetime.datetime.ctime(datetime.datetime.now()))
-    Cfile.write('\n/****************************************************************************/\n/***        Macro Definitions                                             ***/\n/****************************************************************************/\n\n/****************************************************************************/\n/***        Type Definitions                                              ***/\n/****************************************************************************/\n\nstruct pdum_tsAPdu_tag {\n    struct pdum_tsAPduInstance_tag *psAPduInstances;\n    uint16 u16FreeListHeadIdx;\n    uint16 u16Size;\n    uint16 u16NumInstances;\n};\n\nstruct pdum_tsAPduInstance_tag {\n    uint8 *au8Storage;\n    uint16 u16Size;\n    uint16 u16NextAPduInstIdx;\n    uint16 u16APduIdx;\n};\n\ntypedef struct pdum_tsAPduInstance_tag pdum_tsAPduInstance;\ntypedef struct pdum_tsAPdu_tag pdum_tsAPdu;\n\n\n/****************************************************************************/\n/***        Function Prototypes                                           ***/\n/****************************************************************************/\n\n/****************************************************************************/\n/***        Local Variables                                               ***/\n/****************************************************************************/\n\n')
+    Cfile.write(
+        '/****************************************************************************\n'
+        ' *\n'
+        ' *                 THIS IS A GENERATED FILE. DO NOT EDIT!\n'
+        ' *\n'
+        ' * MODULE:         PDUMCOnfig\n'
+        ' *\n'
+        ' * COMPONENT:      pdum_gen.c\n'
+        ' *\n'
+        ' * DATE:           %s\n'
+        ' *\n'
+        ' * AUTHOR:         NXP PDU Manager Configuration Tool\n'
+        ' *\n'
+        ' * DESCRIPTION:    PDU definitions\n'
+        ' *\n'
+        ' ****************************************************************************\n'
+        ' *\n'
+        ' * This software is owned by NXP B.V. and/or its supplier and is protected\n'
+        ' * under applicable copyright laws. All rights are reserved. We grant You,\n'
+        ' * and any third parties, a license to use this software solely and\n'
+        ' * exclusively on NXP products [NXP Microcontrollers such as JN5168, JN5179].\n'
+        ' * You, and any third parties must reproduce the copyright and warranty notice\n'
+        ' * and any other legend of ownership on each copy or partial copy of the\n'
+        ' * software.\n'
+        ' *\n'
+        ' * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"\n'
+        ' * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n'
+        ' * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n'
+        ' * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE\n'
+        ' * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n'
+        ' * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n'
+        ' * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n'
+        ' * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n'
+        ' * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n'
+        ' * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n'
+        ' * POSSIBILITY OF SUCH DAMAGE.\n'
+        ' *\n'
+        ' * Copyright NXP B.V. 2016. All rights reserved\n'
+        ' ****************************************************************************/\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Include files                                                 ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        '#include <jendefs.h>\n'
+        '#include <pdum_nwk.h>\n'
+        '#include <pdum_apl.h>\n'
+        '\n' % datetime.datetime.ctime(datetime.datetime.now()))
+    Cfile.write(
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Macro Definitions                                             ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Type Definitions                                              ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        'struct pdum_tsAPdu_tag {\n'
+        '    struct pdum_tsAPduInstance_tag *psAPduInstances;\n'
+        '    uint16 u16FreeListHeadIdx;\n'
+        '    uint16 u16Size;\n'
+        '    uint16 u16NumInstances;\n'
+        '};\n'
+        '\n'
+        'struct pdum_tsAPduInstance_tag {\n'
+        '    uint8 *au8Storage;\n'
+        '    uint16 u16Size;\n'
+        '    uint16 u16NextAPduInstIdx;\n'
+        '    uint16 u16APduIdx;\n'
+        '};\n'
+        '\n'
+        'typedef struct pdum_tsAPduInstance_tag pdum_tsAPduInstance;\n'
+        'typedef struct pdum_tsAPdu_tag pdum_tsAPdu;\n'
+        '\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Function Prototypes                                           ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Local Variables                                               ***/\n'
+        '/****************************************************************************/\n'
+        '\n')
     Cfile.write('\n/* NPDU Pool */\n')
     npduPoolSize = int(pdumConfig.NumNPDUs)
     Cfile.write('PRIVATE pdum_tsNPdu s_asNPduPool[%d];\n' % npduPoolSize)
@@ -96,7 +178,8 @@ def outputC(dir, pdumConfig, sEndian):
         apduInstances = int(apdu.Instances)
         for i in range(0, apduInstances):
             storageName = 's_au8%sInstance%dStorage' % (apdu.Name, i)
-            Cfile.write('PRIVATE uint8 %s[%d];\n' % (storageName, apduSize))
+            Cfile.write('PRIVATE uint8 %s[%d];\n'
+        '' % (storageName, apduSize))
 
         Cfile.write('PUBLIC pdum_tsAPduInstance s_as%sInstances[%d] = {\n' % (apdu.Name, apduInstances))
         for i in range(0, apduInstances):
@@ -105,10 +188,25 @@ def outputC(dir, pdumConfig, sEndian):
         Cfile.write('};\n')
         a += 1
 
-    Cfile.write('\n/****************************************************************************/\n/***        Exported Variables                                            ***/\n/****************************************************************************/\n\n')
+    Cfile.write(
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Exported Variables                                            ***/\n'
+        '/****************************************************************************/\n'
+        '\n')
     numAPdus = len(list(pdumConfig.APDUs))
     Cfile.write('extern pdum_tsAPdu s_asAPduPool[%d];\n' % numAPdus)
-    Cfile.write('\n/****************************************************************************/\n/***        Exported Functions                                            ***/\n/****************************************************************************/\n\nextern void pdum_vNPduInit(pdum_tsNPdu *psNPduPool, uint16 u16Size);\nextern void pdum_vAPduInit(pdum_tsAPdu *asAPduPool, uint16 u16NumAPdus);\n\nPUBLIC void PDUM_vInit(void)\n{\n')
+    Cfile.write(
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Exported Functions                                            ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        'extern void pdum_vNPduInit(pdum_tsNPdu *psNPduPool, uint16 u16Size);\n'
+        'extern void pdum_vAPduInit(pdum_tsAPdu *asAPduPool, uint16 u16NumAPdus);\n'
+        '\n'
+        'PUBLIC void PDUM_vInit(void)\n'
+        '{\n')
     Cfile.write('    uint32 i;\n')
     Cfile.write('    for (i =0; i < %d; i++) { \n' % numAPdus)
     Cfile.write('        s_asAPduPool[i].u16FreeListHeadIdx = 0;\n')
@@ -118,7 +216,16 @@ def outputC(dir, pdumConfig, sEndian):
         Cfile.write('    pdum_vAPduInit(s_asAPduPool, %d);\n' % numAPdus)
     else:
         Cfile.write('    pdum_vAPduInit(s_asAPduPool, %d);\n' % numAPdus)
-    Cfile.write('}\n\n/****************************************************************************/\n/***        Local Functions                                               ***/\n/****************************************************************************/\n\n/****************************************************************************/\n/***        END OF FILE                                                   ***/\n/****************************************************************************/\n')
+    Cfile.write(
+        '}\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Local Functions                                               ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        END OF FILE                                                   ***/\n'
+        '/****************************************************************************/\n')
     Cfile.close()
     if os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_READONLY)
@@ -160,8 +267,56 @@ def outputHeader(dir, pdumConfig):
     if os.path.exists(fsp) and os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_NORMAL)
     Hfile = open(fsp, 'w')
-    Hfile.write('/****************************************************************************\n *\n *                 THIS IS A GENERATED FILE. DO NOT EDIT!\n *\n * MODULE:         PDUMCOnfig\n *\n * COMPONENT:      pdum_gen.h\n *\n * DATE:           %s\n *\n * AUTHOR:         NXP PDU Manager Configuration Tool\n *\n * DESCRIPTION:    PDU definitions\n *\n *****************************************************************************\n *\n * This software is owned by NXP B.V. and/or its supplier and is protected\n * under applicable copyright laws. All rights are reserved. We grant You,\n * and any third parties, a license to use this software solely and\n * exclusively on NXP products [NXP Microcontrollers such as JN5168, JN5179].\n * You, and any third parties must reproduce the copyright and warranty notice\n * and any other legend of ownership on each copy or partial copy of the\n * software.\n *\n * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"\n * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE\n * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n * POSSIBILITY OF SUCH DAMAGE.\n *\n * Copyright NXP B.V. 2016. All rights reserved\n ****************************************************************************/\n' % datetime.datetime.ctime(datetime.datetime.now()))
-    Hfile.write('\n#ifndef _PDUM_GEN_H\n#define _PDUM_GEN_H\n\n#include <pdum_apl.h>\n\n/****************************************************************************/\n/***        Macro Definitions                                             ***/\n/****************************************************************************/\n')
+    Hfile.write(
+        '/****************************************************************************\n'
+        ' *\n'
+        ' *                 THIS IS A GENERATED FILE. DO NOT EDIT!\n'
+        ' *\n'
+        ' * MODULE:         PDUMCOnfig\n'
+        ' *\n'
+        ' * COMPONENT:      pdum_gen.h\n'
+        ' *\n'
+        ' * DATE:           %s\n'
+        ' *\n'
+        ' * AUTHOR:         NXP PDU Manager Configuration Tool\n'
+        ' *\n'
+        ' * DESCRIPTION:    PDU definitions\n'
+        ' *\n'
+        ' *****************************************************************************\n'
+        ' *\n'
+        ' * This software is owned by NXP B.V. and/or its supplier and is protected\n'
+        ' * under applicable copyright laws. All rights are reserved. We grant You,\n'
+        ' * and any third parties, a license to use this software solely and\n'
+        ' * exclusively on NXP products [NXP Microcontrollers such as JN5168, JN5179].\n'
+        ' * You, and any third parties must reproduce the copyright and warranty notice\n'
+        ' * and any other legend of ownership on each copy or partial copy of the\n'
+        ' * software.\n'
+        ' *\n'
+        ' * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"\n'
+        ' * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n'
+        ' * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n'
+        ' * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE\n'
+        ' * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n'
+        ' * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n'
+        ' * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n'
+        ' * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n'
+        ' * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n'
+        ' * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n'
+        ' * POSSIBILITY OF SUCH DAMAGE.\n'
+        ' *\n'
+        ' * Copyright NXP B.V. 2016. All rights reserved\n'
+        ' ****************************************************************************/\n' %
+        datetime.datetime.ctime(datetime.datetime.now()))
+    Hfile.write(
+        '\n'
+        '#ifndef _PDUM_GEN_H\n'
+        '#define _PDUM_GEN_H\n'
+        '\n'
+        '#include <pdum_apl.h>\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Macro Definitions                                             ***/\n'
+        '/****************************************************************************/\n')
     Hfile.write('/* APDUs */\n')
     a = 0
     for apdu in pdumConfig.APDUs:
@@ -169,7 +324,16 @@ def outputHeader(dir, pdumConfig):
         Hfile.write('#define %s &pdum_%s\n' % (apdu.Name, apdu.Name))
         a += 1
 
-    Hfile.write('\n/****************************************************************************/\n/***        Type Definitions                                              ***/\n/****************************************************************************/\n\n/****************************************************************************/\n/***        External Variables                                            ***/\n/****************************************************************************/\n\n')
+    Hfile.write(
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Type Definitions                                              ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        External Variables                                            ***/\n'
+        '/****************************************************************************/\n'
+        '\n')
     Hfile.write('/* APDUs */\n')
     a = 0
     for apdu in pdumConfig.APDUs:
@@ -177,7 +341,18 @@ def outputHeader(dir, pdumConfig):
         Hfile.write('extern const struct pdum_tsAPdu_tag pdum_%s;\n' % apdu.Name)
         a += 1
 
-    Hfile.write('\n/****************************************************************************/\n/***        Exported Functions                                            ***/\n/****************************************************************************/\n\nPUBLIC void PDUM_vInit(void);\n\n/****************************************************************************/\n/****************************************************************************/\n/****************************************************************************/\n\n#endif\n')
+    Hfile.write(
+        '\n'
+        '/****************************************************************************/\n'
+        '/***        Exported Functions                                            ***/\n'
+        '/****************************************************************************/\n'
+        '\n'
+        'PUBLIC void PDUM_vInit(void);\n'
+        '\n'
+        '/****************************************************************************/\n'
+        '/****************************************************************************/\n'
+        '/****************************************************************************/\n'
+        '\n#endif\n')
     Hfile.close()
     if os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_READONLY)
@@ -191,7 +366,22 @@ else:
     version = 'x.x.x'
 print('PDUMConfig - PDU Manager Configuration Tool v%s Build %s\n' % (version, '90693'))
 if len(sys.argv) <= 1:
-    print('\n\tThis software is owned by Jennic and/or its supplier and is protected\n\tunder applicable copyright laws. All rights are reserved. We grant You,\n\tand any third parties, a license to use this software solely and\n\texclusively on Jennic products. You, and any third parties must reproduce\n\tthe copyright and warranty notice and any other legend of ownership on each\n\tcopy or partial copy of the software.\n\t\n\tTHIS SOFTWARE IS PROVIDED "AS IS". JENNIC MAKES NO WARRANTIES, WHETHER\n\tEXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED\n\tWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE,\n\tACCURACY OR LACK OF NEGLIGENCE. JENNIC SHALL NOT, IN ANY CIRCUMSTANCES,\n\tBE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, SPECIAL,\n\tINCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON WHATSOEVER.\n\n\t(c) Copyright Jennic Ltd 2008. All rights reserved.\n')
+    print(
+        '\n'
+        '\tThis software is owned by Jennic and/or its supplier and is protected\n'
+        '\tunder applicable copyright laws. All rights are reserved. We grant You,\n'
+        '\tand any third parties, a license to use this software solely and\n'
+        '\texclusively on Jennic products. You, and any third parties must reproduce\n'
+        '\tthe copyright and warranty notice and any other legend of ownership on each\n'
+        '\tcopy or partial copy of the software.\n'
+        '\t\n'
+        '\tTHIS SOFTWARE IS PROVIDED "AS IS". JENNIC MAKES NO WARRANTIES, WHETHER\n'
+        '\tEXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED\n'
+        '\tWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE,\n'
+        '\tACCURACY OR LACK OF NEGLIGENCE. JENNIC SHALL NOT, IN ANY CIRCUMSTANCES,\n'
+        '\tBE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, SPECIAL,\n'
+        '\tINCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON WHATSOEVER.\n'
+        '\n\t(c) Copyright Jennic Ltd 2008. All rights reserved.\n')
     print('For help: %s --help' % sys.argv[0])
     sys.exit(0)
 if None == options.configFilename:
