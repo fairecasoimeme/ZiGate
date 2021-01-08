@@ -34,8 +34,8 @@ https://github.com/fairecasoimeme/ZiGate/releases
 
 #### Requirements:
 
-- python2
-- `pip install amara` (for python2)
+- python3 or python2.7
+- `pip3 install xmltodict` (or `pip install xmltodict` for python2)
 
 
 Download the toolchain for jn51XX processor from 
@@ -67,4 +67,10 @@ another baudrate and chip, e.g.
 
 ```shell
 make BAUD=115200 JENNIC_CHIP=JN5168 JENNIC_CHIP_FAMILY=JN516x
+```
+
+To provide a path to your python you can pass PYTHON parameter to make
+
+```shell
+make PYTHON=/usr/bin/python2.7
 ```

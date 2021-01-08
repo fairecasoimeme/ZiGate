@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 
 import datetime
 import os
@@ -6,85 +6,147 @@ import re
 import sys
 from optparse import OptionParser
 
-from amara import bindery
+import xmltodict
 
 if os.name == 'nt':
     import win32api
     import win32con
 
 
+def get_child_nodes(root):
+    return [
+        item
+        for sublist in (
+            v if isinstance(v, (list, tuple)) else [v]
+            for k, v in root.items()
+            if not k.startswith('@')
+        )
+        for item in sublist
+    ]
+
+
+def as_list(item):
+    return item if isinstance(item, list) else [item]
+
+
 parser = OptionParser()
-parser.add_option('-z', '--zigbee', dest='zigbeeNodeName', default='', help='Output configuration for Zigbee Protocol Stack for the specified node.')
-parser.add_option('-o', '--output', dest='outputDir', default=os.path.curdir, help='Path to output the configuration into.')
-parser.add_option('-f', '--config-file', dest='configFilename', help='Configuration file')
-parser.add_option('-e', '--endian', dest='endian', type='string', default='BIG_ENDIAN', help='Endian of the processor BIG_ENDIAN or LITTLE_ENDIAN')
+parser.add_option(
+    '-z',
+    '--zigbee',
+    dest='zigbee_node_name',
+    default='',
+    help='Output configuration for Zigbee Protocol Stack for the specified node.',
+)
+parser.add_option(
+    '-o',
+    '--output',
+    dest='output_dir',
+    default=os.path.curdir,
+    help='Path to output the configuration into.',
+)
+parser.add_option(
+    '-f',
+    '--config-file',
+    dest='config_filename',
+    help='Configuration file',
+)
+parser.add_option(
+    '-e',
+    '--endian',
+    dest='endian',
+    type='string',
+    default='BIG_ENDIAN',
+    help='Endian of the processor BIG_ENDIAN or LITTLE_ENDIAN',
+)
 (options, args) = parser.parse_args(sys.argv[1:])
 
 
-def checkForDuplicateNames(nodes, n1):
-    if not hasattr(n1, 'Name'):
+def check_for_duplicate_names(nodes, n1):
+    if '@Name' not in n1:
         return False
     for n2 in nodes:
-        if n2 != n1 and hasattr(n2, 'Name') and n1.Name == n2.Name:
+        if n2 != n1 and '@Name' in n2 and n1['@Name'] == n2['@Name']:
             return True
 
     return False
 
 
-def validateConfiguration(configNode):
-    nodeName = configNode.Name
-    nameCheck = re.compile('[a-zA-Z_][a-zA-Z_0-9]*')
-    if hasattr(configNode, 'PDUConfiguration'):
-        if not hasattr(configNode.PDUConfiguration, 'NumNPDUs'):
-            print("ERROR: The PDU Manager for node '%s' must have a NumNPDUs attribute.\n" % nodeName)
+def validate_configuration(config_node):
+    """
+    :type config_node: dict
+    """
+    node_name = config_node['@Name']
+    name_check = re.compile(r'[a-zA-Z_][a-zA-Z_0-9]*')
+    if 'PDUConfiguration' in config_node:
+        if '@NumNPDUs' not in config_node['PDUConfiguration']:
+            print("ERROR: The PDU Manager for node '%s' must have a NumNPDUs attribute.\n" % node_name)
             return False
-        elif int(configNode.PDUConfiguration.NumNPDUs, 0) < 8:
-            print("ERROR: The PDU Manager for node '%s' must have at least 8 NPDUs configured" % nodeName)
+        elif int(config_node['PDUConfiguration']['@NumNPDUs'], 10) < 8:
+            print("ERROR: The PDU Manager for node '%s' must have at least 8 NPDUs configured" % node_name)
             return False
-        if not hasattr(configNode.PDUConfiguration, 'APDUs'):
-            print("ERROR: The PDU Manager for node '%s' does not have any APDUs.\n" % nodeName)
+        if 'APDUs' not in config_node['PDUConfiguration']:
+            print("ERROR: The PDU Manager for node '%s' does not have any APDUs.\n" % node_name)
             return False
         else:
-            for apdu in configNode.PDUConfiguration.APDUs:
-                if not hasattr(apdu, 'Name'):
-                    print("ERROR: An APDU for node '%s' does not have a Name specified.\n" % nodeName)
+            for apdu in as_list(config_node['PDUConfiguration']['APDUs']):
+                if '@Name' not in apdu:
+                    print("ERROR: An APDU for node '%s' does not have a Name specified.\n" % node_name)
                     return False
                 else:
-                    result = nameCheck.match(apdu.Name)
-                    if result.group(0) != apdu.Name:
-                        print("ERROR: The APDU '%s' for node '%s' is not a valid C identifier.\n" % (apdu.Name, nodeName))
+                    result = name_check.match(apdu['@Name'])
+                    if result.group(0) != apdu['@Name']:
+                        print(
+                            "ERROR: The APDU '%s' for node '%s' is not a valid C identifier.\n" %
+                            (apdu['@Name'], node_name))
                         return False
-                if not hasattr(apdu, 'Id'):
-                    print("ERROR: The APDU '%s' for node '%s' does not have an Id specified.\n" % (apdu.Name, nodeName))
+                if '@Id' not in apdu:
+                    print(
+                        "ERROR: The APDU '%s' for node '%s' does not have an Id specified.\n" %
+                        (apdu['@Name'], node_name))
                     return False
-                if not hasattr(apdu, 'Size'):
-                    print("ERROR: The APDU '%s' for node '%s' does not have a Size specified.\n" % (apdu.Name, nodeName))
+                if '@Size' not in apdu:
+                    print(
+                        "ERROR: The APDU '%s' for node '%s' does not have a Size specified.\n" %
+                        (apdu['@Name'], node_name))
                     return False
-                elif int(apdu.Size, 0) < 1:
-                    print("ERROR: The APDU '%s' for node '%s' must have a Size of at least 1.\n" % (apdu.Name, nodeName))
+                elif int(apdu['@Size'], 10) < 1:
+                    print(
+                        "ERROR: The APDU '%s' for node '%s' must have a Size of at least 1.\n" %
+                        (apdu['@Name'], node_name))
                     return False
-                if not hasattr(apdu, 'Instances'):
-                    print("ERROR: The APDU '%s' for node '%s' does not have a number of Instances specified.\n" % (apdu.Name, nodeName))
+                if '@Instances' not in apdu:
+                    print(
+                        "ERROR: The APDU '%s' for node '%s' does not have a number of Instances specified.\n" %
+                        (apdu['@Name'], node_name))
                     return False
-                elif int(apdu.Instances, 0) < 1:
-                    print("ERROR: The APDU '%s' for node '%s' must have a number of Instances of at least 1.\n" % (apdu.Name, nodeName))
+                elif int(apdu['@Instances'], 10) < 1:
+                    print(
+                        "ERROR: The APDU '%s' for node '%s' must have a number of Instances of at least 1.\n" %
+                        (apdu['@Name'], node_name))
                     return False
-                if checkForDuplicateNames(configNode.PDUConfiguration.APDUs, apdu):
-                    print("ERROR: There are one or more APDUs with the name '%s' for node '%s'. APDUs must have unique names.\n" % (apdu.Name, nodeName))
+                if check_for_duplicate_names(as_list(config_node['PDUConfiguration']['APDUs']), apdu):
+                    print(
+                        "ERROR: There are one or more APDUs with the name '%s' for node '%s'. "
+                        "APDUs must have unique names.\n" % (apdu['@Name'], node_name))
                     return False
 
     else:
-        print("ERROR: The node '%s' must have a PDU Manager element.\n" % nodeName)
+        print("ERROR: The node '%s' must have a PDU Manager element.\n" % node_name)
         return False
     return True
 
 
-def outputC(dir, pdumConfig, sEndian):
-    fsp = os.path.join(dir, 'pdum_gen.c')
+def output_c(output_dir, pdum_config, s_endian):
+    """
+    :type output_dir: str
+    :type pdum_config: dict
+    :type s_endian: str
+    """
+    fsp = os.path.join(output_dir, 'pdum_gen.c')
     if os.path.exists(fsp) and os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_NORMAL)
-    Cfile = open(fsp, 'w')
-    Cfile.write(
+    c_file = open(fsp, 'w')
+    c_file.write(
         '/****************************************************************************\n'
         ' *\n'
         ' *                 THIS IS A GENERATED FILE. DO NOT EDIT!\n'
@@ -132,7 +194,7 @@ def outputC(dir, pdumConfig, sEndian):
         '#include <pdum_nwk.h>\n'
         '#include <pdum_apl.h>\n'
         '\n' % datetime.datetime.ctime(datetime.datetime.now()))
-    Cfile.write(
+    c_file.write(
         '\n'
         '/****************************************************************************/\n'
         '/***        Macro Definitions                                             ***/\n'
@@ -168,35 +230,34 @@ def outputC(dir, pdumConfig, sEndian):
         '/***        Local Variables                                               ***/\n'
         '/****************************************************************************/\n'
         '\n')
-    Cfile.write('\n/* NPDU Pool */\n')
-    npduPoolSize = int(pdumConfig.NumNPDUs)
-    Cfile.write('PRIVATE pdum_tsNPdu s_asNPduPool[%d];\n' % npduPoolSize)
-    Cfile.write('\n/* APDU Pool */\n')
+    c_file.write('\n/* NPDU Pool */\n')
+    npdu_pool_size = int(pdum_config['@NumNPDUs'], 10)
+    c_file.write('PRIVATE pdum_tsNPdu s_asNPduPool[%d];\n' % npdu_pool_size)
+    c_file.write('\n/* APDU Pool */\n')
     a = 0
-    for apdu in pdumConfig.APDUs:
-        apduSize = int(apdu.Size)
-        apduInstances = int(apdu.Instances)
-        for i in range(0, apduInstances):
-            storageName = 's_au8%sInstance%dStorage' % (apdu.Name, i)
-            Cfile.write('PRIVATE uint8 %s[%d];\n'
-        '' % (storageName, apduSize))
+    for apdu in as_list(config_node['PDUConfiguration']['APDUs']):
+        apdu_size = int(apdu['@Size'])
+        apdu_instances = int(apdu['@Instances'])
+        for i in range(0, apdu_instances):
+            storage_name = 's_au8%sInstance%dStorage' % (apdu['@Name'], i)
+            c_file.write('PRIVATE uint8 %s[%d];\n' % (storage_name, apdu_size))
 
-        Cfile.write('PUBLIC pdum_tsAPduInstance s_as%sInstances[%d] = {\n' % (apdu.Name, apduInstances))
-        for i in range(0, apduInstances):
-            Cfile.write('    { s_au8%sInstance%dStorage, 0, 0, %d },\n' % (apdu.Name, i, a))
+        c_file.write('PUBLIC pdum_tsAPduInstance s_as%sInstances[%d] = {\n' % (apdu['@Name'], apdu_instances))
+        for i in range(0, apdu_instances):
+            c_file.write('    { s_au8%sInstance%dStorage, 0, 0, %d },\n' % (apdu['@Name'], i, a))
 
-        Cfile.write('};\n')
+        c_file.write('};\n')
         a += 1
 
-    Cfile.write(
+    c_file.write(
         '\n'
         '/****************************************************************************/\n'
         '/***        Exported Variables                                            ***/\n'
         '/****************************************************************************/\n'
         '\n')
-    numAPdus = len(list(pdumConfig.APDUs))
-    Cfile.write('extern pdum_tsAPdu s_asAPduPool[%d];\n' % numAPdus)
-    Cfile.write(
+    numAPdus = len(as_list(config_node['PDUConfiguration']['APDUs']))
+    c_file.write('extern pdum_tsAPdu s_asAPduPool[%d];\n' % numAPdus)
+    c_file.write(
         '\n'
         '/****************************************************************************/\n'
         '/***        Exported Functions                                            ***/\n'
@@ -207,16 +268,16 @@ def outputC(dir, pdumConfig, sEndian):
         '\n'
         'PUBLIC void PDUM_vInit(void)\n'
         '{\n')
-    Cfile.write('    uint32 i;\n')
-    Cfile.write('    for (i =0; i < %d; i++) { \n' % numAPdus)
-    Cfile.write('        s_asAPduPool[i].u16FreeListHeadIdx = 0;\n')
-    Cfile.write('    }\n')
-    Cfile.write('    pdum_vNPduInit(s_asNPduPool, %d);\n' % npduPoolSize)
-    if hasattr(pdumConfig, 'PDUMMutexName'):
-        Cfile.write('    pdum_vAPduInit(s_asAPduPool, %d);\n' % numAPdus)
+    c_file.write('    uint32 i;\n')
+    c_file.write('    for (i =0; i < %d; i++) { \n' % numAPdus)
+    c_file.write('        s_asAPduPool[i].u16FreeListHeadIdx = 0;\n')
+    c_file.write('    }\n')
+    c_file.write('    pdum_vNPduInit(s_asNPduPool, %d);\n' % npdu_pool_size)
+    if '@PDUMMutexName' in pdum_config:
+        c_file.write('    pdum_vAPduInit(s_asAPduPool, %d);\n' % numAPdus)
     else:
-        Cfile.write('    pdum_vAPduInit(s_asAPduPool, %d);\n' % numAPdus)
-    Cfile.write(
+        c_file.write('    pdum_vAPduInit(s_asAPduPool, %d);\n' % numAPdus)
+    c_file.write(
         '}\n'
         '\n'
         '/****************************************************************************/\n'
@@ -226,48 +287,51 @@ def outputC(dir, pdumConfig, sEndian):
         '/****************************************************************************/\n'
         '/***        END OF FILE                                                   ***/\n'
         '/****************************************************************************/\n')
-    Cfile.close()
+    c_file.close()
     if os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_READONLY)
-    fsp = os.path.join(dir, 'pdum_apdu.S')
+    fsp = os.path.join(output_dir, 'pdum_apdu.S')
     if os.path.exists(fsp) and os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_NORMAL)
-    Cfile = open(fsp, 'w')
-    numAPdus = len(list(pdumConfig.APDUs))
-    Cfile.write('    .global s_asAPduPool\n')
-    if sEndian != 'BIG_ENDIAN':
-        Cfile.write('    .section    .data.s_asAPduPool,"aw",%progbits\n')
+    c_file = open(fsp, 'w')
+    c_file.write('    .global s_asAPduPool\n')
+    if s_endian != 'BIG_ENDIAN':
+        c_file.write('    .section    .data.s_asAPduPool,"aw",%progbits\n')
     else:
-        Cfile.write('    .section    .data.s_asAPduPool,"aw",@progbits\n')
-    Cfile.write('    .align 4\n')
-    if sEndian != 'BIG_ENDIAN':
-        Cfile.write('    .type    s_asAPduPool, %object\n')
+        c_file.write('    .section    .data.s_asAPduPool,"aw",@progbits\n')
+    c_file.write('    .align 4\n')
+    if s_endian != 'BIG_ENDIAN':
+        c_file.write('    .type    s_asAPduPool, %object\n')
     else:
-        Cfile.write('    .type    s_asAPduPool, @object\n')
-    Cfile.write('    .size    s_asAPduPool, %d\n' % (numAPdus * 12))
-    Cfile.write('s_asAPduPool:\n')
-    for apdu in pdumConfig.APDUs:
-        apduSize = int(apdu.Size)
-        apduInstances = int(apdu.Instances)
-        Cfile.write('    .global pdum_%s\n' % apdu.Name)
-        Cfile.write('pdum_%s:\n' % apdu.Name)
-        Cfile.write('    .long    s_as%sInstances\n' % apdu.Name)
-        Cfile.write('    .short    0\n')
-        Cfile.write('    .short    %d\n' % apduSize)
-        Cfile.write('    .short    %d\n' % apduInstances)
-        Cfile.write('    .zero     2\n')
+        c_file.write('    .type    s_asAPduPool, @object\n')
+    c_file.write('    .size    s_asAPduPool, %d\n' % (numAPdus * 12))
+    c_file.write('s_asAPduPool:\n')
+    for apdu in as_list(config_node['PDUConfiguration']['APDUs']):
+        apdu_size = int(apdu['@Size'])
+        apdu_instances = int(apdu['@Instances'])
+        c_file.write('    .global pdum_%s\n' % apdu['@Name'])
+        c_file.write('pdum_%s:\n' % apdu['@Name'])
+        c_file.write('    .long    s_as%sInstances\n' % apdu['@Name'])
+        c_file.write('    .short    0\n')
+        c_file.write('    .short    %d\n' % apdu_size)
+        c_file.write('    .short    %d\n' % apdu_instances)
+        c_file.write('    .zero     2\n')
 
-    Cfile.close()
+    c_file.close()
     if os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_READONLY)
 
 
-def outputHeader(dir, pdumConfig):
-    fsp = os.path.join(dir, 'pdum_gen.h')
+def output_header(output_dir, pdumConfig):
+    """
+    :type output_dir: str
+    :type pdumConfig: dict
+    """
+    fsp = os.path.join(output_dir, 'pdum_gen.h')
     if os.path.exists(fsp) and os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_NORMAL)
-    Hfile = open(fsp, 'w')
-    Hfile.write(
+    h_file = open(fsp, 'w')
+    h_file.write(
         '/****************************************************************************\n'
         ' *\n'
         ' *                 THIS IS A GENERATED FILE. DO NOT EDIT!\n'
@@ -307,7 +371,7 @@ def outputHeader(dir, pdumConfig):
         ' * Copyright NXP B.V. 2016. All rights reserved\n'
         ' ****************************************************************************/\n' %
         datetime.datetime.ctime(datetime.datetime.now()))
-    Hfile.write(
+    h_file.write(
         '\n'
         '#ifndef _PDUM_GEN_H\n'
         '#define _PDUM_GEN_H\n'
@@ -317,14 +381,14 @@ def outputHeader(dir, pdumConfig):
         '/****************************************************************************/\n'
         '/***        Macro Definitions                                             ***/\n'
         '/****************************************************************************/\n')
-    Hfile.write('/* APDUs */\n')
+    h_file.write('/* APDUs */\n')
     a = 0
-    for apdu in pdumConfig.APDUs:
-        aPduSize = int(apdu.Size)
-        Hfile.write('#define %s &pdum_%s\n' % (apdu.Name, apdu.Name))
+    for apdu in as_list(pdumConfig['APDUs']):
+        apdu_size = int(apdu['@Size'])
+        h_file.write('#define %s &pdum_%s\n' % (apdu['@Name'], apdu['@Name']))
         a += 1
 
-    Hfile.write(
+    h_file.write(
         '\n'
         '/****************************************************************************/\n'
         '/***        Type Definitions                                              ***/\n'
@@ -334,14 +398,14 @@ def outputHeader(dir, pdumConfig):
         '/***        External Variables                                            ***/\n'
         '/****************************************************************************/\n'
         '\n')
-    Hfile.write('/* APDUs */\n')
+    h_file.write('/* APDUs */\n')
     a = 0
-    for apdu in pdumConfig.APDUs:
-        aPduSize = int(apdu.Size)
-        Hfile.write('extern const struct pdum_tsAPdu_tag pdum_%s;\n' % apdu.Name)
+    for apdu in as_list(pdumConfig['APDUs']):
+        apdu_size = int(apdu['@Size'])
+        h_file.write('extern const struct pdum_tsAPdu_tag pdum_%s;\n' % apdu['@Name'])
         a += 1
 
-    Hfile.write(
+    h_file.write(
         '\n'
         '/****************************************************************************/\n'
         '/***        Exported Functions                                            ***/\n'
@@ -353,7 +417,7 @@ def outputHeader(dir, pdumConfig):
         '/****************************************************************************/\n'
         '/****************************************************************************/\n'
         '\n#endif\n')
-    Hfile.close()
+    h_file.close()
     if os.name == 'nt':
         win32api.SetFileAttributes(fsp, win32con.FILE_ATTRIBUTE_READONLY)
 
@@ -384,40 +448,48 @@ if len(sys.argv) <= 1:
         '\n\t(c) Copyright Jennic Ltd 2008. All rights reserved.\n')
     print('For help: %s --help' % sys.argv[0])
     sys.exit(0)
-if None == options.configFilename:
+if options.config_filename is None:
     print('ERROR: a configuration file must be specified.\n')
     sys.exit(-1)
-if not os.path.exists(options.configFilename):
-    print("ERROR: unable to open configuration file '%s'.\n" % options.configFilename)
+if not os.path.exists(options.config_filename):
+    print("ERROR: unable to open configuration file '%s'.\n" % options.config_filename)
     sys.exit(-1)
-if None != options.outputDir and not os.path.exists(options.outputDir):
-    print("ERROR: Output directory '%s' does not exist.\n" % options.outputDir)
+if options.output_dir is not None and not os.path.exists(options.output_dir):
+    print("ERROR: Output directory '%s' does not exist.\n" % options.output_dir)
     sys.exit(-1)
-config = bindery.parse(options.configFilename, validate=False)
-if '' == options.zigbeeNodeName:
+
+namespaces = {
+    "http://www.nxp.com/zpscfg": None,
+    "http://www.w3.org/2001/XMLSchema-instance": None,
+}
+
+with open(options.config_filename, 'rb') as f:
+    config = xmltodict.parse(f, process_namespaces=True, namespaces=namespaces)
+if not options.zigbee_node_name:
     print('ERROR: A node must be specified.\n')
     sys.exit(-1)
 else:
-    configNode = None
-    if hasattr(config.ZigbeeWirelessNetwork, 'Coordinator'):
-        if options.zigbeeNodeName == config.ZigbeeWirelessNetwork.Coordinator.Name:
-            configNode = config.ZigbeeWirelessNetwork.Coordinator
-    if None == configNode:
-        if hasattr(config.ZigbeeWirelessNetwork, 'ChildNodes'):
-            for node in config.ZigbeeWirelessNetwork.ChildNodes:
-                if options.zigbeeNodeName == node.Name:
-                    configNode = node
+    config_node = None
+    root = config['ZigbeeWirelessNetwork']
+    if 'Coordinator' in root and root['Coordinator']['@Name'] == options.zigbee_node_name:
+        config_node = root['Coordinator']
+    if config_node is None:
+        children = get_child_nodes(root)
+        if children:
+            for node in children:
+                if options.zigbee_node_name == node.get('@Name'):
+                    config_node = node
                     break
 
-            if None == configNode:
-                print("ERROR: Unable to find node '%s' in input configuration file.\n" % options.zigbeeNodeName)
+            if config_node is None:
+                print("ERROR: Unable to find node '%s' in input configuration file.\n" % options.zigbee_node_name)
                 sys.exit(-1)
         else:
-            print("ERROR: Unable to find node '%s' in input configuration file.\n" % options.zigbeeNodeName)
+            print("ERROR: Unable to find node '%s' in input configuration file.\n" % options.zigbee_node_name)
             sys.exit(-1)
-if validateConfiguration(configNode):
-    outputHeader(options.outputDir, configNode.PDUConfiguration)
-    outputC(options.outputDir, configNode.PDUConfiguration, options.endian)
+if validate_configuration(config_node):
+    output_header(options.output_dir, config_node['PDUConfiguration'])
+    output_c(options.output_dir, config_node['PDUConfiguration'], options.endian)
 else:
     sys.exit(1)
 print('Done.\n')

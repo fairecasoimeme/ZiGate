@@ -43,8 +43,9 @@ ifeq ($(OS),Windows_NT)
     PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/bin/PDUMConfig.exe
     ZPSCONFIG = $(TOOL_BASE_DIR)/ZPSConfig/bin/ZPSConfig.exe
 else
-    PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig.py
-    ZPSCONFIG = $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig.py
+    PYTHON     ?= /usr/bin/python3
+    PDUMCONFIG  = $(PYTHON) $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig.py
+    ZPSCONFIG   = $(PYTHON) $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig.py
 endif
 STACK_SIZE ?= 5000
 MINIMUM_HEAP_SIZE ?= 2000
@@ -235,8 +236,9 @@ ifeq ($(OS),Windows_NT)
     PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/bin/PDUMConfig.exe
     ZPSCONFIG  = $(TOOL_BASE_DIR)/ZPSConfig/bin/ZPSConfig.exe
 else
-    PDUMCONFIG = $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig.py
-    ZPSCONFIG  = $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig.py
+    PYTHON     ?= /usr/bin/python3
+    PDUMCONFIG  = $(PYTHON) $(TOOL_BASE_DIR)/PDUMConfig/linuxbin/PDUMConfig.py
+    ZPSCONFIG   = $(PYTHON) $(TOOL_BASE_DIR)/ZPSConfig/linuxbin/ZPSConfig.py
 endif
 JET_BASE            ?= $(SDK2_BASE_DIR)/tools/zigbee_3.0/JET/OTAUtils
 
