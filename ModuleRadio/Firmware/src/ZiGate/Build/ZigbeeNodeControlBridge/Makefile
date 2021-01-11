@@ -158,10 +158,10 @@ endif
 else
 ifeq ($(NODE), COORDINATOR)
 $(info Building Node Coordinator Only...)
-APP_ZPSCFG = ZigbeeNodeControlBridgeCoordinator_GP_proxy.zpscfg
+APP_ZPSCFG = ZigbeeNodeControlBridgeCoordinator_GP_Proxy.zpscfg
 else
 $(info Building Node Full functionality ...)
-APP_ZPSCFG = ZigbeeNodeControlBridge_GP_proxy.zpscfg
+APP_ZPSCFG = ZigbeeNodeControlBridge_GP_Proxy.zpscfg
 endif
 endif
 

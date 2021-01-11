@@ -427,7 +427,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     uint8     				u8LinkQuality;
     u8LinkQuality=psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality;
 
-    
+
     //ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [0],         psEvent->pZPSevent->uEvent.sApsZgpDataIndEvent.u8Rssi,             u16Length );
    // ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsInterPanDataIndEvent.u8LinkQuality, u16Length );
     //ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality,         u16Length );
@@ -569,7 +569,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
             ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  u16SizeOfAttribute,                                                 u16Length );
             if ( u16SizeOfAttribute !=  0 )
             {
-                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElément : %d\n",i);
+                vLog_Printf(TRACE_ZB_CONTROLBRIDGE_TASK,LOG_DEBUG,"\nElï¿½ment : %d\n",i);
                 while ( i <  u16Elements )
                 {
                     if( ( psEvent->uMessage.sIndividualAttributeResponse.eAttributeDataType ==  E_ZCL_OSTRING ) ||
@@ -764,7 +764,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                                u8LinkQuality );
         }
         break;
-        
+
         case E_ZCL_CBET_DISCOVER_COMMAND_RECEIVED_RESPONSE:
         {
             vLog_Printf ( TRACE_ZCL, LOG_DEBUG, " (E_ZCL_CBET_DISCOVER_COMMAND_RECEIVED_RESPONSE)" );
@@ -802,7 +802,7 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
                                u8LinkQuality );
         }
         break;
-        
+
         case E_ZCL_CBET_CLUSTER_CUSTOM:
         {
             ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0],          psEvent->u8TransactionSequenceNumber,                               u16Length );
@@ -1404,25 +1404,33 @@ void vAPP_ZCL_DeviceSpecific_Init ( void )
  ****************************************************************************/
 teZCL_Status eApp_ZLO_RegisterEndpoint ( tfpZCL_ZCLCallBackFunction    fptr )
 {
-
-	/*eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
+/*
+#if defined(ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT)
+	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ORVIBO_ENDPOINT,
 	                                                fptr,
 	                                                &sControlBridge );
-
+#endif
+#if defined(ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT)
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_TERNCY_ENDPOINT,
 		                                                fptr,
 		                                                &sControlBridge );
+#endif
+#if defined(ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT)
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_KONKE_ENDPOINT,
 			                                                fptr,
 			                                                &sControlBridge );
-
+#endif
+#if defined(ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT)
 	eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_WISER_ENDPOINT,
 				                                                fptr,
-				                                                &sControlBridge );*/
-
+				                                                &sControlBridge );
+#endif
+*/
+#if defined(ZIGBEENODECONTROLBRIDGE_LIVOLO_ENDPOINT)
 	eZLO_RegisterControlBridgeEndPointLivolo ( ZIGBEENODECONTROLBRIDGE_LIVOLO_ENDPOINT,
-					                                                fptr,
-					                                                &sControlBridge );
+				                                                fptr,
+				                                                &sControlBridge );
+#endif
 
     return eZLO_RegisterControlBridgeEndPoint ( ZIGBEENODECONTROLBRIDGE_ZLO_ENDPOINT,
                                                 fptr,

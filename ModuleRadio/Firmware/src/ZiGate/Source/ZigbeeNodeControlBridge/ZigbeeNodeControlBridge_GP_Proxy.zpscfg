@@ -113,6 +113,8 @@
     <Clusters Name="Electrical_Measurements" Id="0x0B04"/>
     <Clusters Name="Diagnostics" Id="0x0B05"/>
     <Clusters Name="Default" Id="0xFFFF"/>
+    <Clusters Name="MultiStateInput" Id="0x0012"/>
+    <Clusters Name="MultiStateOutput" Id="0x0013"/>
   </Profiles>
   <Profiles Name="GP" Id="0xA1E0">
     <Clusters Name="GreenPower" Id="0x0021"/>
