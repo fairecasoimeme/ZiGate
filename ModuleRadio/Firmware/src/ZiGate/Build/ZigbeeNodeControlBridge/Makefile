@@ -365,7 +365,7 @@ endif
 	$(CC) -c -o $(subst Source,Build,$@) $(CFLAGS) $(INCFLAGS) $< -MD -MF $*.d -MP
 	@echo
 
-%.o: %.c
+%.o: %.c $(APP_SRC_DIR)/pdum_gen.c $(APP_SRC_DIR)/pdum_gen.h $(APP_SRC_DIR)/pdum_apdu.S $(APP_SRC_DIR)/zps_gen.c $(APP_SRC_DIR)/zps_gen.h
 	$(info Compiling $< ...)
 	$(CC) -c -o $(subst Source,Build,$@) $(CFLAGS) $(INCFLAGS) $< -MD -MF $*.d -MP
 	@echo
