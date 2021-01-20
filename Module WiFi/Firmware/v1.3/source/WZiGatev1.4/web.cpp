@@ -28,7 +28,7 @@ const char HTTP_HEADER[] PROGMEM =
   " </head>"
     "<body>"
   "<nav class='navbar navbar-expand-lg navbar-light bg-light rounded'><a class='navbar-brand' href='/'><img src='web/img/logo.png'/> <strong>WiFi Config </strong>"
-   VERSION
+   "{version)"
   "</a>"
   "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNavDropdown' aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation'>"
   "<span class='navbar-toggler-icon'></span>"
@@ -126,7 +126,7 @@ void handleRoot() {
   result += FPSTR(HTTP_ROOT);
   result += F("</html>");
    
-  result.replace("{{version}}",VERSION);
+  result.replace("{{version}}","1.4");
   result.replace("{{ssid}}",ConfigSettings.ssid);
   result.replace("{{ip}}",ConfigSettings.ipAddress);
   result.replace("{{mask}}",ConfigSettings.ipMask);
