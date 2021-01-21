@@ -435,13 +435,16 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
 
     if (sZllState.u8RawMode == RAW_MODE_ON){
         ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
-        if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE && psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT )
+        if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE &&
+        		psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT &&
+        		psEvent->eEventType != E_ZCL_CBET_REPORT_ATTRIBUTES
+        	)
         {
             Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
             return;
         }
     }
-    
+
     switch (psEvent->eEventType)
     {
         case E_ZCL_CBET_READ_REQUEST:
