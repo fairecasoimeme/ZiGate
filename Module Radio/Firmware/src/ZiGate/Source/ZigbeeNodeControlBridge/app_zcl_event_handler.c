@@ -131,6 +131,7 @@ void vAPP_ZCL_DeviceSpecific_Init ( void );
 /****************************************************************************/
 /***        Local Variables                                               ***/
 /****************************************************************************/
+uint8_t tmpSqn=0;
 tsZLO_ControlBridgeDevice    sControlBridge;
 tsCLD_ZllDeviceTable         sDeviceTable =  { ZLO_NUMBER_DEVICES,
                                                  { { 0,
@@ -432,22 +433,29 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     //ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length], psEvent->pZPSevent->uEvent.sApsDataIndEvent.u8LinkQuality,         u16Length );
     //vSL_WriteMessage ( 0x9999, u16Length,au8LinkTxBuffer,u8LinkQuality);
     u16Length =  0;
-
     if (sZllState.u8RawMode == RAW_MODE_ON){
         ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
-        if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE &&
-        		psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT &&
-        		psEvent->eEventType != E_ZCL_CBET_REPORT_ATTRIBUTES &&
-        		psEvent->eEventType != E_ZCL_CBET_READ_ATTRIBUTES_RESPONSE
-        	)
+
+        if (tmpSqn!=psEvent->u8TransactionSequenceNumber)
         {
-            Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
-            return;
+			tmpSqn=psEvent->u8TransactionSequenceNumber;
+			if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE &&
+					psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT &&
+					psEvent->eEventType != E_ZCL_CBET_REPORT_ATTRIBUTES &&
+					psEvent->eEventType != E_ZCL_CBET_READ_ATTRIBUTES_RESPONSE
+				)
+			{
+				Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+				return;
+			}
+        }else{
+        	return;
         }
     }
 
     switch (psEvent->eEventType)
     {
+
         case E_ZCL_CBET_READ_REQUEST:
     	{
             vLog_Printf(TRACE_ZCL, LOG_DEBUG, "EP EVT:E_ZCL_CBET_READ_REQUEST\r\n");
