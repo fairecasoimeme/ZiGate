@@ -131,7 +131,7 @@ void vAPP_ZCL_DeviceSpecific_Init ( void );
 /****************************************************************************/
 /***        Local Variables                                               ***/
 /****************************************************************************/
-uint8_t tmpSqn=0;
+uint32_t tmpSqn=0;
 tsZLO_ControlBridgeDevice    sControlBridge;
 tsCLD_ZllDeviceTable         sDeviceTable =  { ZLO_NUMBER_DEVICES,
                                                  { { 0,
@@ -435,10 +435,9 @@ PRIVATE void APP_ZCL_cbEndpointCallback ( tsZCL_CallBackEvent*    psEvent )
     u16Length =  0;
     if (sZllState.u8RawMode == RAW_MODE_ON){
         ZPS_tsAfEvent* psStackEvent = psEvent->pZPSevent;
-
-        if (tmpSqn!=psEvent->u8TransactionSequenceNumber)
+        if (tmpSqn!=(psEvent->u8TransactionSequenceNumber+psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr))
         {
-			tmpSqn=psEvent->u8TransactionSequenceNumber;
+			tmpSqn=(psEvent->u8TransactionSequenceNumber+psEvent->pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr);
 			if (psEvent->eEventType != E_ZCL_CBET_CLUSTER_UPDATE &&
 					psEvent->eEventType != E_ZCL_CBET_UNHANDLED_EVENT &&
 					psEvent->eEventType != E_ZCL_CBET_REPORT_ATTRIBUTES &&
