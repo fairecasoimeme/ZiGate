@@ -112,14 +112,19 @@ PUBLIC void APP_vGenCallback(uint8 u8Endpoint, ZPS_tsAfEvent *psStackEvent)
 
     DBG_vPrintf(TRACE_BDB, "BDB: APP_vGenCallback [%d %d] \n", u8Endpoint, psStackEvent->eType);
 
-    /* Before passing to queue; copy is required to combine two arguments from stack */
-    sZpsAfEvent.u8EndPoint = u8Endpoint;
-    memcpy(&sZpsAfEvent.sStackEvent, psStackEvent, sizeof(ZPS_tsAfEvent));
-
-    /* Post the task to break stack context */
-    if(ZQ_bQueueSend(sBDB.hBdbEventsMsgQ, &sZpsAfEvent) == FALSE)
+    if (u8Endpoint <= 1)
     {
-        DBG_vPrintf(TRACE_BDB, "BDB: Failed to post zpsEvent %d \n", psStackEvent->eType);
+		/* Before passing to queue; copy is required to combine two arguments from stack */
+		sZpsAfEvent.u8EndPoint = u8Endpoint;
+		memcpy(&sZpsAfEvent.sStackEvent, psStackEvent, sizeof(ZPS_tsAfEvent));
+
+		/* Post the task to break stack context */
+		if(ZQ_bQueueSend(sBDB.hBdbEventsMsgQ, &sZpsAfEvent) == FALSE)
+		{
+			DBG_vPrintf(TRACE_BDB, "BDB: Failed to post zpsEvent %d \n", psStackEvent->eType);
+		}
+    }else{
+    	PDUM_eAPduFreeAPduInstance(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst);
     }
 }
 /****************************************************************************
