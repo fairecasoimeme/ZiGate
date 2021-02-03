@@ -110,10 +110,13 @@ PUBLIC void APP_vGenCallback(uint8 u8Endpoint, ZPS_tsAfEvent *psStackEvent)
 {
     BDB_tsZpsAfEvent sZpsAfEvent;
 
-    DBG_vPrintf(TRACE_BDB, "BDB: APP_vGenCallback [%d %d] \n", u8Endpoint, psStackEvent->eType);
+    DBG_vPrintf(TRACE_BDB, "BDB: APP_vGenCallback [EP:%d type:%d] \n", u8Endpoint, psStackEvent->eType);
 
-    if (u8Endpoint <= 1)
+    if (u8Endpoint > 1 && (psStackEvent->eType==ZPS_EVENT_APS_DATA_INDICATION)) //Fix duplicate DATAIND with different EP + Free persistent APDU
     {
+    	if (psStackEvent->uEvent.sApsDataIndEvent.hAPduInst!=NULL)
+    	    		PDUM_eAPduFreeAPduInstance(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst);
+    }else{
 		/* Before passing to queue; copy is required to combine two arguments from stack */
 		sZpsAfEvent.u8EndPoint = u8Endpoint;
 		memcpy(&sZpsAfEvent.sStackEvent, psStackEvent, sizeof(ZPS_tsAfEvent));
@@ -123,9 +126,8 @@ PUBLIC void APP_vGenCallback(uint8 u8Endpoint, ZPS_tsAfEvent *psStackEvent)
 		{
 			DBG_vPrintf(TRACE_BDB, "BDB: Failed to post zpsEvent %d \n", psStackEvent->eType);
 		}
-    }else{
-    	PDUM_eAPduFreeAPduInstance(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst);
     }
+
 }
 /****************************************************************************
  *
