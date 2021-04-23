@@ -67,6 +67,12 @@
 #endif
 #include "dbg.h"
 #include "bdb_fr.h"
+
+//FRED
+#include "app_common.h"
+#include "SerialLink.h"
+#include "zps_struct.h"
+//FRED
 #include <string.h>
 #include <stdlib.h>
 /****************************************************************************/
@@ -109,11 +115,30 @@ PUBLIC tsBDB sBDB;
 PUBLIC void APP_vGenCallback(uint8 u8Endpoint, ZPS_tsAfEvent *psStackEvent)
 {
     BDB_tsZpsAfEvent sZpsAfEvent;
+    uint16                 u16Length =  0;
+	uint8                  au8LinkTxBuffer[50];
 
-    DBG_vPrintf(TRACE_BDB, "BDB: APP_vGenCallback [EP:%d type:%d] \n", u8Endpoint, psStackEvent->eType);
 
-    if (u8Endpoint > 1 && (psStackEvent->eType==ZPS_EVENT_APS_DATA_INDICATION)) //Fix duplicate DATAIND with different EP + Free persistent APDU
+    DBG_vPrintf(TRACE_BDB, "BDB: APP_vGenCallback [EP:%d src:%d dst:%d status:%d time:%ld cluster:%02x - type:%d] \n",
+    					u8Endpoint,
+    					psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
+    					psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint ,
+    					psStackEvent->uEvent.sApsDataIndEvent.eStatus ,
+    					psStackEvent->uEvent.sApsDataIndEvent.u32RxTime ,
+    					psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId,
+    					psStackEvent->eType);
+
+    if (((u8Endpoint > 1) && (psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint != psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint)) && (psStackEvent->eType==ZPS_EVENT_APS_DATA_INDICATION)) //Fix duplicate DATAIND with different EP + Free persistent APDU
     {
+
+    	/*u16Length =  0;
+    	ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ 0 ],  u8Endpoint,     u16Length );
+    	ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ],  psStackEvent->eType,     u16Length );
+    	ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [ u16Length ],  psStackEvent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,     u16Length );
+    	vSL_WriteMessage ( 0x9997,
+    	                                   u16Length,
+    	                                   au8LinkTxBuffer,
+    	                                   0);*/
     	if (psStackEvent->uEvent.sApsDataIndEvent.hAPduInst!=NULL)
     	    		PDUM_eAPduFreeAPduInstance(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst);
     }else{
