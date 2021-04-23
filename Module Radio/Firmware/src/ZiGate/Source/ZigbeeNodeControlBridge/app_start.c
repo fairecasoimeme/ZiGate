@@ -244,7 +244,10 @@ tsZllState sZllState = {
         .u16NwkAddrOfServer     = 0,
         .u8OTAserverEP          = 0,
 #endif
-		.u8RawMode               = 0
+		.u8RawMode               = 0,
+#ifdef MANUALDEFAULTRESPONSE
+		.u8DisableDefaultResponseMode   = 0
+#endif
 };
 
 PUBLIC tszQueue           APP_msgSerialRx;

@@ -410,6 +410,14 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
                 PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
             }
             break;
+#ifdef MANUALDEFAULTRESPONSE
+            case (E_SL_MSG_SET_DISABLEDEFAULTRESPONSEMODE):
+			{
+			   sZllState.u8DisableDefaultResponseMode     =   au8LinkRxBuffer [ 0 ];
+				PDM_eSaveRecordData( PDM_ID_APP_ZLL_CMSSION, &sZllState, sizeof ( sZllState ) );
+			}
+			break;
+#endif
 
             case (E_SL_MSG_GET_VERSION):
             {

@@ -57,6 +57,9 @@
 #include "zps_apl.h"
 #include "zps_apl_af.h"
 
+#include "SerialLink.h"
+#include "app_common.h"
+
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
 /****************************************************************************/
@@ -195,18 +198,46 @@ PUBLIC teZCL_Status eZCL_SendDefaultResponse(
          psZCL_Common->eSecuritySupported  = E_ZCL_SECURITY_NETWORK;
     }
 
-
-    // transmit request - reverse event parameters - src and dst
-    if (eZCL_TransmitDataRequest(myPDUM_thAPduInstance,
-                                u16payloadSize,
-                                pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint,
-                                pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
-                                pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId,
-                                &sZCL_Address) != E_ZCL_SUCCESS)
+#ifdef MANUALDEFAULTRESPONSE
+    if (sZllState.u8DisableDefaultResponseMode)
     {
-        psZCL_Common->eSecuritySupported = eSecuritySupportedSaved;
-        return(E_ZCL_ERR_ZTRANSMIT_FAIL);
+    	uint16                 u16Length =  0;
+   	    uint8                  au8LinkTxBuffer[256];
+
+   	    // free buffer
+   	    PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
+
+   	    ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [0],  pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u16Addr,     u16Length );
+   	    ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,     u16Length );
+   	    ZNC_BUF_U16_UPD ( &au8LinkTxBuffer[u16Length],  pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId,     u16Length );
+    	ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],          sZCL_HeaderParams.bDirection,          u16Length );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  sZCL_HeaderParams.bDisableDefaultResponse,     u16Length );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  sZCL_HeaderParams.bManufacturerSpecific,     u16Length );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  sZCL_HeaderParams.eFrameType,     u16Length );
+		ZNC_BUF_U16_UPD ( &au8LinkTxBuffer [u16Length],  sZCL_HeaderParams.u16ManufacturerCode,     u16Length );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  sZCL_HeaderParams.u8CommandIdentifier,     u16Length );
+		ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length],  sZCL_HeaderParams.u8TransactionSequenceNumber,     u16Length );
+
+    	vSL_WriteMessage ( E_SL_MSG_HEADERPARAMS,
+    	                                   u16Length,
+    	                                   au8LinkTxBuffer,
+    	                                   0);
+    }else{
+#endif
+		// transmit request - reverse event parameters - src and dst
+		if (eZCL_TransmitDataRequest(myPDUM_thAPduInstance,
+									u16payloadSize,
+									pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint,
+									pZPSevent->uEvent.sApsDataIndEvent.u8SrcEndpoint,
+									pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId,
+									&sZCL_Address) != E_ZCL_SUCCESS)
+		{
+			psZCL_Common->eSecuritySupported = eSecuritySupportedSaved;
+			return(E_ZCL_ERR_ZTRANSMIT_FAIL);
+		}
+#ifdef MANUALDEFAULTRESPONSE
     }
+#endif
     psZCL_Common->eSecuritySupported = eSecuritySupportedSaved;
     return(E_ZCL_SUCCESS);
 }

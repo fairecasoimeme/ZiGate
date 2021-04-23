@@ -174,6 +174,9 @@ typedef struct {
     uint8 u8OTAserverEP;
 #endif
     uint8_t u8RawMode;
+#ifdef MANUALDEFAULTRESPONSE
+    uint8_t u8DisableDefaultResponseMode;
+#endif
 }tsZllState;
 
 typedef struct {
