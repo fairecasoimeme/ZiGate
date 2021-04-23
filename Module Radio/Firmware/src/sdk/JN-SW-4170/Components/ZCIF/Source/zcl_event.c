@@ -920,6 +920,7 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                         sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
                         vZCL_PassEventToUser(&sZCL_CallBackEvent);
                         //eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
+                        eZCL_SendDefaultResponse(pZPSevent, E_ZCL_SUCCESS);
                 	}
                 }
                 else
@@ -960,7 +961,8 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
                     sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
                     vZCL_PassEventToUser(&sZCL_CallBackEvent);
 
-                //eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
+                    //eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
+                    eZCL_SendDefaultResponse(pZPSevent, E_ZCL_SUCCESS);
                 }
             }
             else

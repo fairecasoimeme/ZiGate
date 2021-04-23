@@ -342,7 +342,7 @@ PUBLIC void APP_vHandleAppEvents ( void )
                               &uNonce.au8[1] );
             memset( &uNonce.au8[9],
                     0,
-                    ( sizeof ( uint8 ) * 8 ) );
+                    ( sizeof ( uint8 ) * 7 ) ); //FROM zigatev2
 
             pu8MicLocation = & au8LinkTxBuffer [ u16Length ];
 #ifdef LITTLE_ENDIAN_PROCESSOR
@@ -1495,6 +1495,13 @@ PUBLIC void Znc_vSendDataIndicationToHost ( ZPS_tsAfEvent*    psStackEvent,
                        u16Length,
                        pau8LinkTxBuffer,
                        u8LinkQuality);
+
+    tsZCL_HeaderParams sZCL_HeaderParams;
+	u16ZCL_ReadCommandHeader(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst,
+									 &sZCL_HeaderParams);
+	if(!(sZCL_HeaderParams.bDisableDefaultResponse))
+			eZCL_SendDefaultResponse(psStackEvent, E_ZCL_CMDS_SUCCESS);
+
 }
 /****************************************************************************/
 /***        END OF FILE                                                   ***/
