@@ -1,3 +1,21 @@
+# Version 3.1e
+
+* Add ACK + IEEE mode to RAW Mode
+* Add NPDU et APDU info on Status message (At the end (0x8000)
+* Add extended Message on 0x9999 command
+* Add LoRaTap command and add more compatibility on ON/OFF command
+* Add 8012/8072 command 
+* Add Default response capability to RAW message
+* Fix memory issue to ZPSCFG 7 APS ACK MAX + 14 APDU + 14 NPDU + 70 Routing table
+* Fix BDB messages. Message filter when a device attack many endpoint
+* Fix duplicate packet in RAW/hybrid mode
+* Fix E_ZCL_ERR_SECURITY_RANGE on ZLO register
+* Fix HATransportKey function (Device Authentification)
+* Fix overflow on serial command
+* Fix Memory leak and clean APDU
+* Fix some other bugs
+* Delete Migration procedure
+
 # Version 3.1d
 
 * Add 0x8002 command (raw command) when cluster or attribute is unknown. https://github.com/fairecasoimeme/ZiGate/pull/287 / https://github.com/fairecasoimeme/ZiGate/pull/314 
