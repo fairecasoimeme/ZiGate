@@ -306,11 +306,11 @@ int main(int argc, char *argv[])
 	if (iErase)
 	{
 		
-		if (iFW_Open(&sFW_Info, (char *)"FlashProgrammerExtension_JN5168.bin"))
+		/*if (iFW_Open(&sFW_Info, (char *)"FlashProgrammerExtension_JN5168.bin"))
         {
             printf("Error opening FlashProgrammerExtension_JN5168.bin  \n");
             return -1;
-        }
+        }*/
 		BL_DownloadExtensionToRamBeforeErase(iUartFd,&sFW_Info);
 		
 		printf("Erase EEPROM \n");
