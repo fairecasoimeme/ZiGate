@@ -61,6 +61,7 @@
 
 #include "uart.h"
 #include "JN51xx_BootLoader.h"
+#include "FlashProgrammerExtension_JN5168.bin.h"
 #include "ChipID.h"
 #include "dbg.h"
 
@@ -1597,38 +1598,38 @@ int BL_DownloadExtensionToRamBeforeErase(int iUartFd, tsFW_Info *psFW_Info)
 	DBG_vPrintf(TRACE_BOOTLOADER, "\nReset entry point 0x%08x", ntohl(psFW_Info->u32ResetEntryPoint));
     DBG_vPrintf(TRACE_BOOTLOADER, "\nWake entry point 0x%08x",  ntohl(psFW_Info->u32WakeUpEntryPoint));
         
-	for(n = 0; n < psFW_Info->u32TextSectionLength;)
+	for(n = 0; n < 0x0000097c;)
     {
-        if((psFW_Info->u32TextSectionLength - n) > 128)
+        if((0x0000097c - n) > 128)
         {
             u8ChunkSize = 128;
         }
         else
         {
-            u8ChunkSize = psFW_Info->u32TextSectionLength - n;
+            u8ChunkSize = 0x0000097c - n;
         }
         
-        if(iBL_WriteRAM(iUartFd,psFW_Info->u32TextSectionLoadAddress + n, u8ChunkSize, psFW_Info->pu8TextData + n) == -1)
+        if(iBL_WriteRAM(iUartFd,0x04000400 + n, u8ChunkSize, FlashProgrammerExtension_JN5168_bin + n) == -1)
         {
             DBG_vPrintf(TRACE_BOOTLOADER, "\nProblem writing chunk");
             return(-1);
         }
 
-        DBG_vPrintf(TRACE_BOOTLOADER,"Wrote chunk length %d at address 0x%08x: 0x%08x\n", u8ChunkSize, psFW_Info->u32TextSectionLoadAddress + n, ntohl(*((uint32_t*)(psFW_Info->pu8TextData + n))));
+        DBG_vPrintf(TRACE_BOOTLOADER,"Wrote chunk length %d at address 0x%08x: 0x%08x\n", u8ChunkSize, 0x04000400 + n, ntohl(*((uint32_t*)(FlashProgrammerExtension_JN5168_bin + n))));
         
         if (1)
         {
             uint8_t au8Buffer[128 + 1];
-            if (iBL_ReadRAM(iUartFd,psFW_Info->u32TextSectionLoadAddress + n, u8ChunkSize, au8Buffer) == -1)
+            if (iBL_ReadRAM(iUartFd,0x04000400 + n, u8ChunkSize, au8Buffer) == -1)
             {
-                printf("Error reading at address 0x%08x\n", psFW_Info->u32TextSectionLoadAddress + n);
+                printf("Error reading at address 0x%08x\n", 0x04000400 + n);
                 return -1;
             }
             else
             {
-                if (memcmp(psFW_Info->pu8TextData + n, au8Buffer, u8ChunkSize))
+                if (memcmp(FlashProgrammerExtension_JN5168_bin + n, au8Buffer, u8ChunkSize))
                 {
-                    printf("Data read at address 0x%08x is incorrect\n", psFW_Info->u32TextSectionLoadAddress + n);
+                    printf("Data read at address 0x%08x is incorrect\n", 0x04000400 + n);
                     return -1;
                 }
             }
@@ -1636,11 +1637,10 @@ int BL_DownloadExtensionToRamBeforeErase(int iUartFd, tsFW_Info *psFW_Info)
         
         n += u8ChunkSize;
         
-        //DBG_vPrintf(TRACE_BOOTLOADER, "Loading: %3d%%\n%c[A", (n * 100) / psFW_Info->u32TextSectionLength, 0x1B);
-        DBG_vPrintf(TRACE_BOOTLOADER, "Loading: %3d%%\n", (n * 100) / psFW_Info->u32TextSectionLength);
+        DBG_vPrintf(TRACE_BOOTLOADER, "Loading: %3d%%\n", (n * 100) / 0x0000097c);
     }
 	DBG_vPrintf(TRACE_BOOTLOADER, "\nStarting module application");
-	iBL_RunRAM(iUartFd, psFW_Info->u32ResetEntryPoint);
+	iBL_RunRAM(iUartFd, 0x24050004);
 	BL_eSetBaudrate(iUartFd, 38400);
 	BL_EEPROMErase(iUartFd,1);
 	DBG_vPrintf(TRACE_BOOTLOADER, "\nErase OK");
