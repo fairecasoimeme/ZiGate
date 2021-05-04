@@ -100,7 +100,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x0003031e
+#define VERSION    0x0004031e
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
