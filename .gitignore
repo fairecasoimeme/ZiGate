@@ -1,2 +1,12 @@
 
 Module Radio/Firmware/src/ZiGate/Doc/size.txt
+*.d
+*.o
+*.bin
+*.map
+*.elf
+Module Radio/Firmware/src/ZiGate/Source/ZigbeeNodeControlBridge/zps_gen.h
+Module Radio/Firmware/src/ZiGate/Source/ZigbeeNodeControlBridge/zps_gen.c
+Module Radio/Firmware/src/ZiGate/Source/ZigbeeNodeControlBridge/pdum_gen.h
+Module Radio/Firmware/src/ZiGate/Source/ZigbeeNodeControlBridge/pdum_gen.c
+Module Radio/Firmware/src/ZiGate/Source/ZigbeeNodeControlBridge/pdum_apdu.S
