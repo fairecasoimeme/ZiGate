@@ -41,35 +41,28 @@ https://github.com/fairecasoimeme/ZiGate/releases
 Download the toolchain for jn51XX processor from 
 https://github.com/openlumi/BA2-toolchain/releases/download/20201219/ba-toolchain-20201219.tar.bz2
 
-For non-amd64 architectures or other dependencies one can build the toolchain
+For non-amd64 architectures or other dependencies, one can build the toolchain
 from sources: https://github.com/alephsecurity/BA2-toolchain
-
-Then `git clone` the sources and add a symlink from sources to `ModuleRadio/Firmware/src/sdk/Tools/ba-elf-ba2-r36379`
-
-```shell
-git clone https://github.com/fairecasoimeme/ZiGate.git --depth 1
-mkdir -p ZiGate/ModuleRadio/Firmware/src/sdk/Tools
-ln -s PATH_TO_TOOLCHAIN ZiGate/ModuleRadio/Firmware/src/sdk/Tools/ba-elf-ba2-r36379 
-```
 
 Then you can build the firmware:
 
 ```shell
 cd ZiGate/ModuleRadio/Firmware/src/ZiGate/Build/ZigbeeNodeControlBridge
-make
+make TOOLCHAIN_PATH=ba-toolchain TOOL_COMMON_BASE_DIR=<path to folder containing ba-toolchain>
 ```
 
-It will build `ZigbeeNodeControlBridge_JN5169_COORDINATOR_1000000.bin` in 
+This will build `ZigbeeNodeControlBridge_JN5169_COORDINATOR_1000000.bin` in 
 `ModuleRadio/Firmware/src/ZiGate/Build/ZigbeeNodeControlBridge` directory.
 
-Also, you can use BAUD and JENNIC_CHIP parameters to build a firmware with 
+Also, you can use `BAUD` and `JENNIC_CHIP` parameters to build a firmware with 
 another baudrate and chip, e.g.
 
 ```shell
 make BAUD=115200 JENNIC_CHIP=JN5168 JENNIC_CHIP_FAMILY=JN516x
 ```
 
-To provide a path to your python you can pass PYTHON parameter to make
+To provide a path to your python distribution (e.g., a `virtualenv`) you can pass the `PYTHON`
+parameter to `make`:
 
 ```shell
 make PYTHON=/usr/bin/python2.7

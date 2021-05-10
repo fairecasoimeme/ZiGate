@@ -31,7 +31,7 @@
 ###############################################################################
 
 # Set toolchain path to use ba2 version of compiler
-TOOLCHAIN_PATH = ba-elf-ba2-r36379
+TOOLCHAIN_PATH ?= ba-elf-ba2-r36379
 CROSS_COMPILE  = ba-elf
 
 # BA2 architecture compiler flags
