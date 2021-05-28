@@ -126,15 +126,18 @@ typedef enum
     E_SL_MSG_ZLL_FACTORY_NEW                                   =   0x0013,
     E_SL_MSG_GET_PERMIT_JOIN                                   =   0x0014,
     E_SL_MSG_GET_PERMIT_JOIN_RESPONSE                          =   0x8014,
-    E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE                       =   0x0015,
+    E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE                     =   0x0015,
     E_SL_MSG_GET_DISPLAY_ADDRESS_MAP_TABLE_LIST                =   0x8015,
-    E_SL_MSG_SET_TIMESERVER                                       =   0x0016,
+    E_SL_MSG_SET_TIMESERVER                                    =   0x0016,
 
-    E_SL_MSG_GET_TIMESERVER                                       =   0x0017,
+    E_SL_MSG_GET_TIMESERVER                                    =   0x0017,
     E_SL_MSG_GET_TIMESERVER_LIST                               =   0x8017,
 
     E_SL_MSG_SET_LED                                           =   0x0018,
-    E_SL_MSG_SET_CE_FCC                                           =   0x0019,
+    E_SL_MSG_SET_CE_FCC                                        =   0x0019,
+
+    E_SL_MSG_GET_TRANSPORT_KEY                                 =   0x001a,
+    E_SL_MSG_GET_TRANSPORT_KEY_RESPONSE                        =   0x801a,
 
     E_SL_MSG_SET_FLOW_CONTROL								   =   0x002F,
     E_SL_MSG_BIND                                              =   0x0030,
