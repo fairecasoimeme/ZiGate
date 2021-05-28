@@ -711,6 +711,17 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             }
             break;
 
+            case (E_SL_MSG_GET_TRANSPORT_KEY):
+            {
+                ZPS_tsNwkNib *psNib    =  ZPS_psAplZdoGetNib ( );
+                vSL_WriteMessage ( E_SL_MSG_GET_TRANSPORT_KEY_RESPONSE,
+                                   ZPS_SEC_KEY_LENGTH * sizeof( uint8 ),
+                                   psNib->sTbl.psSecMatSet[0].au8Key,
+                                   0);
+                return;
+            }
+                break;
+
 #ifdef PDM_DEBUG
             case (E_SL_MSG_DEBUG_PDM):
             {
