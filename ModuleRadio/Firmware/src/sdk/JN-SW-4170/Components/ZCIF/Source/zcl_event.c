@@ -604,16 +604,9 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
         }
         //workaround to avoid sending back default response with an error code for different devices like Xiaomi 0x115F , schneider 0x105E
 
-	    if(  sZCL_HeaderParams.bManufacturerSpecific &&
-                ((sZCL_HeaderParams.u16ManufacturerCode == 0x1228) ||
-                 (sZCL_HeaderParams.u16ManufacturerCode == 0x15D2) ||
-                 (sZCL_HeaderParams.u16ManufacturerCode == 0x115F) ||
-                 (sZCL_HeaderParams.u16ManufacturerCode == 0x100B) ||
-                 (sZCL_HeaderParams.u16ManufacturerCode == 0x1234) ||
-                 (sZCL_HeaderParams.u16ManufacturerCode == 0x105E) ||
-                 (sZCL_HeaderParams.u16ManufacturerCode == 0x1021)))
+	    if(sZCL_HeaderParams.bManufacturerSpecific)
 	    {
-		  vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: workaround to avoid sending back default response with an error code for different devices: sZCL_HeaderParams.bManufacturerSpecific: 0x%04x\n", __FILE__, __LINE__, __func__,sZCL_HeaderParams.bManufacturerSpecific);
+		   vLog_Printf(1,LOG_DEBUG, "BEN: %s - %d - %s: workaround to avoid sending back default response with an error code for different devices: sZCL_HeaderParams.bManufacturerSpecific: 0x%04x\n", __FILE__, __LINE__, __func__,sZCL_HeaderParams.bManufacturerSpecific);
 		   u8Error=0;
 	    }
 
@@ -622,7 +615,7 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
 	    	u8Error=0;
 	    }
 
-	    //FRED -- Specifique à orvibo + TERNCY
+	    //FRED -- Specifique ï¿½ orvibo + TERNCY
 	    if (((pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x0a) || (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x6e)|| (pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint ==0x15))&& ( sZCL_HeaderParams.eFrameType == eFRAME_TYPE_COMMAND_IS_SPECIFIC_TO_A_CLUSTER ) )
 	    {
 	    	u8Error=0;
@@ -819,113 +812,38 @@ PRIVATE void vZCL_HandleDataIndication(ZPS_tsAfEvent *pZPSevent)
             else if( psZCL_EndPointDefinition != NULL )
             {
                 // check whether cluster is present on endpoint
-                if ((psClusterInstance == NULL) && 
+                if ((psClusterInstance == NULL) &&
                     (bZCL_OverrideHandlingEntireProfileCmd(pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId) == FALSE))
                 {
 
-                	if ((sZCL_HeaderParams.u16ManufacturerCode == 0x1021)
-                			&& (sZCL_HeaderParams.bManufacturerSpecific==1)
-                			&& (pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId==0)
-                		)
-                	{
-                		/*uint8_t u8Status;
-                		u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT16, &(sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.u16AttributeEnum));
-                		if (pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId ==0x0000)
-                		{
-                			if (sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.u16AttributeEnum==0xF000)
-                			{
-                				uint16 u16offset;
-								uint16 u16payloadSize;
+                    switch(sZCL_HeaderParams.u8CommandIdentifier) {
+                        case E_ZCL_READ_ATTRIBUTES_RESPONSE:
+                        case E_ZCL_REPORT_ATTRIBUTES:
+                        case E_ZCL_CONFIGURE_REPORTING_RESPONSE:
+                        case E_ZCL_WRITE_ATTRIBUTES_RESPONSE:
+                            // Parse report response commands normally, even if they're on
+                            // unregistered clusters.
+                            //
+                            vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n vZCL_HandleEntireProfileCommand for non standard "
+                                                               "cluster 0x%04x",
+                                                               pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId);
 
-								PDUM_thAPduInstance myPDUM_thAPduInstance;
-								uint16 u16AttributeId;
-                				uint16    au16AttributeList[2];
-                				au16AttributeList[0]=0xF000;
-                				au16AttributeList[1]=0x0066;
-                				tsZCL_Address sAddress;
-                				sAddress.eAddressMode = pZPSevent->uEvent.sApsDataIndEvent.u8SrcAddrMode;
-                			    sAddress.uAddress.u64DestinationAddress = pZPSevent->uEvent.sApsDataIndEvent.uSrcAddress.u64Addr;
-
-
-                			    // get buffer
-                			       myPDUM_thAPduInstance = hZCL_AllocateAPduInstance();
-
-                			       // write command header
-                			       u16offset = u16ZCL_WriteCommandHeader(myPDUM_thAPduInstance,
-                			                                          eFRAME_TYPE_COMMAND_ACTS_ACCROSS_ENTIRE_PROFILE,
-                			                                          1,
-                			                                          0x1021,
-                			                                          1,
-                			                                          1,
-                			                                          sZCL_HeaderParams.u8TransactionSequenceNumber,
-                			                                          E_ZCL_READ_ATTRIBUTES_RESPONSE);
-
-                			       // calculate payload size
-                			       u16payloadSize = u16offset + 8;
-                			       // check buffer size
-                			       if(PDUM_u16APduGetSize(psZCL_Common->hZCL_APdu) < u16payloadSize)
-                			       {
-                			           // free buffer and return
-                			           PDUM_eAPduFreeAPduInstance(myPDUM_thAPduInstance);
-
-                			       }
-
-
-                			       // read input attribute Id
-                			       u16inputOffset += u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_ATTRIBUTE_ID, &u16AttributeId);
-
-                			       uint8_t u8errorCode=0;
-                			       uint8_t datatype=0x23;
-                			       uint32_t data=0x00000066;
-                			       // write payload, attribute at a time
-                			       u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance, u16offset, E_ZCL_ATTRIBUTE_ID, &u16AttributeId);
-                			       u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance, u16offset+2, E_ZCL_UINT8, &u8errorCode);
-                			       u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance,u16offset+3,E_ZCL_UINT8,&datatype);
-                			       u16ZCL_APduInstanceWriteNBO(myPDUM_thAPduInstance,u16offset+4,E_ZCL_UINT32,&data);
-
-
-                			       // transmit the request
-                			       u8Status = eZCL_TransmitDataRequest(myPDUM_thAPduInstance,
-                			                                   u16payloadSize,
-                			                                   1,
-                			                                   1,
-                			                                   0x0000,
-                			                                   &sAddress) ;
-
-                				 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n u8Status : %d\n",u8Status);
-                			}
-                		}
-                		// psClusterInstance = sControlBridge.sEndPoint.psClusterInstance;
-                		 psClusterInstance = psZCL_Common->psZCL_EndPointRecord[0].psEndPointDefinition->psClusterInstance;
-                		 sZCL_CallBackEvent.psClusterInstance = psClusterInstance;
-                		 u16inputOffset = u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT16, &(sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.u16AttributeEnum));
-                		 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n u16inputOffset : %d\n",u16inputOffset);
-                		 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n attributeEnum : %d\n",sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.u16AttributeEnum);
-                		 u16inputOffset = u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT8, &(sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.eAttributeDataType));
-                		 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n u16inputOffset : %d\n",u16inputOffset);
-                		 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n attributeEnum : %d\n",sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.eAttributeDataType);
-                		 u16inputOffset = u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT8, &(sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.eAttributeStatus));
-						 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n u16inputOffset : %d\n",u16inputOffset);
-						 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n attributeEnum : %d\n",sZCL_CallBackEvent.uMessage.sIndividualAttributeResponse.eAttributeStatus);
-
-                		 u16inputOffset += u16ZCL_APduInstanceReadNBO(pZPSevent->uEvent.sApsDataIndEvent.hAPduInst, u16inputOffset, E_ZCL_UINT16, &(sZCL_CallBackEvent.uMessage.sClusterCustomMessage.u16ClusterId));
-						 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n u16inputOffset : %d\n",u16inputOffset);
-						 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n attributeEnum : %d\n",sZCL_CallBackEvent.uMessage.sClusterCustomMessage.u16ClusterId);
-
-						 vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId : %d\n",pZPSevent->uEvent.sApsDataIndEvent.u16ClusterId);
-                		 	*/
-
-                	}else{
-                        sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
-                        sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
-                        vZCL_PassEventToUser(&sZCL_CallBackEvent);
-                        //eZCL_SendDefaultResponse(pZPSevent, E_ZCL_CMDS_UNSUPPORTED_CLUSTER);
-                        eZCL_SendDefaultResponse(pZPSevent, E_ZCL_SUCCESS);
-                	}
+                            vZCL_HandleEntireProfileCommand(sZCL_HeaderParams.u8CommandIdentifier,
+                                                            pZPSevent,
+                                                            psZCL_EndPointDefinition,
+                                                            psClusterInstance);
+                            break;
+                        default:
+                            sZCL_CallBackEvent.eEventType = E_ZCL_CBET_UNHANDLED_EVENT;
+                            sZCL_CallBackEvent.u8EndPoint = pZPSevent->uEvent.sApsDataIndEvent.u8DstEndpoint;
+                            vZCL_PassEventToUser(&sZCL_CallBackEvent);
+                            eZCL_SendDefaultResponse(pZPSevent, E_ZCL_SUCCESS);
+                            break;
+                    }
                 }
                 else
                 {
-                	//vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n vZCL_HandleEntireProfileCommand cmd : %d", sZCL_HeaderParams.u8CommandIdentifier);
+                	vLog_Printf(TRACE_DEBUG,LOG_DEBUG, "\n vZCL_HandleEntireProfileCommand cmd : %d", sZCL_HeaderParams.u8CommandIdentifier);
 
                     // Moved to zcl_library_options.h as some commands are optional so
                     // the command handler is built at the same time as the app and unused
