@@ -36,6 +36,11 @@ TARGET  =    ZigbeeNodeControlBridge
 ###############################################################################
 # User definable make parameters that may be overwritten from the command line
 # Chip variant
+VERSION                ?= 197406
+SW_BUILD_ID            ?= 00000001
+HARDWARE_VERSION       ?= 01
+MANUFACTURER_NAME      ?= Nimbus9
+MANUFACTURER_CODE      ?= 0000
 JENNIC_CHIP            ?= JN5169
 JENNIC_CHIP_FAMILY     ?= JN516x
 JENNIC_PCB             ?= DEVKIT2
@@ -109,6 +114,14 @@ APP_AHI_CONTROL        ?= 1
 CFLAGS  += -DUART_BAUD_RATE=$(BAUD)
 CFLAGS  += -D$(NODE)
 CFLAGS	+= -D$(CRC_NEW)
+
+# Version/manufacturer flags
+#
+CFLAGS  += -DVERSION=$(VERSION)
+CFLAGS  += -DCLD_BAS_ATTR_SW_BUILD_ID=$(SW_BUILD_ID)
+CFLAGS  += -DCLD_BAS_ATTR_HARDWARE_VERSION=$(HARDWARE_VERSION)
+CFLAGS  += -DCLD_BAS_ATTR_MANUFACTURER_NAME=$(MANUFACTURER_NAME)
+CFLAGS  += -DZCL_MANUFACTURER_CODE=$(MANUFACTURER_CODE)
 
 ifeq ($(DEBUG), UART1)
 CFLAGS  += -DDBG_ENABLE
