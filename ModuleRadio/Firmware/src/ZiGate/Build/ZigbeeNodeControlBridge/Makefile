@@ -96,6 +96,12 @@ else
 GENERATED_FILE_NAME    ?= $(TARGET)_$(JENNIC_CHIP)_GP_Proxy_$(NODE)_$(BAUD)
 endif
 
+ifneq ($(DEBUG), NONE)
+RELEASE_FILE_NAME ?= ZigbeeCoordinator_v$(VERSION)_PDM$(PDM_BUILD_TYPE)_Baud$(BAUD)_Debug$(DEBUG)
+else
+RELEASE_FILE_NAME ?= ZigbeeCoordinator_v$(VERSION)_PDM$(PDM_BUILD_TYPE)_Baud$(BAUD)
+endif
+
 ###############################################################################
 # Select the network stack (e.g. MAC, ZBPro)
 
@@ -426,3 +432,16 @@ clean:
 
 ###############################################################################
 
+################################################################################
+
+distclean: clean
+	rm -f $(RELEASE_FILE_NAME).bin
+
+###############################################################################
+
+################################################################################
+
+release: all
+	mv $(GENERATED_FILE_NAME).bin $(RELEASE_FILE_NAME).bin
+
+###############################################################################

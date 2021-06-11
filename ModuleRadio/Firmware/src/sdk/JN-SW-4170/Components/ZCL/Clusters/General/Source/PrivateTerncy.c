@@ -27,7 +27,6 @@
 #include "zcl_customcommand.h"
 #include "PrivateTerncy.h"
 #include "zcl_options.h"
-//#include "log.h"
 
 #include "app_common.h"
 

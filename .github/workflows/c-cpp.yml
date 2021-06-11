@@ -32,38 +32,57 @@ jobs:
       run: wget https://github.com/openlumi/BA2-toolchain/releases/download/20201219/ba-toolchain-20201219.tar.bz2 -O - | tar -jx -C $SDK_DIR
     - name: Install xmltodict
       run: pip3 install xmltodict
-    - name: Build Host PDM Debug
-      id: build-host-pdm-debug
+    - name: make
+      id: make
       run: |
-        make -j8 -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
-                               TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
-                               BAUD=$BAUD \
-                               JENNIC_CHIP=$JENNIC_CHIP \
-                               SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
-                               MANUFACTURER_NAME=$MANUFACTURER_NAME \
-                               VERSION=$(printf "%d" $VERSION) \
-                               HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
-                               MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
-                               STACK_SIZE=5300 \
-                               PDM_BUILD_TYPE=_NONE \
-                               DEBUG=UART0 \
-                               TRACE=1 \
-                               all
-        mv *.bin ZigbeeCoordinator_v$VERSION_PDM$(PDM_BUILD_TYPE)_Debug$(DEBUG)_Baud$BAUD.bin
-        make -j8 -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
-                               TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
-                               BAUD=$BAUD \
-                               JENNIC_CHIP=$JENNIC_CHIP \
-                               SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
-                               MANUFACTURER_NAME=$MANUFACTURER_NAME \
-                               VERSION=$(printf "%d" $VERSION) \
-                               HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
-                               MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
-                               STACK_SIZE=5300 \
-                               PDM_BUILD_TYPE=_NONE \
-                               DEBUG=UART0 \
-                               TRACE=1 \
-                               clean
+        make -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
+                           TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
+                           BAUD=$BAUD \
+                           JENNIC_CHIP=$JENNIC_CHIP \
+                           SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
+                           MANUFACTURER_NAME=$MANUFACTURER_NAME \
+                           VERSION=$(printf "%d" $VERSION) \
+                           HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
+                           MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
+                           release clean
+        make -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
+                           TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
+                           BAUD=$BAUD \
+                           JENNIC_CHIP=$JENNIC_CHIP \
+                           SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
+                           MANUFACTURER_NAME=$MANUFACTURER_NAME \
+                           VERSION=$(printf "%d" $VERSION) \
+                           HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
+                           MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
+                           DEBUG=UART0 \
+                           TRACE=1 \
+                           release clean
+        make -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
+                           TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
+                           BAUD=$BAUD \
+                           JENNIC_CHIP=$JENNIC_CHIP \
+                           SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
+                           MANUFACTURER_NAME=$MANUFACTURER_NAME \
+                           VERSION=$(printf "%d" $VERSION) \
+                           HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
+                           MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
+                           STACK_SIZE=5300 \
+                           PDM_BUILD_TYPE=_NONE \
+                           release clean
+        make -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
+                           TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
+                           BAUD=$BAUD \
+                           JENNIC_CHIP=$JENNIC_CHIP \
+                           SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
+                           MANUFACTURER_NAME=$MANUFACTURER_NAME \
+                           VERSION=$(printf "%d" $VERSION) \
+                           HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
+                           MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
+                           STACK_SIZE=5300 \
+                           PDM_BUILD_TYPE=_NONE \
+                           DEBUG=UART0 \
+                           TRACE=1 \
+                           release clean
         echo "::set-output name=status::success"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
