@@ -5,6 +5,7 @@ on:
     branches: [ auto_build ]
   pull_request:
     branches: [ auto_build ]
+  workflow_dispatch:
 
 env:
   BUILD_DIR: ModuleRadio/Firmware/src/ZiGate/Build/ZigbeeNodeControlBridge/
@@ -36,13 +37,13 @@ jobs:
                                TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
                                BAUD=$BAUD \
                                JENNIC_CHIP=JN5168 \
-                               SW_BUILD_ID=$SW_BUILD_ID \ 
-                               MANUFACTURER_NAME=$MANUFACTURER_NAME \ 
-                               VERSION=$(shell printf "%d" $VERSION) \  
-                               HARDWARE_VERSION=$(shell printf "%d" $HARDWARE_VERSION) \ 
-                               MANUFACTURER_CODE=$(shell printf "%d" $MANUFACTURER_CODE) \ 
+                               SW_BUILD_ID=$SW_BUILD_ID \
+                               MANUFACTURER_NAME=$MANUFACTURER_NAME \
+                               VERSION=$(shell printf "%d" $VERSION) \
+                               HARDWARE_VERSION=$(shell printf "%d" $HARDWARE_VERSION) \
+                               MANUFACTURER_CODE=$(shell printf "%d" $MANUFACTURER_CODE) \
                                STACK_SIZE=5300 \
-                               PDM_BUILD_TYPE=_NONE \     
+                               PDM_BUILD_TYPE=_NONE \
                                DEBUG=UART0 \
                                TRACE=1
         make -C $BUILD_DIR BAUD=0 clean
