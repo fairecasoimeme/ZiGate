@@ -37,7 +37,7 @@ TARGET  =    ZigbeeNodeControlBridge
 # User definable make parameters that may be overwritten from the command line
 # Chip variant
 VERSION                ?= 197406
-SW_BUILD_ID            ?= 00000001
+SW_BUILD_ID            ?= 0000001
 HARDWARE_VERSION       ?= 01
 MANUFACTURER_NAME      ?= Nimbus9
 MANUFACTURER_CODE      ?= 0000

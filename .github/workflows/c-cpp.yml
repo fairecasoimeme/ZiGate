@@ -13,10 +13,10 @@ env:
   BUILD_DIR: ModuleRadio/Firmware/src/ZiGate/Build/ZigbeeNodeControlBridge/
   SDK_DIR: ModuleRadio/Firmware/src/sdk
   TOOLCHAIN_PATH: ba-toolchain
+  JENNIC_CHIP: JN5168
   BAUD: 115200
   HOST_PDM_STACK_SIZE: 5300
   VERSION: 0x0003031e
-  SW_BUILD_ID: $(git rev-parse --short "$GITHUB_SHA")
   HARDWARE_VERSION: 0x01
   MANUFACTURER_NAME: Nimbus9
   MANUFACTURER_CODE: 0x0000
@@ -29,26 +29,41 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Get toolchain
-      run: wget https://github.com/openlumi/BA2-toolchain/releases/download/20201219/ba-toolchain-20201219.tar.bz2 -O - | tar -jx -C ${{ env.SDK_DIR }}
+      run: wget https://github.com/openlumi/BA2-toolchain/releases/download/20201219/ba-toolchain-20201219.tar.bz2 -O - | tar -jx -C $SDK_DIR
     - name: Install xmltodict
       run: pip3 install xmltodict
     - name: Build Host PDM Debug
       id: build-host-pdm-debug
       run: |
-        make -j8 -C $BUILD_DIR TOOL_COMMON_BASE_DIR=${{ env.SDK_DIR }}
+        make -j8 -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
                                TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
                                BAUD=$BAUD \
-                               JENNIC_CHIP=JN5168 \
-                               SW_BUILD_ID=$SW_BUILD_ID \
+                               JENNIC_CHIP=$JENNIC_CHIP \
+                               SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
                                MANUFACTURER_NAME=$MANUFACTURER_NAME \
-                               VERSION=$(shell printf "%d" $VERSION) \
-                               HARDWARE_VERSION=$(shell printf "%d" $HARDWARE_VERSION) \
-                               MANUFACTURER_CODE=$(shell printf "%d" $MANUFACTURER_CODE) \
+                               VERSION=$(printf "%d" $VERSION) \
+                               HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
+                               MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
                                STACK_SIZE=5300 \
                                PDM_BUILD_TYPE=_NONE \
                                DEBUG=UART0 \
-                               TRACE=1
-        make -C $BUILD_DIR BAUD=0 clean
+                               TRACE=1 \
+                               all
+        mv *.bin ZigbeeCoordinator_v$VERSION_PDM$(PDM_BUILD_TYPE)_Debug$(DEBUG)_Baud$BAUD.bin
+        make -j8 -C $BUILD_DIR TOOL_COMMON_BASE_DIR=$GITHUB_WORKSPACE/$SDK_DIR \
+                               TOOLCHAIN_PATH=$TOOLCHAIN_PATH \
+                               BAUD=$BAUD \
+                               JENNIC_CHIP=$JENNIC_CHIP \
+                               SW_BUILD_ID=$(git rev-parse --short "$GITHUB_SHA") \
+                               MANUFACTURER_NAME=$MANUFACTURER_NAME \
+                               VERSION=$(printf "%d" $VERSION) \
+                               HARDWARE_VERSION=$(printf "%d" $HARDWARE_VERSION) \
+                               MANUFACTURER_CODE=$(printf "%d" $MANUFACTURER_CODE) \
+                               STACK_SIZE=5300 \
+                               PDM_BUILD_TYPE=_NONE \
+                               DEBUG=UART0 \
+                               TRACE=1 \
+                               clean
         echo "::set-output name=status::success"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
