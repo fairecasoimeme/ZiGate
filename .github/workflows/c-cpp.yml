@@ -2,9 +2,11 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ auto_build ]
+    branches:
+      - master
   pull_request:
-    branches: [ auto_build ]
+    branches:
+      - master
   workflow_dispatch:
 
 env:
