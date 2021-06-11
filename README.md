@@ -2,10 +2,12 @@
 
 # ZiGate
 
-Repository de la passerelle ZiGate
+ZiGate Gateway Repository
 
-Vous y trouverez toutes les documentations techniques et logiciels :
 
-# Module Radio
+# ModuleRadio
 
-# Module Wifi
+Contains source code and build configurations for compiling coordinator firmware to NXP's
+JN516x series chips. The JN5168 chip is the primary focus of this fork.
+
+# ModuleWiFi
