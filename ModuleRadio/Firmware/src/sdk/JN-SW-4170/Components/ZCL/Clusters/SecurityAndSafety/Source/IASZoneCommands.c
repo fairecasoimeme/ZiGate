@@ -469,7 +469,7 @@ PUBLIC teZCL_Status eCLD_IASZoneEnrollReqReceive(
                                      pu8TransactionSequenceNumber,
                                      asPayloadDefinition,
                                      sizeof(asPayloadDefinition) / sizeof(tsZCL_RxPayloadItem),
-                                     E_ZCL_ACCEPT_EXACT|E_ZCL_DISABLE_DEFAULT_RESPONSE);
+                                     E_ZCL_ACCEPT_LESS|E_ZCL_DISABLE_DEFAULT_RESPONSE);
 
 }
 
