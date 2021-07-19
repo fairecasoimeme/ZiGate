@@ -568,12 +568,7 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
             if (sZllState.u8RawMode == RAW_MODE_HYBRID)
                 Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
 
-            if (sZllState.u8RawMode == RAW_MODE_ON){
-                Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
-				PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
 
-                return;
-            }
 
             uint8*    dataPtr =  ( uint8* ) PDUM_pvAPduInstanceGetPayload ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
             uint8     u8Size  =  PDUM_u16APduInstanceGetPayloadSize ( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
@@ -581,6 +576,12 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
             if( psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint != 0  &&
                 psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint != 0 )
             {
+            	if (sZllState.u8RawMode == RAW_MODE_ON){
+					Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+					PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
+
+					return;
+				}
                 uint8    i =  0;
                 ZNC_BUF_U8_UPD   ( &au8LinkTxBuffer [0],          psStackEvent->uEvent.sApsDataIndEvent.eStatus,          u16Length );
                 ZNC_BUF_U16_UPD  ( &au8LinkTxBuffer [u16Length],  psStackEvent->uEvent.sApsDataIndEvent.u16ProfileId,     u16Length );
@@ -628,7 +629,15 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
                                             &sApsZdpEvent );
 
                 ZNC_BUF_U8_UPD ( &au8LinkTxBuffer [0] , sApsZdpEvent.u8SequNumber, u16Length );
+                if (sZllState.u8RawMode == RAW_MODE_ON){
+					if (sApsZdpEvent.u16ClusterId!=ZPS_ZDP_DEVICE_ANNCE_REQ_CLUSTER_ID)
+					{
+						Znc_vSendDataIndicationToHost(psStackEvent, au8LinkTxBuffer);
+						PDUM_eAPduFreeAPduInstance( psStackEvent->uEvent.sApsDataIndEvent.hAPduInst );
+						return;
+					}
 
+				}
                 switch(sApsZdpEvent.u16ClusterId)
                 {
                     case ZPS_ZDP_DEVICE_ANNCE_REQ_CLUSTER_ID:
