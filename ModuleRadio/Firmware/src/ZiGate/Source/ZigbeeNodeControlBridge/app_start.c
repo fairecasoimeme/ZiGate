@@ -1140,10 +1140,10 @@ PRIVATE void APP_cbTimerZclTick (void*    pvParam)
 
 bool_t APP_vProfileWideCommandSupportedForCluster ( uint16 u16Clusterid )
 {
-    if ( u16Clusterid == MEASUREMENT_AND_SENSING_CLUSTER_ID_OCCUPANCY_SENSING)
+    /*if ( u16Clusterid == MEASUREMENT_AND_SENSING_CLUSTER_ID_OCCUPANCY_SENSING)
     {
         return TRUE;
-    }
+    }*/
     return FALSE;
 }
 
