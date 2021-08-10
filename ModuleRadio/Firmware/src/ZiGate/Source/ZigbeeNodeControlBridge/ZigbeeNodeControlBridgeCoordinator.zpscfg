@@ -519,7 +519,16 @@
       <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
       <OutputClusters Cluster="Power_Configuration" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
     </Endpoints>
-    <Endpoints Id="3" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="WISER2"/>
+    <Endpoints Id="3" Enabled="true" ApplicationDeviceId="0" ApplicationDeviceVersion="0" Profile="ZLO" Message="APP_msgZpsEvents_ZCL" Name="WISER2">
+      <InputClusters Cluster="Basic" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Metering" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="OTA" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+      <InputClusters Cluster="Thermostat" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="MEASUREMENT_AND_SENSING_CLUSTER_ID_TEMPERATURE_MEASUREMENT" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Power_Configuration" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <InputClusters Cluster="Default" RxAPDU="ZigbeeNodeControlBridge->apduZDP" Discoverable="false"/>
+      <OutputClusters Cluster="Basic" TxAPDUs="ZigbeeNodeControlBridge->apduZDP" Discoverable="true"/>
+    </Endpoints>
     <PDUConfiguration NumNPDUs="14" PDUMMutexName="mutexPDUM">
       <APDUs Id="ZigbeeNodeControlBridge->apduZDP" Name="apduZDP" Size="100" Instances="14"/>
     </PDUConfiguration>

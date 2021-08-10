@@ -128,9 +128,11 @@ PUBLIC void APP_vGenCallback(uint8 u8Endpoint, ZPS_tsAfEvent *psStackEvent)
     					psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId,
     					psStackEvent->eType);
 
-    if (((u8Endpoint > 1) && (psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint != psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint)) && (psStackEvent->eType==ZPS_EVENT_APS_DATA_INDICATION)) //Fix duplicate DATAIND with different EP + Free persistent APDU
-    {
-
+    if (((u8Endpoint > 1) &&
+        		(psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint != psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint)) &&
+        		(psStackEvent->eType==ZPS_EVENT_APS_DATA_INDICATION) &&
+    			(psStackEvent->uEvent.sApsDataIndEvent.u16ClusterId != HVAC_CLUSTER_ID_THERMOSTAT)) //Fix duplicate DATAIND with different EP + Free persistent APDU
+        {
     	/*u16Length =  0;
     	ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ 0 ],  u8Endpoint,     u16Length );
     	ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [ u16Length ],  psStackEvent->eType,     u16Length );
