@@ -1,3 +1,8 @@
+# Version 3.20
+
+* Fix IASZONE to be more flexible
+* Fix Wiser endpoint
+
 # Version 3.1e
 
 * Add ACK + IEEE mode to RAW Mode
