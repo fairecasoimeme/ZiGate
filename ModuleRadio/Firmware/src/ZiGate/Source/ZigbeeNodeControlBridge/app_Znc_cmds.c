@@ -882,7 +882,23 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             {
             	ZPS_tsAfProfileDataReq    sAfProfileDataReq;
             	uint8                     u8DataLength;
-            	if ((au8LinkRxBuffer[0]== E_ZCL_AM_SHORT) || (au8LinkRxBuffer[0]== E_ZCL_AM_SHORT_NO_ACK))
+				if ((au8LinkRxBuffer[0]== ZPS_E_ADDR_MODE_IEEE) || (au8LinkRxBuffer[0]== ZPS_E_ADDR_MODE_IEEE_NO_ACK))
+				{
+					sAfProfileDataReq.uDstAddr.u64Addr    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 1 );
+					sAfProfileDataReq.u16ClusterId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 11 );
+					sAfProfileDataReq.u16ProfileId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 13 );
+					sAfProfileDataReq.eDstAddrMode        =  au8LinkRxBuffer[0];
+					sAfProfileDataReq.u8SrcEp             =  au8LinkRxBuffer[9];
+					sAfProfileDataReq.u8DstEp             =  au8LinkRxBuffer[10];
+					sAfProfileDataReq.eSecurityMode       =  au8LinkRxBuffer[15];
+					sAfProfileDataReq.u8Radius            =  au8LinkRxBuffer[16];
+					u8DataLength                          =  au8LinkRxBuffer[17];
+					 u8Status      =  APP_eApsProfileDataRequest ( &sAfProfileDataReq,
+																					  &au8LinkRxBuffer[18],
+																					  u8DataLength,
+																					  &u8SeqNum );
+				}
+				else
 				{
 
 					sAfProfileDataReq.uDstAddr.u16Addr    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 1 );
@@ -896,21 +912,6 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 					u8DataLength                          =  au8LinkRxBuffer[11];
 					 u8Status      =  APP_eApsProfileDataRequest ( &sAfProfileDataReq,
 																					  &au8LinkRxBuffer[12],
-																					  u8DataLength,
-																					  &u8SeqNum );
-				}else if ((au8LinkRxBuffer[0]== E_ZCL_AM_IEEE) || (au8LinkRxBuffer[0]== E_ZCL_AM_IEEE_NO_ACK))
-				{
-					sAfProfileDataReq.uDstAddr.u64Addr    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 1 );
-					sAfProfileDataReq.u16ClusterId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 11 );
-					sAfProfileDataReq.u16ProfileId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 13 );
-					sAfProfileDataReq.eDstAddrMode        =  au8LinkRxBuffer[0];
-					sAfProfileDataReq.u8SrcEp             =  au8LinkRxBuffer[9];
-					sAfProfileDataReq.u8DstEp             =  au8LinkRxBuffer[10];
-					sAfProfileDataReq.eSecurityMode       =  au8LinkRxBuffer[15];
-					sAfProfileDataReq.u8Radius            =  au8LinkRxBuffer[16];
-					u8DataLength                          =  au8LinkRxBuffer[17];
-					 u8Status      =  APP_eApsProfileDataRequest ( &sAfProfileDataReq,
-																					  &au8LinkRxBuffer[18],
 																					  u8DataLength,
 																					  &u8SeqNum );
 				}
