@@ -82,6 +82,8 @@
 #include "PollControl.h"
 #include <string.h>
 #endif
+
+#include "app_common.h"
 /****************************************************************************/
 /***        Macro Definitions                                             ***/
 /****************************************************************************/
@@ -443,7 +445,13 @@ PUBLIC   void vZCL_HandleAttributesWriteRequest(
         psZCL_EndPointDefinition->pCallBackFunctions(&sZCL_CallBackEvent);
      }
 
-
+     //Fred Nov 21.
+	 // if there is an error we send request to host
+	 if (!bNoErrors)
+	 {
+		uint8                  au8LinkTxBuffer[256];
+		Znc_vSendDataIndicationToHost(pZPSevent, au8LinkTxBuffer);
+	 }
     // Daniel Nov 09.
     // Do we send back a default resonse (SUCCESS or ERROR) from a write no response?
     // I think I remember read somewhere that said no but I can't find it in the new release of the spec so am not sure
