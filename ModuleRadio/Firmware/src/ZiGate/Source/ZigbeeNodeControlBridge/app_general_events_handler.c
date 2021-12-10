@@ -1086,6 +1086,30 @@ PUBLIC void APP_vHandleStackEvents ( ZPS_tsAfEvent*    psStackEvent )
 					ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u8Capability,   u16Length );
 					ZNC_BUF_U8_UPD  ( &au8LinkTxBuffer [u16Length] ,  psStackEvent->uEvent.sNwkJoinIndicationEvent.u8Rejoin,   u16Length );
 
+					// fix Xiaomi MCGQ14LM node descriptor custom
+					uint64 u64addr;
+					uint8 macManuf[3];
+					zps_tsApl *  s_sApl = ( zps_tsApl * ) ZPS_pvAplZdoGetAplHandle ();
+					u64addr = psStackEvent->uEvent.sNwkJoinIndicationEvent.u64ExtAddr;
+					macManuf[0] = (u64addr >> 56);
+					macManuf[1] = (u64addr >> 48);
+					macManuf[2] = (u64addr >> 40);
+					 // fix Xiaomi MCGQ14LM
+					if ( (((macManuf[0] == 0x04) &&
+							(macManuf[1] == 0xcf) &&
+							(macManuf[2] == 0x8c))) ||
+						 (((macManuf[0] == 0x54) &&
+							(macManuf[1] == 0xef) &&
+							(macManuf[2] == 0x44)))
+						)
+					{
+						s_sApl->sAfContext.psNodeDescriptor->u16ManufacturerCode = 0x115f;
+					}else{
+
+						s_sApl->sAfContext.psNodeDescriptor->u16ManufacturerCode = ZCL_MANUFACTURER_CODE;
+
+					}
+
 					vSL_WriteMessage ( E_SL_MSG_DEVICE_ANNOUNCE,
 									   u16Length,
 									   au8LinkTxBuffer,
