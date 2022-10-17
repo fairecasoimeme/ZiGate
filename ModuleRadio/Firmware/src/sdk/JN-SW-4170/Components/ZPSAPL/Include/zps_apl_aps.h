@@ -86,12 +86,14 @@ typedef enum {
 
 typedef enum
 {
-    ZPS_E_ADDR_MODE_BOUND        = 0,
-    ZPS_E_ADDR_MODE_GROUP        = 1,
-    ZPS_E_ADDR_MODE_SHORT        = 2,
-    ZPS_E_ADDR_MODE_IEEE         = 3,
-    ZPS_E_ADDR_MODE_SHORT_NO_ACK = 7,
-    ZPS_E_ADDR_MODE_IEEE_NO_ACK  = 8,
+	ZPS_E_ADDR_MODE_BOUND        = 0,
+	ZPS_E_ADDR_MODE_GROUP        = 1,
+	ZPS_E_ADDR_MODE_SHORT        = 2,
+	ZPS_E_ADDR_MODE_IEEE         = 3,
+	ZPS_E_ADDR_MODE_BROADCAST    = 4,
+	ZPS_E_ADDR_MODE_BOUND_NO_ACK = 6,
+	ZPS_E_ADDR_MODE_SHORT_NO_ACK = 7,
+	ZPS_E_ADDR_MODE_IEEE_NO_ACK  = 8
 
 } ZPS_teAplApsdeAddressMode;
 

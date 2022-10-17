@@ -100,7 +100,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION    0x00040321
+#define VERSION    0x00040323
 #endif
 /****************************************************************************/
 /***    Type Definitions                          ***/
@@ -882,23 +882,7 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
             {
             	ZPS_tsAfProfileDataReq    sAfProfileDataReq;
             	uint8                     u8DataLength;
-            	if ((au8LinkRxBuffer[0]== E_ZCL_AM_SHORT) || (au8LinkRxBuffer[0]== E_ZCL_AM_SHORT_NO_ACK))
-				{
-
-					sAfProfileDataReq.uDstAddr.u16Addr    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 1 );
-					sAfProfileDataReq.u16ClusterId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
-					sAfProfileDataReq.u16ProfileId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 7 );
-					sAfProfileDataReq.eDstAddrMode        =  au8LinkRxBuffer[0];
-					sAfProfileDataReq.u8SrcEp             =  au8LinkRxBuffer[3];
-					sAfProfileDataReq.u8DstEp             =  au8LinkRxBuffer[4];
-					sAfProfileDataReq.eSecurityMode       =  au8LinkRxBuffer[9];
-					sAfProfileDataReq.u8Radius            =  au8LinkRxBuffer[10];
-					u8DataLength                          =  au8LinkRxBuffer[11];
-					 u8Status      =  APP_eApsProfileDataRequest ( &sAfProfileDataReq,
-																					  &au8LinkRxBuffer[12],
-																					  u8DataLength,
-																					  &u8SeqNum );
-				}else if ((au8LinkRxBuffer[0]== E_ZCL_AM_IEEE) || (au8LinkRxBuffer[0]== E_ZCL_AM_IEEE_NO_ACK))
+            	if ((au8LinkRxBuffer[0]== E_ZCL_AM_IEEE) || (au8LinkRxBuffer[0]== E_ZCL_AM_IEEE_NO_ACK))
 				{
 					sAfProfileDataReq.uDstAddr.u64Addr    =  ZNC_RTN_U64 ( au8LinkRxBuffer, 1 );
 					sAfProfileDataReq.u16ClusterId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 11 );
@@ -911,6 +895,21 @@ PUBLIC void APP_vProcessIncomingSerialCommands ( uint8    u8RxByte )
 					u8DataLength                          =  au8LinkRxBuffer[17];
 					 u8Status      =  APP_eApsProfileDataRequest ( &sAfProfileDataReq,
 																					  &au8LinkRxBuffer[18],
+																					  u8DataLength,
+																					  &u8SeqNum );
+				}else{
+
+					sAfProfileDataReq.uDstAddr.u16Addr    =  ZNC_RTN_U16 ( au8LinkRxBuffer, 1 );
+					sAfProfileDataReq.u16ClusterId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 5 );
+					sAfProfileDataReq.u16ProfileId        =  ZNC_RTN_U16 ( au8LinkRxBuffer, 7 );
+					sAfProfileDataReq.eDstAddrMode        =  au8LinkRxBuffer[0];
+					sAfProfileDataReq.u8SrcEp             =  au8LinkRxBuffer[3];
+					sAfProfileDataReq.u8DstEp             =  au8LinkRxBuffer[4];
+					sAfProfileDataReq.eSecurityMode       =  au8LinkRxBuffer[9];
+					sAfProfileDataReq.u8Radius            =  au8LinkRxBuffer[10];
+					u8DataLength                          =  au8LinkRxBuffer[11];
+					u8Status      =  APP_eApsProfileDataRequest( &sAfProfileDataReq,
+																					  &au8LinkRxBuffer[12],
 																					  u8DataLength,
 																					  &u8SeqNum );
 				}
@@ -4303,6 +4302,24 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
         {
         	switch (psProfileDataReq->eDstAddrMode)
 			{
+        	case ZPS_E_ADDR_MODE_BOUND:
+				eStatus =  ZPS_eAplAfBoundAckDataReq(hAPduInst,
+													psProfileDataReq->u16ClusterId,
+													psProfileDataReq->u8SrcEp,
+													psProfileDataReq->eSecurityMode,
+													psProfileDataReq->u8Radius,
+													pu8Seq);
+				break;
+			case ZPS_E_ADDR_MODE_GROUP:
+				eStatus = ZPS_eAplAfGroupDataReq(hAPduInst,
+													psProfileDataReq->u16ClusterId,
+													psProfileDataReq->u8SrcEp,
+													psProfileDataReq->uDstAddr.u16Addr,
+													psProfileDataReq->eSecurityMode,
+													psProfileDataReq->u8Radius,
+													pu8Seq);
+
+			break;
 			case ZPS_E_ADDR_MODE_SHORT:
 				eStatus =  ZPS_eAplAfUnicastAckDataReq(hAPduInst,
 													psProfileDataReq->u16ClusterId,
@@ -4312,7 +4329,7 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
 													psProfileDataReq->eSecurityMode,
 													psProfileDataReq->u8Radius,
 													pu8Seq);
-			break;
+				break;
 			case ZPS_E_ADDR_MODE_IEEE:
 				eStatus =  ZPS_eAplAfUnicastIeeeAckDataReq(hAPduInst,
 													psProfileDataReq->u16ClusterId,
@@ -4322,7 +4339,25 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
 													psProfileDataReq->eSecurityMode,
 													psProfileDataReq->u8Radius,
 													pu8Seq);
-			break;
+				break;
+			case ZPS_E_ADDR_MODE_BROADCAST:
+				eStatus =  ZPS_eAplAfBroadcastDataReq(hAPduInst,
+													psProfileDataReq->u16ClusterId,
+													psProfileDataReq->u8SrcEp,
+													psProfileDataReq->u8DstEp,
+													ZPS_E_APL_AF_BROADCAST_ALL,
+													psProfileDataReq->eSecurityMode,
+													psProfileDataReq->u8Radius,
+													pu8Seq);
+				break;
+			case ZPS_E_ADDR_MODE_BOUND_NO_ACK:
+				eStatus = ZPS_eAplAfBoundDataReq(hAPduInst,
+													psProfileDataReq->u16ClusterId,
+													psProfileDataReq->u8SrcEp,
+													psProfileDataReq->eSecurityMode,
+													psProfileDataReq->u8Radius,
+													pu8Seq);
+				break;
 			case ZPS_E_ADDR_MODE_SHORT_NO_ACK:
 				eStatus =  ZPS_eAplAfUnicastDataReq(hAPduInst,
 													psProfileDataReq->u16ClusterId,
@@ -4332,7 +4367,7 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
 													psProfileDataReq->eSecurityMode,
 													psProfileDataReq->u8Radius,
 													pu8Seq);
-			break;
+				break;
 			case ZPS_E_ADDR_MODE_IEEE_NO_ACK:
 				eStatus =  ZPS_eAplAfUnicastIeeeDataReq(hAPduInst,
 													psProfileDataReq->u16ClusterId,
@@ -4342,20 +4377,20 @@ PRIVATE ZPS_teStatus APP_eApsProfileDataRequest ( ZPS_tsAfProfileDataReq*    psP
 													psProfileDataReq->eSecurityMode,
 													psProfileDataReq->u8Radius,
 													pu8Seq);
-			break;
+				break;
 			default:
 				eStatus =  ZPS_eAplAfApsdeDataReq( hAPduInst,
 												   psProfileDataReq,
 												   pu8Seq );
 			}
-            if (eStatus)
-            {
-                PDUM_eAPduFreeAPduInstance(hAPduInst);
-            }
-        }
-    }
+			if (eStatus)
+			{
+				PDUM_eAPduFreeAPduInstance(hAPduInst);
+			}
+		}
+	}
 
-    return eStatus;
+	return eStatus;
 }
 
 /****************************************************************************
