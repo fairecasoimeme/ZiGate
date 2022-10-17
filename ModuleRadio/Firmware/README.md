@@ -1,3 +1,15 @@
+# Version 3.23
+
+* Add all mode to RAW mode command (Bound, short, IEEE, group, broadcast)
+* Fix WindowCovering to permit lift percentage
+* Fix : send defaultResponse only if ZCL
+
+# Version 3.21
+
+* Add raw message when there are errors on write attribute command
+* Fix for Xiaomi and Lumi devices which ask manufacture code (0x115f) whith node descriptor request
+* Fix BindGroup command
+
 # Version 3.20
 
 * Fix IASZONE to be more flexible
