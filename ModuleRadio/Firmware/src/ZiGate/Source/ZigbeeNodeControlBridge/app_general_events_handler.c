@@ -1529,11 +1529,15 @@ PUBLIC void Znc_vSendDataIndicationToHost ( ZPS_tsAfEvent*    psStackEvent,
                        pau8LinkTxBuffer,
                        u8LinkQuality);
 
-    tsZCL_HeaderParams sZCL_HeaderParams;
-	u16ZCL_ReadCommandHeader(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst,
-									 &sZCL_HeaderParams);
-	if(!(sZCL_HeaderParams.bDisableDefaultResponse))
-			eZCL_SendDefaultResponse(psStackEvent, E_ZCL_CMDS_SUCCESS);
+    if ((psStackEvent->uEvent.sApsDataIndEvent.u8SrcEndpoint!=0) && (psStackEvent->uEvent.sApsDataIndEvent.u8DstEndpoint!=0))
+	{
+		tsZCL_HeaderParams sZCL_HeaderParams;
+		u16ZCL_ReadCommandHeader(psStackEvent->uEvent.sApsDataIndEvent.hAPduInst,
+										 &sZCL_HeaderParams);
+		if(!(sZCL_HeaderParams.bDisableDefaultResponse))
+				eZCL_SendDefaultResponse(psStackEvent, E_ZCL_CMDS_SUCCESS);
+	}
+
 
 }
 /****************************************************************************/
